@@ -43,7 +43,13 @@ function readme(manifest: Manifest) {
   const mermaid = ['```mermaid', 'graph LR', ...(edges.length ? edges : ['%% no deps']), '```'].join(
     '\n'
   )
-  const header = fs.readFileSync(path.join(process.cwd(), 'README.stub.md'), 'utf-8')
+  let header: string;
+  try {
+    header = fs.readFileSync(path.join(process.cwd(), 'README.stub.md'), 'utf-8');
+  } catch (err) {
+    header = '# Service Overview\n\n> README.stub.md not found or unreadable. Please provide a stub file for a custom header.\n';
+    console.warn('Warning: README.stub.md not found or unreadable:', err);
+  }
   const table = `| Service | Env | Repo | URL | Health | Depends |\n| --- | --- | --- | --- | --- | --- |\n${rows}`
   return [header.trim(), '', '## Service Matrix', table, '', '## Topology', mermaid, ''].join('\n')
 }
