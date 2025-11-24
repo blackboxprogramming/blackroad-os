@@ -1,0 +1,21 @@
+# 🧬 Agent Role Token Mapping
+
+🤖 `core-agent` → Logic + OS decisions  
+🧠 `planner-agent` → Timeline + Sprint scoping  
+📊 `analyst-agent` → Metrics, pricing, ROI  
+🧱 `builder-agent` → Codegen, DevOps, Infra-as-code  
+🪄 `wizard-agent` → Prompting, ML, embeddings  
+🧾 `scribe-agent` → Docs, specs, markdown  
+💼 `exec-agent` → OKRs, org decisions  
+🎨 `designer-agent` → UI, colors, Figma sync  
+🔐 `guardian-agent` → Auth, security, permissioning  
+📮 `router-agent` → Message-passer, connector bridge  
+🧬 `qa-agent` → Testing, validation, guardrails  
+🪞 `mirror-agent` → Learns from human and mirrors ops  
+📢 `broadcast-agent` → Notifies Slack, comments, posts  
+🛰️ `watcher-agent` → Observability, logs, alerts  
+🧳 `archivist-agent` → Repo + docs tracking, snapshotting
+
+✨ Bonus groupings:
+👪 = agent-pack (multiple specialized agents)
+🧭 = orchestrator-agent (oversees and delegates)
