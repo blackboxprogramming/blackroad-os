@@ -1,0 +1,30 @@
+# 🤖 emoji-bot-config.yml
+
+# Mapping of emoji → GitHub Project Status field values
+status_mapping:
+  "✅": "Done"
+  "🟡": "In Progress"
+  "⬜": "Not Started"
+  "❌": "Blocked"
+  "🔁": "Rework"
+  "🤔": "Needs Review"
+  "🛟": "Escalation"
+
+# Emoji to trigger special agent behavior
+agent_triggers:
+  "🤖": "Auto-assign to agent"
+  "🧍‍♀️": "Assign to human"
+  "👥": "Tag team"
+
+# Reaction triggers
+reactions:
+  "✅": "close_issue"
+  "❌": "label_blocked"
+  "🛟": "notify_guardian_agent"
+  "🤔": "assign_reviewer"
+
+# Agent responsible for acting on escalations
+guardian_agent: "@guardian-agent"
+
+# Optional: Default GitHub Project ID to update
+default_project_id: 12345678
