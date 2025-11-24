@@ -151,6 +151,16 @@ function daysBetween(startDate, endDate) {
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 }
 
+/**
+ * Get the date from one week ago
+ * @returns {Date} - Date object representing one week ago
+ */
+function getOneWeekAgo() {
+  const date = new Date();
+  date.setDate(date.getDate() - 7);
+  return date;
+}
+
 // ============================================================
 // 🎭 Emoji Parsing
 // ============================================================
@@ -227,9 +237,7 @@ function generateEmojiHeatmap(activity) {
  * @returns {Promise<object>} - Weekly activity data
  */
 async function fetchWeeklyActivity() {
-  const oneWeekAgo = new Date();
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-  const since = oneWeekAgo.toISOString();
+  const since = getOneWeekAgo().toISOString();
 
   const query = `
     query($owner: String!, $repo: String!, $since: DateTime!) {
@@ -299,8 +307,7 @@ function processActivityData(data) {
   const issues = repo.issues.nodes;
   
   // Filter PRs to only include those from the past week
-  const oneWeekAgo = new Date();
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  const oneWeekAgo = getOneWeekAgo();
   const pullRequests = repo.pullRequests.nodes.filter((pr) => {
     const createdAt = new Date(pr.createdAt);
     return createdAt >= oneWeekAgo;
@@ -313,7 +320,7 @@ function processActivityData(data) {
 
   // PR statistics
   const openPRs = pullRequests.filter((p) => p.state === "OPEN").length;
-  const mergedPRs = pullRequests.filter((p) => p.state === "MERGED" || p.mergedAt).length;
+  const mergedPRs = pullRequests.filter((p) => p.mergedAt).length;
   const closedPRs = pullRequests.filter((p) => p.state === "CLOSED" && !p.mergedAt).length;
   const totalPRs = pullRequests.length;
 
