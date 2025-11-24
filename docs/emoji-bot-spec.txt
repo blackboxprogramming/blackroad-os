@@ -1,0 +1,144 @@
+================================================================================
+                          EMOJI-BOT SPECIFICATION
+                     BlackRoad OS Intelligence Suite
+================================================================================
+
+OVERVIEW
+--------
+Emoji-Bot is an intelligent automation bot that uses emoji reactions and 
+patterns to orchestrate GitHub project management workflows. It bridges 
+human-readable emoji cues with automated agent actions and project status 
+updates.
+
+ARCHITECTURE
+------------
+The bot consists of the following core components:
+
+1. index.js
+   - Entry point for the GitHub Actions workflow
+   - Parses event payloads and extracts reaction data
+   - Logs processing activity
+
+2. emoji-agent-router.js
+   - Routes emoji/reactions to appropriate agent handlers
+   - Maintains mapping tables for emoji → agent routing
+   - Supports both Unicode emoji and GitHub reaction names
+
+3. handlers/project-status-sync.js
+   - Maps reactions to project status values
+   - Synchronizes status changes with GitHub Projects
+   - Provides status mapping utilities
+
+4. project-status-service.js
+   - GitHub GraphQL API client for Projects V2
+   - Reads project structure (fields, options)
+   - Updates project item statuses
+
+5. agent-math-utils.js
+   - Tracks agent trigger statistics
+   - Generates emoji heatmaps
+   - Calculates sprint progress metrics
+   - Renders visual progress bars
+
+EMOJI MAPPINGS
+--------------
+Status Emojis:
+  ✅ → Done
+  🟡 → In Progress
+  ⬜ → Not Started
+  ❌ → Blocked
+  🔁 → Rework
+  🤔 → Needs Review
+  🛟 → Escalation
+
+Agent Triggers:
+  🤖 → Auto-assign to agent
+  🧍‍♀️ → Assign to human
+  👥 → Tag team
+
+GitHub Reaction Mappings:
+  :rocket: / :hooray: → Done
+  :eyes:              → In Progress
+  :-1: / :confused:   → Blocked
+  :thinking_face:     → Needs Review
+  :rotating_light:    → Escalation
+
+WORKFLOW
+--------
+1. User reacts to issue/PR comment with an emoji
+2. GitHub triggers the emoji-bot workflow
+3. Bot parses the reaction from the event payload
+4. emoji-agent-router determines the appropriate handler
+5. project-status-sync maps reaction to status
+6. project-status-service updates the GitHub Project card
+7. Bot posts a comment using the appropriate template
+
+COMMENT TEMPLATES
+-----------------
+Location: bot/comments/
+
+- in-progress.md   : Posted when work begins
+- completed.md     : Posted when task is done
+- blocked.md       : Posted when progress is halted
+- review-requested.md : Posted when review is needed
+- escalation.md    : Posted for critical issues
+
+CONFIGURATION FILES
+-------------------
+- emoji-bot-config.yml : Emoji mappings and agent triggers
+- project-config.yml   : GitHub Project settings and automation rules
+
+ANALYTICS
+---------
+The agent-math-utils module provides:
+
+1. Agent Tracker
+   - Records how many times each agent is triggered
+   - Supports per-agent and aggregate reporting
+
+2. Emoji Heatmap
+   - Tracks emoji usage frequency
+   - Calculates percentage distributions
+   - Example output:
+     ✅ 45.0% (45 occurrences)
+     ❌ 30.0% (30 occurrences)
+     🟡 25.0% (25 occurrences)
+
+3. Sprint Progress Bar
+   - Visual representation of sprint status
+   - Format: ✅✅✅🟡🟡⬜⬜⬜⬜⬜
+   - Configurable width
+
+TESTING
+-------
+Tests are located in tests/reaction.test.ts and cover:
+
+- Reaction to status mapping
+- Emoji routing
+- Agent tracking
+- Heatmap calculations
+- Progress bar generation
+
+GITHUB ACTIONS WORKFLOW
+-----------------------
+Location: .github/workflows/emoji-bot.yml
+
+Triggers on:
+- issue_comment created events
+
+Steps:
+1. Checkout repository
+2. Set up Node.js 18
+3. Run bot/index.js
+
+FUTURE ENHANCEMENTS
+-------------------
+- Real-time Slack notifications
+- Cross-org project synchronization
+- LUCIDIA AI integration for intelligent routing
+- Custom reaction vocabulary per repository
+- Sprint velocity predictions
+
+================================================================================
+                     © BlackRoad OS - All Rights Reserved
+================================================================================
