@@ -35,6 +35,9 @@ on:
         required: false
         default: ""
 
+permissions:
+  contents: read
+
 jobs:
   spawn-runner:
     runs-on: ubuntu-latest

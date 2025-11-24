@@ -1,6 +1,7 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import path from "path";
 import fs from "fs";
+import os from "os";
 
 // Import the module functions
 const spawnRunner = require("../bot/lucidia-spawn-runner.js");
@@ -287,8 +288,8 @@ spawn_rules:
     it("spawns agents when conditions are met", () => {
       const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
       
-      // Create a temp file with test spawn rules
-      const tempPath = "/tmp/test-spawn-rules.yml";
+      // Create a temp file with test spawn rules using cross-platform temp directory
+      const tempPath = path.join(os.tmpdir(), "test-spawn-rules.yml");
       fs.writeFileSync(tempPath, `
 spawn_rules:
   - if:
@@ -317,8 +318,8 @@ spawn_rules:
     it("does not spawn agents when conditions are not met", () => {
       const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
       
-      // Create a temp file with test spawn rules
-      const tempPath = "/tmp/test-spawn-rules-2.yml";
+      // Create a temp file with test spawn rules using cross-platform temp directory
+      const tempPath = path.join(os.tmpdir(), "test-spawn-rules-2.yml");
       fs.writeFileSync(tempPath, `
 spawn_rules:
   - if:

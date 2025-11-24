@@ -52,8 +52,8 @@ function parseSpawnRules(content) {
       continue;
     }
 
-    // Parse key-value pairs
-    const kvMatch = trimmed.match(/^(\w+):\s*(.*)$/);
+    // Parse key-value pairs (supports alphanumeric, underscore, and hyphen in keys)
+    const kvMatch = trimmed.match(/^([\w-]+):\s*(.*)$/);
     if (kvMatch) {
       const key = kvMatch[1];
       let value = kvMatch[2];
@@ -102,7 +102,7 @@ function evaluateCondition(condition, value) {
   const isPct = condition.includes("%");
   const condStr = condition.replace("%", "").trim();
 
-  const match = condStr.match(/^([><=!]+)\s*(\d+(?:\.\d+)?)$/);
+  const match = condStr.match(/^(>=|<=|!=|==|>|<|=)\s*(\d+(?:\.\d+)?)$/);
   if (!match) return false;
 
   const operator = match[1];
