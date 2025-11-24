@@ -1,0 +1,20 @@
+{
+  "episodes": [
+    {
+      "id": "episode-001",
+      "title": "The Clone Awakens",
+      "agent": "guardian-clone-vault",
+      "date": "2025-11-23",
+      "mp3": "https://example.com/audio/guardian-clone-vault.mp3",
+      "transcript": true
+    },
+    {
+      "id": "episode-002",
+      "title": "The Digest Protocol",
+      "agent": "guardian-clone-vault",
+      "date": "2025-11-24",
+      "mp3": "https://example.com/audio/guardian-clone-vault.mp3",
+      "transcript": true
+    }
+  ]
+}
