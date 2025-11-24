@@ -3,8 +3,6 @@ name: 🤖 Emoji-Bot – Reaction Handler
 on:
   issue_comment:
     types: [created]
-  reaction:
-    types: [created]
 
 jobs:
   emoji-bot:
