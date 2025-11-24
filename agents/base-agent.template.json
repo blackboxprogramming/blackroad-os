@@ -1,0 +1,12 @@
+{
+  "id": "base-agent",
+  "name": "Unnamed Agent",
+  "role": "worker",
+  "traits": [],
+  "inputs": [],
+  "outputs": [],
+  "description": "This is a template agent used for cloning new agent definitions.",
+  "triggers": [],
+  "inherits_from": null,
+  "active": true
+}

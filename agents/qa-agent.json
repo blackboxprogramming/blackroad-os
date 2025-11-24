@@ -1,0 +1,11 @@
+{
+  "id": "qa-agent",
+  "name": "Quality Assurance Agent",
+  "role": "verifier",
+  "traits": ["test-runner", "assertion-logic", "workflow-tester"],
+  "inputs": ["pull-request", "build-log"],
+  "outputs": ["test-report.md", "bug-report.md"],
+  "description": "Runs sanity checks, integration tests, and validates emoji workflows.",
+  "triggers": ["pr-opened", "reaction::🔁"],
+  "inherits_from": "base-agent"
+}

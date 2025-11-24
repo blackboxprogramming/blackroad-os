@@ -1,0 +1,11 @@
+{
+  "id": "scribe-agent",
+  "name": "Scribe Agent",
+  "role": "documentation",
+  "traits": ["markdown-writer", "summary-generator", "spec-author"],
+  "inputs": ["issue-comment", "status-update"],
+  "outputs": ["README.md", "docs/*.md"],
+  "description": "Generates Markdown documentation from project activity and agent workflows.",
+  "triggers": ["reaction::✍🏼", "status::in-progress"],
+  "inherits_from": "base-agent"
+}

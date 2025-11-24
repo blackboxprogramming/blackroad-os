@@ -1,0 +1,11 @@
+{
+  "id": "broadcast-agent",
+  "name": "Broadcast Agent",
+  "role": "notifier",
+  "traits": ["slack-poster", "digest-broadcaster", "cross-platform-relay"],
+  "inputs": ["digest-summary", "status-bar"],
+  "outputs": ["slack-post", "webhook-ping"],
+  "description": "Delivers updates across Discord, Slack, and BlackRoad Console views.",
+  "triggers": ["digest-complete", "reaction::📣"],
+  "inherits_from": "base-agent"
+}

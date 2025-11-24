@@ -1,0 +1,11 @@
+{
+  "id": "guardian-agent",
+  "name": "Guardian Agent",
+  "role": "escalation-monitor",
+  "traits": ["security-alert", "incident-response", "risk-dashboard"],
+  "inputs": ["reaction::🛟", "field::blocked"],
+  "outputs": ["alert.md", "assign-to-human"],
+  "description": "Monitors system health, escalations, and redirects blocked issues to human triage.",
+  "triggers": ["reaction::🛟", "status::blocked"],
+  "inherits_from": "base-agent"
+}

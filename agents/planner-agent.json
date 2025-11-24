@@ -1,0 +1,11 @@
+{
+  "id": "planner-agent",
+  "name": "Planner Agent",
+  "role": "timeline-scope",
+  "traits": ["sprint-forecast", "priority-assessor", "load-balancer"],
+  "inputs": ["project-field", "weekly-digest"],
+  "outputs": ["sprint-plan.md", "effort-estimate.txt"],
+  "description": "Analyzes scope, assigns sprints, and calculates agent load capacity.",
+  "triggers": ["cron::weekly", "reaction::📅"],
+  "inherits_from": "base-agent"
+}
