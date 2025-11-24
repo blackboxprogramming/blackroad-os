@@ -1,0 +1,51 @@
+name: 📊 Weekly Emoji Digest Bot
+
+on:
+  schedule:
+    # Runs every Monday at 9:00 AM UTC
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+    inputs:
+      digest_issue_number:
+        description: "Issue number to post the digest comment (optional)"
+        required: false
+        type: number
+
+jobs:
+  digest-bot:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+
+    steps:
+      - name: 🧬 Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: 🧠 Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 📊 Run Weekly Digest Bot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DIGEST_ISSUE_NUMBER: ${{ inputs.digest_issue_number }}
+        run: |
+          node -e "
+          const { runWeeklyDigest } = require('./bot/handlers/digest-bot.js');
+
+          const owner = process.env.GITHUB_REPOSITORY.split('/')[0];
+          const repo = process.env.GITHUB_REPOSITORY.split('/')[1];
+          const digestIssueNumber = process.env.DIGEST_ISSUE_NUMBER ? parseInt(process.env.DIGEST_ISSUE_NUMBER) : null;
+
+          runWeeklyDigest(owner, repo, digestIssueNumber)
+            .then(result => {
+              console.log('📊 Digest generation complete!');
+              console.log('Total reactions:', result.stats.total);
+            })
+            .catch(err => {
+              console.error('❌ Digest generation failed:', err.message);
+              process.exit(1);
+            });
+          "
