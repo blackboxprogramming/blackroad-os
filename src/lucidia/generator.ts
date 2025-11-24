@@ -152,6 +152,9 @@ on:
   schedule:
     - cron: '*/15 * * * *'  # Run every 15 minutes
 
+permissions:
+  contents: read
+
 env:
   AGENT_NAME: ${spawn}
   AGENT_ROLE: ${config.role}

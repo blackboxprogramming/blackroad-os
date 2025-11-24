@@ -62,6 +62,8 @@ describe("generateAgentWorkflow", () => {
     expect(workflow).toContain("AGENT_ROLE: sentinel");
     expect(workflow).toContain("workflow_dispatch:");
     expect(workflow).toContain("schedule:");
+    expect(workflow).toContain("permissions:");
+    expect(workflow).toContain("contents: read");
   });
 });
 
