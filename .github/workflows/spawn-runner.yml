@@ -26,6 +26,9 @@ on:
         default: "alexa"
         type: string
 
+permissions:
+  contents: read
+
 jobs:
   spawn-agent:
     runs-on: ubuntu-latest
