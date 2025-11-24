@@ -1,0 +1,61 @@
+---
+title: "guardian-clone-vault"
+description: "Temporary overflow clone of guardian-agent to absorb burst escalations"
+role: "sentinel"
+status: "spawned"
+created_by: "lucidia"
+---
+
+# 🤖 guardian-clone-vault
+
+> Temporary overflow clone of guardian-agent to absorb burst escalations
+
+## Overview
+
+| Property | Value |
+|----------|-------|
+| **Role** | sentinel |
+| **TTL** | 96h |
+| **Parent** | `guardian-agent` |
+| **Created By** | Lucidia (auto-spawn) |
+
+## Capabilities
+
+- `monitor_escalations`
+- `auto_triage`
+- `priority_assignment`
+- `alert_routing`
+
+## Triggers
+
+- `escalation_created`
+- `high_priority_issue`
+- `sla_breach`
+
+## Outputs
+
+- `escalation_resolved`
+- `priority_updated`
+- `agent_assigned`
+
+## Spawn Condition
+
+This agent was spawned by Lucidia when the following rule matched:
+
+**Rule:** `escalation-overflow` – Escalation Overflow Handler
+
+```yaml
+escalations_last_3_days: "> 15"
+agent_load: "> 85"
+```
+
+## Lifecycle
+
+1. **Spawned**: Auto-created by Lucidia based on metrics
+2. **Active**: Processing assigned triggers
+3. **Monitored**: Performance tracked by parent agent
+4. **Terminated**: TTL expiration or manual shutdown
+
+## Related Agents
+
+- [`guardian-agent`](/docs/agents/guardian-agent.mdx) – Parent agent

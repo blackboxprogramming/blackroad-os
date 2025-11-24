@@ -1,0 +1,26 @@
+{
+  "name": "guardian-clone-vault",
+  "version": "1.0.0",
+  "role": "sentinel",
+  "inherits_from": "guardian-agent",
+  "ttl": "96h",
+  "description": "Temporary overflow clone of guardian-agent to absorb burst escalations",
+  "created_at": "2025-11-24T23:10:38.453Z",
+  "created_by": "lucidia",
+  "capabilities": [
+    "monitor_escalations",
+    "auto_triage",
+    "priority_assignment",
+    "alert_routing"
+  ],
+  "triggers": [
+    "escalation_created",
+    "high_priority_issue",
+    "sla_breach"
+  ],
+  "outputs": [
+    "escalation_resolved",
+    "priority_updated",
+    "agent_assigned"
+  ]
+}
