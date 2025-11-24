@@ -27,4 +27,4 @@ reactions:
 guardian_agent: "@guardian-agent"
 
 # Optional: Default GitHub Project ID to update
-default_project_id: 12345678
+default_project_id: 12345678  # Example: 12345678
