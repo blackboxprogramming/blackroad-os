@@ -1,0 +1,52 @@
+---
+title: {{AGENT_NAME}}
+description: {{AGENT_DESCRIPTION}}
+---
+
+# {{AGENT_NAME}}
+
+> Agent ID: `{{AGENT_ID}}`
+
+## Overview
+
+{{AGENT_DESCRIPTION}}
+
+## Role
+
+{{AGENT_ROLE}}
+
+## Traits
+
+{{AGENT_TRAITS_MDX}}
+
+## Configuration
+
+```json
+{
+  "id": "{{AGENT_ID}}",
+  "version": "1.0.0",
+  "triggers": ["issue_comment.created", "workflow_dispatch"]
+}
+```
+
+## Usage
+
+This agent is triggered automatically by configured events. You can also trigger it manually via workflow dispatch.
+
+### Manual Trigger
+
+1. Go to Actions tab in the repository
+2. Select "{{AGENT_NAME}} – Agent Handler"
+3. Click "Run workflow"
+
+## Files
+
+| File | Description |
+|------|-------------|
+| `agents/{{AGENT_ID}}.agent.json` | Agent specification |
+| `agents/{{AGENT_ID}}.prompt.txt` | Agent personality and instructions |
+| `.github/workflows/{{AGENT_ID}}.workflow.yml` | GitHub Actions workflow |
+
+## Created
+
+{{CREATED_AT}}

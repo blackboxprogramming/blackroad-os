@@ -1,0 +1,26 @@
+{
+  "id": "{{AGENT_ID}}",
+  "name": "{{AGENT_NAME}}",
+  "version": "1.0.0",
+  "role": "{{AGENT_ROLE}}",
+  "description": "{{AGENT_DESCRIPTION}}",
+  "traits": {{AGENT_TRAITS}},
+  "triggers": {
+    "events": ["issue_comment.created", "workflow_dispatch"],
+    "schedule": null
+  },
+  "outputs": {
+    "logs": true,
+    "artifacts": [],
+    "notifications": []
+  },
+  "dsl": {
+    "entrypoint": "agents/{{AGENT_ID}}.prompt.txt",
+    "workflow": ".github/workflows/{{AGENT_ID}}.workflow.yml"
+  },
+  "metadata": {
+    "author": "BlackRoad-OS",
+    "createdAt": "{{CREATED_AT}}",
+    "tags": {{AGENT_TAGS}}
+  }
+}
