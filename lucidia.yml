@@ -34,7 +34,7 @@ agents:
       Reacts to: ✅ ❌ 🛟 🤔 📊
       Outputs Markdown.
     triggers:
-      - source: digest.js
+      - source: bot/index.js
       - command: "summarize agent performance"
     traits:
       - math: emoji-count-ratio
@@ -91,7 +91,7 @@ routing:
     from: codex-digest-agent
     to: planner-agent
     action: escalate
-    
+
   escalation-to-guardian:
     condition: "emoji == '🛟'"
     from: any
