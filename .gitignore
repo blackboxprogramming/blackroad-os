@@ -1,3 +1,10 @@
 node_modules
 coverage
 
+# TypeScript build output
+*.js
+!bot/*.js
+!bot/**/*.js
+
+# Generated output
+spawned-agents.json
