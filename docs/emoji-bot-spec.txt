@@ -1,0 +1,38 @@
+Emoji Bot Spec (v0.1)
+====================
+
+Summary
+-------
+A GitHub Action that listens for reaction events and routes work using emojis.
+Each emoji maps to a declarative rule set defined in `emoji-bot-config.yml` and
+uses markdown templates in `bot/comments/` for replies.
+
+Events
+------
+- `reaction.created` on issues, PRs, and comments
+- Manual `workflow_dispatch` trigger for smoke testing
+
+Config
+------
+- `defaults.dryRun` toggles between logging and performing mutations
+- `defaults.templates` maps logical names to comment markdown files
+- `reactions` keys are emoji strings with actions: `addLabels`, `assign`, `close`, `template`, `note`
+- `defaults.labels` stores reusable label names to avoid duplication
+
+Actions
+-------
+For each matched reaction:
+- Apply `addLabels` using the canonical labels map
+- Assign `assign` usernames
+- Render the configured template with `actor`, `labels`, `assignees`, `context`, and `footer`
+- If `close` is true, close the issue or pull request
+
+Local Testing
+-------------
+- Run `node bot/index.js --event <path-to-sample-event.json> --dry-run`
+- Use `npm test` for the rest of the repo if needed; the bot is dependency-light
+
+Notes
+-----
+- The bot relies on `@actions/github` and the built-in `GITHUB_TOKEN`
+- Templates include a footer marker so duplicate comments are easy to find

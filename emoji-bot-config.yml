@@ -1,0 +1,56 @@
+# High-level configuration for the emoji-driven automation bot.
+# Each reaction entry maps an emoji to the actions the bot should perform.
+
+meta:
+  name: emoji-bot
+  description: GitHub-native visual automation powered by reactions.
+  maintainers:
+    - ops-team
+    - automation-guild
+
+defaults:
+  dryRun: true
+  commentFooter: "<!-- emoji-bot -->"
+  templates:
+    acknowledge: bot/comments/acknowledge.md
+    help: bot/comments/help.md
+    close: bot/comments/close.md
+    escalate: bot/comments/escalate.md
+  labels:
+    acknowledged: "status: acknowledged"
+    needsHelp: "needs: support"
+    closed: "status: closed"
+
+reactions:
+  "✅":
+    template: acknowledge
+    addLabels:
+      - acknowledged
+    assign:
+      - ops-team
+    note: Mark work as acknowledged by operations.
+
+  "🛟":
+    template: help
+    addLabels:
+      - needsHelp
+    assign:
+      - automation-guild
+    note: Route the conversation to a support agent.
+
+  "❌":
+    template: close
+    addLabels:
+      - closed
+    close: true
+    note: Close items that are explicitly rejected.
+
+  "⚡":
+    template: escalate
+    addLabels:
+      - acknowledged
+      - "priority: high"
+    assign:
+      - ops-team
+      - automation-guild
+    note: Escalate urgent work to both groups.
