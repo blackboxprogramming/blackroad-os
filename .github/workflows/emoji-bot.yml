@@ -1,0 +1,29 @@
+name: "🤖 Emoji-Bot – Reaction Handler"
+
+on:
+  issue_comment:
+    types: [created]
+  reaction:
+    types: [created]
+
+jobs:
+  emoji-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "🧬 Checkout Repo"
+        uses: actions/checkout@v3
+
+      - name: "🧠 Set up Node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: "📦 Install Dependencies"
+        run: npm install
+        working-directory: ./bot
+
+      - name: "🚦 Run Emoji Bot Handler"
+        run: node index.js
+        working-directory: ./bot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
