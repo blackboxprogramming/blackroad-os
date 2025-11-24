@@ -8,6 +8,7 @@
     "br-orchestrate": "dist/src/cli.js"
   },
   "scripts": {
+    "prepare": "npm run build",
     "lint": "pnpm run lint:ts && pnpm run lint:yaml && pnpm run format:check",
     "lint:ts": "eslint . --ext .ts,.tsx,.js,.cjs,.mjs",
     "lint:yaml": "yaml-lint orchestra.yml",
