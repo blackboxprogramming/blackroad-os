@@ -1,0 +1,29 @@
+{
+  "chronicles": {
+    "title": "Lucidia Chronicles",
+    "narrator": "Lucidia",
+    "protocol_version": "v1.2",
+    "description": "Audio digest episodes narrating significant events in the BlackRoad-OS ecosystem"
+  },
+  "episodes": [
+    {
+      "episode": 2,
+      "title": "The Digest Protocol",
+      "agent_id": "guardian-clone-vault",
+      "role": "Sentinel Overflow",
+      "reason": "18 Escalations over 72 hours",
+      "ttl": "96 hours",
+      "status": "active",
+      "created_at": "2024-01-15T00:00:00Z",
+      "assets": {
+        "mdx": "guardian-clone-vault.mdx",
+        "prompt": "guardian-clone-vault.prompt.txt",
+        "audio": "guardian-clone-vault.mp3"
+      },
+      "voice": {
+        "provider": "ElevenLabs",
+        "voice_id": "lucidia"
+      }
+    }
+  ]
+}
