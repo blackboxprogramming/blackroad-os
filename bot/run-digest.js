@@ -7,6 +7,10 @@ async function main() {
   // Check for required environment variables
   const token = process.env.GITHUB_TOKEN;
   const dryRun = process.env.DRY_RUN === "true";
+  
+  // Support GitHub Enterprise with GITHUB_API_URL, default to public GitHub
+  const apiUrl = process.env.GITHUB_API_URL || "https://api.github.com";
+  const graphqlUrl = `${apiUrl}/graphql`;
 
   if (!token) {
     console.error("❌ GITHUB_TOKEN environment variable is required");
@@ -24,11 +28,12 @@ async function main() {
 
   console.log(`📊 Generating weekly emoji digest for ${owner}/${repoName}`);
   console.log(`🔧 Dry run: ${dryRun}`);
+  console.log(`🌐 API URL: ${apiUrl}`);
 
   // Create a minimal octokit-like client
   const octokit = {
     graphql: async (query, variables) => {
-      const response = await fetch("https://api.github.com/graphql", {
+      const response = await fetch(graphqlUrl, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

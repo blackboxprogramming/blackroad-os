@@ -136,6 +136,7 @@ describe("project-status-sync", () => {
       expect(sync).toHaveProperty("updateProjectItemStatus");
       expect(sync).toHaveProperty("syncIssueStatusFromEmoji");
       expect(sync).toHaveProperty("syncIssueStatusFromReaction");
+      expect(sync).toHaveProperty("clearCache");
     });
 
     it("should cache project fields", async () => {

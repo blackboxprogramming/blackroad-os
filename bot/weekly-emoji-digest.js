@@ -404,8 +404,13 @@ function createWeeklyEmojiDigest(octokit) {
     const weekStart = new Date();
     weekStart.setDate(weekStart.getDate() - 7);
 
-    // Extract emoji counts from all issues
-    const allCounts = issues.map((issue) => extractIssueEmojis(issue));
+    // Extract emoji counts from all issues once (optimization: reuse for escalation check)
+    const issuesWithCounts = issues.map((issue) => ({
+      issue,
+      counts: extractIssueEmojis(issue),
+    }));
+    
+    const allCounts = issuesWithCounts.map(({ counts }) => counts);
     const overallCounts = aggregateCounts(allCounts);
     const overallHeatmap = generateHeatmap(overallCounts);
 
@@ -413,12 +418,10 @@ function createWeeklyEmojiDigest(octokit) {
     const agentGroups = groupIssuesByAgent(issues);
     const agentHeatmaps = generateAgentHeatmaps(agentGroups);
 
-    // Find issues with escalations
-    const topEscalations = issues
-      .filter((issue) => {
-        const counts = extractIssueEmojis(issue);
-        return counts.escalation > 0;
-      })
+    // Find issues with escalations (reuse pre-computed counts)
+    const topEscalations = issuesWithCounts
+      .filter(({ counts }) => counts.escalation > 0)
+      .map(({ issue }) => issue)
       .slice(0, 5);
 
     const digestData = {

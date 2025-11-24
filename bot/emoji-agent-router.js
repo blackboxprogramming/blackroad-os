@@ -174,7 +174,12 @@ function createEmojiAgentRouter(options = {}) {
     };
 
     if (onEscalation) {
-      await onEscalation(context, eventData);
+      try {
+        await onEscalation(context, eventData);
+      } catch (error) {
+        console.error(`⚠️ Escalation callback error: ${error.message}`);
+        result.data.callbackError = error.message;
+      }
     }
 
     console.log(
@@ -218,7 +223,12 @@ function createEmojiAgentRouter(options = {}) {
     }
 
     if (onStatusUpdate) {
-      await onStatusUpdate(context, eventData);
+      try {
+        await onStatusUpdate(context, eventData);
+      } catch (error) {
+        console.error(`⚠️ Status update callback error: ${error.message}`);
+        result.data.callbackError = error.message;
+      }
     }
 
     console.log(

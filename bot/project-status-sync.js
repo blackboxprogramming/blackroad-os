@@ -158,19 +158,36 @@ function reactionToStatus(reaction) {
 /**
  * Create a project status sync handler
  * @param {Object} octokit - GitHub Octokit instance
+ * @param {Object} options - Options
+ * @param {number} options.cacheTTL - Cache TTL in milliseconds (default: 5 minutes)
  * @returns {Object} - Handler methods
  */
-function createProjectStatusSync(octokit) {
+function createProjectStatusSync(octokit, options = {}) {
+  const cacheTTL = options.cacheTTL || 5 * 60 * 1000; // Default 5 minutes
   let cachedProjectFields = null;
   let cachedProjectId = null;
+  let cacheTimestamp = null;
+
+  /**
+   * Clear the project fields cache
+   */
+  function clearCache() {
+    cachedProjectFields = null;
+    cachedProjectId = null;
+    cacheTimestamp = null;
+  }
 
   /**
    * Fetch and cache project fields
    * @param {string} projectId - GitHub Project node ID
+   * @param {boolean} forceRefresh - Force refresh the cache
    * @returns {Promise<Array>} - Project fields
    */
-  async function getProjectFields(projectId) {
-    if (cachedProjectId === projectId && cachedProjectFields) {
+  async function getProjectFields(projectId, forceRefresh = false) {
+    const now = Date.now();
+    const cacheExpired = cacheTimestamp && (now - cacheTimestamp) > cacheTTL;
+
+    if (!forceRefresh && !cacheExpired && cachedProjectId === projectId && cachedProjectFields) {
       return cachedProjectFields;
     }
 
@@ -180,6 +197,7 @@ function createProjectStatusSync(octokit) {
 
     cachedProjectId = projectId;
     cachedProjectFields = result.node?.fields?.nodes || [];
+    cacheTimestamp = now;
     return cachedProjectFields;
   }
 
@@ -306,6 +324,7 @@ function createProjectStatusSync(octokit) {
     syncIssueStatusFromEmoji,
     syncIssueStatusFromReaction,
     findStatusFieldValue,
+    clearCache,
   };
 }
 
