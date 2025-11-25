@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts"
+    "spawn-agent": "tsx src/agents/spawn-agent.ts"
   },
   "keywords": [],
   "author": "",

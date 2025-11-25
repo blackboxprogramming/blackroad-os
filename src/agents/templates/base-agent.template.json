@@ -1,0 +1,32 @@
+{
+  "$schema": "./agent-schema.json",
+  "templateVersion": "1.0.0",
+  "defaults": {
+    "triggers": [
+      {
+        "emoji": "🤖",
+        "action": "activate"
+      }
+    ],
+    "capabilities": [
+      {
+        "name": "self-describe",
+        "description": "Agent can describe its own purpose and capabilities",
+        "enabled": true
+      },
+      {
+        "name": "issue-link",
+        "description": "Agent can be linked to GitHub issues",
+        "enabled": true
+      },
+      {
+        "name": "pr-link",
+        "description": "Agent can be linked to GitHub pull requests",
+        "enabled": true
+      }
+    ],
+    "metadata": {
+      "version": "1.0.0"
+    }
+  }
+}

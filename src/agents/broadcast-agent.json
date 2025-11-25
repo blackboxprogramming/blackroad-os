@@ -1,0 +1,54 @@
+{
+  "id": "broadcast-agent",
+  "name": "Broadcast Agent",
+  "role": "broadcast",
+  "description": "Handles notifications, announcements, and communication across channels",
+  "traits": [
+    "communicative",
+    "timely",
+    "clear",
+    "multi-channel"
+  ],
+  "triggers": [
+    {
+      "emoji": "📢",
+      "action": "announce"
+    },
+    {
+      "emoji": "🔔",
+      "action": "notify"
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "self-describe",
+      "description": "Agent can describe its own purpose and capabilities",
+      "enabled": true
+    },
+    {
+      "name": "issue-link",
+      "description": "Agent can be linked to GitHub issues",
+      "enabled": true
+    },
+    {
+      "name": "pr-link",
+      "description": "Agent can be linked to GitHub pull requests",
+      "enabled": true
+    },
+    {
+      "name": "multi-channel",
+      "description": "Agent can broadcast to multiple communication channels",
+      "enabled": true
+    },
+    {
+      "name": "notification-management",
+      "description": "Agent can manage and route notifications",
+      "enabled": true
+    }
+  ],
+  "metadata": {
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "createdBy": "system",
+    "version": "1.0.0"
+  }
+}

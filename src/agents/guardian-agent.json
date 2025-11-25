@@ -1,0 +1,63 @@
+{
+  "id": "guardian-agent",
+  "name": "Guardian Agent",
+  "role": "guardian",
+  "description": "Monitors system health, handles escalations, and ensures security compliance",
+  "traits": [
+    "vigilant",
+    "protective",
+    "responsive",
+    "security-minded"
+  ],
+  "triggers": [
+    {
+      "emoji": "🛟",
+      "action": "escalate"
+    },
+    {
+      "emoji": "🛡️",
+      "action": "protect"
+    },
+    {
+      "emoji": "🚨",
+      "action": "alert"
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "self-describe",
+      "description": "Agent can describe its own purpose and capabilities",
+      "enabled": true
+    },
+    {
+      "name": "issue-link",
+      "description": "Agent can be linked to GitHub issues",
+      "enabled": true
+    },
+    {
+      "name": "pr-link",
+      "description": "Agent can be linked to GitHub pull requests",
+      "enabled": true
+    },
+    {
+      "name": "escalation-handling",
+      "description": "Agent can handle and route escalations",
+      "enabled": true
+    },
+    {
+      "name": "security-monitoring",
+      "description": "Agent monitors for security issues",
+      "enabled": true
+    },
+    {
+      "name": "health-check",
+      "description": "Agent performs system health checks",
+      "enabled": true
+    }
+  ],
+  "metadata": {
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "createdBy": "system",
+    "version": "1.0.0"
+  }
+}

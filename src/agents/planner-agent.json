@@ -1,0 +1,54 @@
+{
+  "id": "planner-agent",
+  "name": "Planner Agent",
+  "role": "planner",
+  "description": "Orchestrates workflows, schedules tasks, and coordinates agent activities",
+  "traits": [
+    "strategic",
+    "organized",
+    "forward-thinking",
+    "coordinating"
+  ],
+  "triggers": [
+    {
+      "emoji": "📋",
+      "action": "plan"
+    },
+    {
+      "emoji": "🗓️",
+      "action": "schedule"
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "self-describe",
+      "description": "Agent can describe its own purpose and capabilities",
+      "enabled": true
+    },
+    {
+      "name": "issue-link",
+      "description": "Agent can be linked to GitHub issues",
+      "enabled": true
+    },
+    {
+      "name": "pr-link",
+      "description": "Agent can be linked to GitHub pull requests",
+      "enabled": true
+    },
+    {
+      "name": "workflow-orchestration",
+      "description": "Agent can orchestrate complex workflows",
+      "enabled": true
+    },
+    {
+      "name": "task-scheduling",
+      "description": "Agent can schedule and prioritize tasks",
+      "enabled": true
+    }
+  ],
+  "metadata": {
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "createdBy": "system",
+    "version": "1.0.0"
+  }
+}

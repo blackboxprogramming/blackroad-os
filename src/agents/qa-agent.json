@@ -1,0 +1,54 @@
+{
+  "id": "qa-agent",
+  "name": "QA Agent",
+  "role": "qa",
+  "description": "Reviews code quality, runs validation checks, and ensures standards compliance",
+  "traits": [
+    "detail-oriented",
+    "thorough",
+    "quality-focused",
+    "systematic"
+  ],
+  "triggers": [
+    {
+      "emoji": "🔍",
+      "action": "review"
+    },
+    {
+      "emoji": "✅",
+      "action": "validate"
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "self-describe",
+      "description": "Agent can describe its own purpose and capabilities",
+      "enabled": true
+    },
+    {
+      "name": "issue-link",
+      "description": "Agent can be linked to GitHub issues",
+      "enabled": true
+    },
+    {
+      "name": "pr-link",
+      "description": "Agent can be linked to GitHub pull requests",
+      "enabled": true
+    },
+    {
+      "name": "code-review",
+      "description": "Agent can perform automated code reviews",
+      "enabled": true
+    },
+    {
+      "name": "test-validation",
+      "description": "Agent can validate test coverage and results",
+      "enabled": true
+    }
+  ],
+  "metadata": {
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "createdBy": "system",
+    "version": "1.0.0"
+  }
+}
