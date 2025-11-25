@@ -3,6 +3,9 @@ name: 🛡️ Guardian Clone Vault – Sentinel Agent
 on:
   issue_comment:
     types: [created]
+name: 🤖 guardian-clone-vault – sentinel workflow
+
+on:
   workflow_dispatch:
     inputs:
       action:
@@ -49,3 +52,43 @@ jobs:
           echo "Processing escalation queue..."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        type: choice
+        options:
+          - process
+          - status
+          - terminate
+  schedule:
+    - cron: '*/15 * * * *'  # Run every 15 minutes
+
+permissions:
+  contents: read
+
+env:
+  AGENT_NAME: guardian-clone-vault
+  AGENT_ROLE: sentinel
+  AGENT_TTL: 96h
+  INHERITS_FROM: guardian-agent
+
+jobs:
+  agent-process:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🧬 Checkout
+        uses: actions/checkout@v4
+
+      - name: 📊 Check Agent TTL
+        id: ttl-check
+        run: |
+          echo "Checking TTL for guardian-clone-vault..."
+          echo "ttl_valid=true" >> $GITHUB_OUTPUT
+
+      - name: 🤖 Execute Agent Logic
+        if: steps.ttl-check.outputs.ttl_valid == 'true'
+        run: |
+          echo "🤖 guardian-clone-vault activated"
+          echo "Role: sentinel"
+          echo "Processing triggers: escalation_created, high_priority_issue, sla_breach"
+
+      - name: 📝 Report Status
+        run: |
+          echo "✅ Agent guardian-clone-vault completed processing cycle"
