@@ -1,3 +1,7 @@
 node_modules
 coverage
+dist
 
+# Generated JS files from TypeScript
+*.js
+!bot/**/*.js
