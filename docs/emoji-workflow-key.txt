@@ -1,0 +1,38 @@
+EMOJI WORKFLOW KEY
+===================
+
+Use this legend to keep status, ownership, and urgency consistent across issues, PRs, dashboards, and agent task files.
+
+Emoji  Meaning
+-----  -------------------------------------------------------------------------
+✅      Complete / Done / Success
+❌      Blocked / Rejected / Failed
+🟢     In Progress / Active
+🟡     Pending / Waiting
+🔴      Error / Critical
+🤔      Needs review / Unclear
+🆘      Urgent help needed
+🛟      Escalation point
+⚠️      Warning / Caution
+🧍‍♀️    Assigned to human
+🤖      Assigned to agent
+📋      Documentation or planning file
+✍🏼      Needs writing / notes
+📕      API subsystem (red)
+📗      Core subsystem (green)
+📘      Web subsystem (blue)
+📙      Docs subsystem (orange)
+🆕      New request
+🆗      Confirmed / Acknowledged
+🆔      ID / Tracking reference
+🔙      Backlog / Needs rework
+🔖      Taggable module / reusable agent
+🪧      UI component
+🚫      Restricted / Denied
+🛑      STOP / Invalid path
+
+Tips
+----
+- Use emoji at the start of issue/PR titles to signal status.
+- Pair status with subsystem emoji for clarity (example: 🟢📘 for active web work).
+- In plain-text trackers, align columns with monospace spacing like in this file.
