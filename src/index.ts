@@ -1,10 +1,15 @@
 import Fastify from "fastify";
 import { getBuildInfo } from "./utils/buildInfo";
 
+const SERVICE_NAME = process.env.SERVICE_NAME || "blackroad-os";
+
 export async function createServer() {
   const server = Fastify({ logger: true });
 
-  server.get("/health", async () => ({ status: "ok" }));
+  server.get("/health", async () => ({ 
+    status: "ok",
+    service: SERVICE_NAME
+  }));
 
   server.get("/version", async () => {
     const info = getBuildInfo();
@@ -15,7 +20,7 @@ export async function createServer() {
 }
 
 if (require.main === module) {
-  const port = Number(process.env.PORT || 3000);
+  const port = Number(process.env.PORT || 8080);
   createServer()
     .then((server) => server.listen({ port, host: "0.0.0.0" }))
     .then((address) => {

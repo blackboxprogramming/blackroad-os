@@ -1,11 +1,13 @@
 {
   "name": "blackroad-os",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "BlackRoad OS - A microservice infrastructure management platform",
+  "main": "dist/index.js",
   "scripts": {
     "test": "vitest",
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +25,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
+    "@types/express": "^5.0.5",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.6",
     "@types/react-dom": "^19.2.3",
