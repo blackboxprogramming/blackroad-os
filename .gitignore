@@ -34,3 +34,11 @@ dist
 
 # Generated output
 spawned-agents.json
+# Build artifacts
+*.js
+!bot/*.js
+!scripts/*.js
+
+# Generated agents directory
+agents/
+

@@ -25,6 +25,12 @@ on:
         required: false
         default: "alexa"
         type: string
+name: 🧬 Lucidia Spawn Runner
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"  # Every 6 hours
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -37,6 +43,12 @@ jobs:
         uses: actions/checkout@v3
 
       - name: 🧠 Set up Node
+  spawn-runner:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -83,3 +95,8 @@ jobs:
             "$LUCIDIA_WEBHOOK"
           
           echo "✅ Notification sent to webhook"
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Spawn Runner
+        run: node bot/spawn-runner.js

@@ -50,3 +50,41 @@ spawn_rules:
         traits: ["batch-escalation", "priority-router"]
         parent: guardian-agent
         ttl: 24h
+# Spawn rules based on signals and emoji heatmaps
+
+spawn_rules:
+  - name: "Escalation Surge Handler"
+    if:
+      escalations_last_7_days: ">10"
+    then:
+      spawn: "escalation-handler"
+      config:
+        priority: "high"
+        ttl: "72h"
+
+  - name: "Blocked Issue Resolver"
+    if:
+      average_blocked_pct: ">20"
+    then:
+      spawn: "blocked-resolver"
+      config:
+        priority: "medium"
+        ttl: "48h"
+
+  - name: "Repo Activity Monitor"
+    if:
+      created_repos_last_72h: ">5"
+    then:
+      spawn: "repo-watcher"
+      config:
+        priority: "low"
+        ttl: "24h"
+
+  - name: "Digest Overload Handler"
+    if:
+      digest_count: ">5"
+    then:
+      spawn: "digest-processor"
+      config:
+        priority: "medium"
+        ttl: "12h"
