@@ -1,0 +1,29 @@
+{
+  "id": "scribe-agent-alpha",
+  "name": "Scribe Agent Alpha",
+  "version": "1.0.0",
+  "role": "Documentation Architect",
+  "description": "The Scribe Agent Alpha is responsible for documentation architecture, markdown spec generation, and OS memory updates.",
+  "trigger": {
+    "agent": "digest-agent",
+    "condition": "storyDensity > 0.80"
+  },
+  "capabilities": [
+    "markdown-spec-generation",
+    "os-memory-updates",
+    "chronicle-archival"
+  ],
+  "output": {
+    "formats": ["markdown", "mdx", "json"],
+    "targets": ["lucidia-chronicles", "docs"]
+  },
+  "spawn": {
+    "reason": "Story Density > 80% in recent digests",
+    "timestamp": "2025-11-24",
+    "episode": 3
+  },
+  "protocol": {
+    "name": "Scribe Protocol",
+    "version": "v2.1"
+  }
+}
