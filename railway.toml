@@ -18,4 +18,4 @@ ENVIRONMENT = "production"
 
 [resources]
 cpu = 1
-memory = "1024MB"
+memory = 1024
