@@ -1,0 +1,14 @@
+# 🔌 Connector Status Emoji Map
+
+⬜ = Not connected  
+🟡 = Pending / Partial  
+🟢 = Active / Healthy  
+🔴 = Broken / Error  
+🛑 = Forbidden / Missing credentials  
+🆔 = Identity verified  
+📡 = Webhook active  
+🧬 = Agent sync enabled  
+🔐 = API key present  
+🔑 = Token rotated
+
+🧠 Use these flags in connector dashboards, README tables, or GitHub Project fields!
