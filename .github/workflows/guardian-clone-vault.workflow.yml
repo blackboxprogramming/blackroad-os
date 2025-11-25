@@ -1,0 +1,51 @@
+name: 🛡️ Guardian Clone Vault – Sentinel Agent
+
+on:
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        default: 'triage'
+        type: choice
+        options:
+          - triage
+          - warm-up
+          - status
+          - deactivate
+
+jobs:
+  guardian-clone-vault:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: 🧬 Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: 🧠 Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 📦 Load Agent Config
+        id: config
+        run: |
+          CONFIG=$(cat agents/guardian-clone-vault.agent.json)
+          echo "agent_id=$(echo $CONFIG | jq -r '.id')" >> $GITHUB_OUTPUT
+          echo "role=$(echo $CONFIG | jq -r '.role')" >> $GITHUB_OUTPUT
+          echo "ttl=$(echo $CONFIG | jq -r '.ttl')" >> $GITHUB_OUTPUT
+
+      - name: 🛡️ Run Guardian Clone Vault Handler
+        run: |
+          echo "🛡️ Guardian Clone Vault Activated"
+          echo "Agent ID: ${{ steps.config.outputs.agent_id }}"
+          echo "Role: ${{ steps.config.outputs.role }}"
+          echo "TTL: ${{ steps.config.outputs.ttl }}"
+          echo "Action: ${{ github.event.inputs.action || 'triage' }}"
+          echo "---"
+          echo "Processing escalation queue..."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

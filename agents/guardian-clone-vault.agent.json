@@ -1,0 +1,15 @@
+{
+  "id": "guardian-clone-vault",
+  "role": "sentinel",
+  "traits": ["incident-response", "triage", "overflow"],
+  "ttl": "96h",
+  "inherits_from": "guardian-agent",
+  "spawned_by": "lucidia.spawn-runner.js",
+  "spawn_reason": "escalation-overflow",
+  "metadata": {
+    "created_at": "2025-11-24T23:11:14.529Z",
+    "escalations_logged": 18,
+    "parent_load_capacity": "85%",
+    "auto_deactivate": true
+  }
+}
