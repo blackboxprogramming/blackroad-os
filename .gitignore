@@ -1,3 +1,12 @@
 node_modules
 coverage
 
+# Build artifacts
+*.js
+!*.config.js
+!vitest.config.js
+*.js.map
+
+# But keep the actual source .ts files
+!*.ts
+!*.tsx

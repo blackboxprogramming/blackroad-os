@@ -1,0 +1,43 @@
+{
+  "version": "1.0.0",
+  "narrator": "Lucidia",
+  "episodes": [
+    {
+      "id": "episode-002-digest-protocol",
+      "episode": 2,
+      "title": "The Digest Protocol",
+      "agentId": "guardian-clone-vault",
+      "role": "Sentinel Overflow",
+      "reason": "18 Escalations over 72 hours",
+      "escalations": 18,
+      "ttlHours": 96,
+      "audioUrl": "",
+      "docUrl": "",
+      "narrator": "Lucidia",
+      "protocolVersion": "1.2",
+      "status": "pending",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "approvedBy": null
+    }
+  ],
+  "scheduledEpisodes": [
+    {
+      "id": "episode-003-planners-reckoning",
+      "title": "The Planner's Reckoning",
+      "scheduledFor": "",
+      "status": "scheduled"
+    },
+    {
+      "id": "episode-004-scribe-awakens",
+      "title": "Scribe Awakens",
+      "scheduledFor": "",
+      "status": "scheduled"
+    },
+    {
+      "id": "episode-005-guardian-shattered",
+      "title": "Guardian Shattered",
+      "scheduledFor": "",
+      "status": "scheduled"
+    }
+  ]
+}
