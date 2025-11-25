@@ -1,0 +1,44 @@
+# 🌀 GitHub Projects – Emoji Field Conventions
+
+🎯 STATUS Field (Progress):
+⬜ = Not Started  
+🟡 = In Progress  
+✅ = Done  
+❌ = Blocked  
+🔁 = In Review  
+🔄 = Needs Rework  
+📦 = Shipped
+
+👤 OWNER Field:
+🧍‍♀️ = Human (assigned)  
+🤖 = Agent (autonomous)  
+👥 = Team  
+👽 = Unknown / External
+
+📅 SPRINT / TIME Field:
+🗓️ = Current sprint  
+📆 = Future sprint  
+🕰️ = Delayed  
+⏳ = ETA slipping  
+🛑 = Stopped
+
+💵 COST Field:
+💸 = High Cost  
+💰 = Budgeted  
+🧾 = Needs Estimation  
+🔐 = Redacted / Secure
+
+📊 EFFORT Field:
+1️⃣ = 1 story point  
+3️⃣ = 3 points  
+5️⃣ = 5 points  
+🔟 = 10 points  
+🎯 = OKR-linked
+
+🔢 PRIORITY Field:
+🔥 = Highest  
+⚡ = High  
+💡 = Medium  
+🌱 = Low  
+🪞 = Nice to have
+
