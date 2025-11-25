@@ -1,0 +1,17 @@
+default_project_id: 4567890
+
+projects:
+  "BlackRoad-OS/blackroad-os-api":
+    status_field_id: "PVTSTATUS1"
+    emoji_map:
+      "✅": "Done"
+      "🟡": "In Progress"
+      "⬜": "Not Started"
+      "❌": "Blocked"
+  blackroad-os:
+    status_field_id: "PVTSTATUS1"
+    emoji_map:
+      "✅": "Done"
+      "🟡": "In Progress"
+      "⬜": "Not Started"
+      "❌": "Blocked"
