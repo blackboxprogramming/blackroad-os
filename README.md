@@ -1,5 +1,9 @@
 # BlackRoad OS
 
+> 🧠 **Org Brain & Map 🧭** – top-level nerve center for the entire BlackRoad OS constellation.
+>
+> 📖 **New here?** Start with [REPO_PERSONA.md](./REPO_PERSONA.md) to understand this repo's role and navigate the ecosystem.
+
 A microservice infrastructure management platform for the BlackRoad ecosystem.
 
 ## Service Purpose
