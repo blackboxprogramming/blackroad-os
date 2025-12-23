@@ -1,31 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "CommonJS",
-    "moduleResolution": "Node",
-    "esModuleInterop": true,
-    "jsx": "react-jsx",
-    "strict": true,
-    "baseUrl": "./",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "skipLibCheck": true,
-    "types": ["node", "vitest/globals", "@testing-library/jest-dom"]
-  },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
-  "include": ["src", "lib", "components", "tests", "app", "chronicles", "vitest.config.ts"],
-  "exclude": ["node_modules"]
     "target": "ES2021",
     "module": "ESNext",
     "moduleResolution": "Node",
     "esModuleInterop": true,
+    "jsx": "react-jsx",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "outDir": "dist"
+    "baseUrl": "./",
+    "outDir": "./dist",
+    "types": ["node", "vitest/globals", "@testing-library/jest-dom"]
   },
-  "include": ["src", "tests", "scripts"],
+  "include": ["src", "lib", "components", "tests", "app", "chronicles", "vitest.config.ts", "scripts"],
   "exclude": ["node_modules", "dist"]
 }

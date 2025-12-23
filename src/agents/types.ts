@@ -26,6 +26,7 @@ export interface AgentMetadata {
   lastModified?: string;
 }
 
+/**
  * Agent type definition for BlackRoad OS Genesis Agents
  */
 export interface Agent {
@@ -47,24 +48,16 @@ export interface AgentTemplate {
   defaults: Omit<Partial<Agent>, 'metadata'> & { metadata?: Partial<AgentMetadata> };
 }
 
-export type AgentRole = 
-  | "scribe" 
-  | "qa" 
-  | "planner" 
-  | "broadcast" 
-  | "guardian" 
-  | "digest" 
-  | "archive" 
+export type AgentRole =
+  | "scribe"
+  | "qa"
+  | "planner"
+  | "broadcast"
+  | "guardian"
+  | "digest"
+  | "archive"
   | "support"
   | "custom";
-  traits: string[];
-  inputs: string[];
-  outputs: string[];
-  description: string;
-  triggers: string[];
-  inherits_from: string | null;
-  active?: boolean;
-}
 
 /**
  * Agent validation result

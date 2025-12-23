@@ -1,15 +1,3 @@
-[build]
-builder = "NIXPACKS"
-
-[deploy]
-startCommand = "npm run start"
-healthcheckPath = "/health"
-restartPolicy = "on-failure"
-
-[variables]
-SERVICE_NAME = "blackroad-os"
-PORT = "8080"
-ENVIRONMENT = "production"
 # railway.toml
 # Railway deployment configuration for blackroad-os
 

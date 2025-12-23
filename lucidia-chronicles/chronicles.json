@@ -1,4 +1,7 @@
 {
+  "title": "Lucidia Chronicles",
+  "description": "The canonical narrative archive of BlackRoad-OS agent evolution",
+  "version": "1.0.0",
   "episodes": [
     {
       "id": "episode-001",
@@ -15,10 +18,7 @@
       "date": "2025-11-24",
       "mp3": "https://example.com/audio/guardian-clone-vault.mp3",
       "transcript": true
-  "title": "Lucidia Chronicles",
-  "description": "The canonical narrative archive of BlackRoad-OS agent evolution",
-  "version": "1.0.0",
-  "episodes": [
+    },
     {
       "episode": 3,
       "title": "The Scribe's Awakening",

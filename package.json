@@ -7,14 +7,29 @@
     "test": "vitest",
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts"
-    "spawn-agent": "tsx src/agents/spawn-agent.ts"
-    "spawn-agent": "node scripts/spawn-agent.js"
+    "dev": "ts-node src/index.ts",
+    "spawn-agent": "node scripts/spawn-agent.js",
+    "prepare": "npm run build",
+    "lint": "pnpm run lint:ts && pnpm run lint:yaml && pnpm run format:check",
+    "lint:ts": "eslint . --ext .ts,.tsx,.js,.cjs,.mjs",
+    "lint:yaml": "yaml-lint orchestra.yml",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "postbuild": "tsx scripts/postbuild.ts",
+    "br-orchestrate": "tsx src/cli.ts"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "br-orchestrate": "dist/src/cli.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.1",
@@ -23,7 +38,6 @@
     "express": "^5.1.0",
     "fastify": "^5.6.2",
     "ioredis": "^5.8.2",
-    "js-yaml": "^4.1.0",
     "js-yaml": "^4.1.1",
     "node-cron": "^4.2.1",
     "react": "^19.2.0",
@@ -34,54 +48,23 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@types/express": "^5.0.5",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.6",
     "@types/react-dom": "^19.2.3",
     "@types/supertest": "^6.0.3",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
     "@vitejs/plugin-react": "^5.1.1",
+    "eslint": "^8.56.0",
     "jsdom": "^27.2.0",
+    "prettier": "^3.1.0",
     "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.13"
-  "version": "0.1.0",
-  "license": "MIT",
-  "private": true,
-  "type": "module",
-  "bin": {
-    "br-orchestrate": "dist/src/cli.js"
-  },
-  "scripts": {
-    "prepare": "npm run build",
-    "lint": "pnpm run lint:ts && pnpm run lint:yaml && pnpm run format:check",
-    "lint:ts": "eslint . --ext .ts,.tsx,.js,.cjs,.mjs",
-    "lint:yaml": "yaml-lint orchestra.yml",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "test": "vitest run",
-    "typecheck": "tsc --noEmit",
-    "build": "tsc",
-    "postbuild": "tsx scripts/postbuild.ts",
-    "br-orchestrate": "tsx src/cli.ts"
-  },
-  "engines": {
-    "node": ">=18"
-  },
-  "devDependencies": {
-    "@types/js-yaml": "^4.0.9",
-    "@typescript-eslint/eslint-plugin": "^7.0.0",
-    "@typescript-eslint/parser": "^7.0.0",
-    "eslint": "^8.56.0",
-    "js-yaml": "^4.1.0",
-    "prettier": "^3.1.0",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.19.2",
-    "typescript": "^5.3.3",
-    "vitest": "^1.0.4",
+    "vitest": "^4.0.13",
     "yaml-lint": "^1.2.4",
     "zod": "^3.22.4"
-    "vitest": "^4.0.13",
-    "yaml": "^2.8.1"
   }
 }

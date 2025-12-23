@@ -1,23 +1,3 @@
-name: 🛡️ Guardian Clone Vault – Sentinel Agent
-
-on:
-  issue_comment:
-    types: [created]
-name: 🤖 guardian-clone-vault – sentinel workflow
-
-on:
-  workflow_dispatch:
-    inputs:
-      action:
-        description: 'Action to perform'
-        required: true
-        default: 'triage'
-        type: choice
-        options:
-          - triage
-          - warm-up
-          - status
-          - deactivate
 name: 🛡️ Guardian Clone Vault - Automated Backup
 
 on:
@@ -41,67 +21,34 @@ on:
         required: false
         default: 'all'
         type: string
+      action:
+        description: 'Action to perform'
+        required: true
+        default: 'triage'
+        type: choice
+        options:
+          - triage
+          - warm-up
+          - status
+          - deactivate
+          - run
+          - warm-up
+          - deactivate
+          - process
+          - status
+          - terminate
   repository_dispatch:
     types:
       - guardian.config.updated
       - guardian.state.changed
       - vault.backup.scheduled
       - restore.requested
-        default: 'run'
-        type: choice
-        options:
-          - run
-          - warm-up
-          - deactivate
-  schedule:
-    - cron: '0 */6 * * *'  # Run every 6 hours
+  issue_comment:
+    types: [created]
 
 permissions:
-  contents: read
-
-jobs:
-  guardian-clone-vault:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: 🧬 Checkout Repo
-        uses: actions/checkout@v3
-
-      - name: 🧠 Set up Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: 📦 Load Agent Config
-        id: config
-        run: |
-          CONFIG=$(cat agents/guardian-clone-vault.agent.json)
-          echo "agent_id=$(echo $CONFIG | jq -r '.id')" >> $GITHUB_OUTPUT
-          echo "role=$(echo $CONFIG | jq -r '.role')" >> $GITHUB_OUTPUT
-          echo "ttl=$(echo $CONFIG | jq -r '.ttl')" >> $GITHUB_OUTPUT
-
-      - name: 🛡️ Run Guardian Clone Vault Handler
-        run: |
-          echo "🛡️ Guardian Clone Vault Activated"
-          echo "Agent ID: ${{ steps.config.outputs.agent_id }}"
-          echo "Role: ${{ steps.config.outputs.role }}"
-          echo "TTL: ${{ steps.config.outputs.ttl }}"
-          echo "Action: ${{ github.event.inputs.action || 'triage' }}"
-          echo "---"
-          echo "Processing escalation queue..."
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        type: choice
-        options:
-          - process
-          - status
-          - terminate
-  schedule:
-    - cron: '*/15 * * * *'  # Run every 15 minutes
-
-permissions:
-  contents: read
+  contents: write
+  actions: read
 
 env:
   AGENT_NAME: guardian-clone-vault
@@ -110,31 +57,11 @@ env:
   INHERITS_FROM: guardian-agent
 
 jobs:
-  agent-process:
+  guardian-clone-vault:
     runs-on: ubuntu-latest
-    steps:
-      - name: 🧬 Checkout
-        uses: actions/checkout@v4
-
-      - name: 📊 Check Agent TTL
-        id: ttl-check
-        run: |
-          echo "Checking TTL for guardian-clone-vault..."
-          echo "ttl_valid=true" >> $GITHUB_OUTPUT
-
-      - name: 🤖 Execute Agent Logic
-        if: steps.ttl-check.outputs.ttl_valid == 'true'
-        run: |
-          echo "🤖 guardian-clone-vault activated"
-          echo "Role: sentinel"
-          echo "Processing triggers: escalation_created, high_priority_issue, sla_breach"
-
-      - name: 📝 Report Status
-        run: |
-          echo "✅ Agent guardian-clone-vault completed processing cycle"
+    permissions:
       contents: write
       actions: read
-
     steps:
       - name: 🧬 Checkout Repository
         uses: actions/checkout@v4
@@ -159,18 +86,34 @@ jobs:
             echo "::warning::Agent configuration not found"
           fi
 
+      - name: 📊 Check Agent TTL
+        id: ttl-check
+        run: |
+          echo "Checking TTL for guardian-clone-vault..."
+          echo "ttl_valid=true" >> $GITHUB_OUTPUT
+
       - name: 🛡️ Execute Guardian Clone Vault
         id: execute
+        if: steps.ttl-check.outputs.ttl_valid == 'true'
         env:
           OPERATION: ${{ github.event.inputs.operation || 'backup' }}
           TARGET: ${{ github.event.inputs.target || 'all' }}
+          ACTION: ${{ github.event.inputs.action || 'triage' }}
           EVENT_TYPE: ${{ github.event_name }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AGENT_ID: guardian-clone-vault
+          AGENT_ROLE: sentinel
+          AGENT_TTL: 96h
         run: |
           echo "🤖 Guardian Clone Vault Agent Activated"
           echo "Operation: $OPERATION"
           echo "Target: $TARGET"
+          echo "Action: $ACTION"
           echo "Event Type: $EVENT_TYPE"
+          echo "Role: sentinel"
+          echo "Traits: incident-response, triage, overflow"
+          echo "TTL: 96h"
+          echo "Inherits From: guardian-agent"
 
           # Create vault directory if it doesn't exist
           mkdir -p vault/guardian-clones
@@ -251,15 +194,3 @@ jobs:
           echo "| Target | ${{ github.event.inputs.target || 'all' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Status | ${{ steps.execute.outputs.status }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Timestamp | $(date -Iseconds) |" >> $GITHUB_STEP_SUMMARY
-      - name: 🛡️ Run Guardian Clone Vault Agent
-        run: |
-          echo "🛡️ Guardian Clone Vault Activated"
-          echo "Role: sentinel"
-          echo "Traits: incident-response, triage, overflow"
-          echo "TTL: 96h"
-          echo "Inherits From: guardian-agent"
-          echo "Action: ${{ github.event.inputs.action || 'scheduled-run' }}"
-        env:
-          AGENT_ID: guardian-clone-vault
-          AGENT_ROLE: sentinel
-          AGENT_TTL: 96h

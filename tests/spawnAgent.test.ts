@@ -13,6 +13,10 @@ describe("spawn-agent", () => {
     // Create test output directory
     if (!fs.existsSync(TEST_OUTPUT_DIR)) {
       fs.mkdirSync(TEST_OUTPUT_DIR, { recursive: true });
+    }
+  });
+});
+
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
 import { execSync } from "child_process";
 import fs from "fs";

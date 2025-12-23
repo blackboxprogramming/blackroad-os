@@ -73,6 +73,9 @@ describe("lucidia.yml", () => {
     expect(lucidia.outputs["markdown-summary"].format).toBe("markdown");
     expect(lucidia.outputs["actionable-recommendations"]).toBeDefined();
     expect(lucidia.outputs["escalation-alerts"]).toBeDefined();
+  });
+});
+
 import { Lucidia, createLucidia } from "../src/lucidia";
 import type { SpawnRulesConfig, Metrics } from "../src/lucidia/types";
 

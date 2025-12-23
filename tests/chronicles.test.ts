@@ -72,6 +72,10 @@ describe("chronicles registry", () => {
       expect(chronicleRegistry.episodes).toContain(episode001);
       expect(chronicleRegistry.totalEpisodes).toBe(1);
       expect(chronicleRegistry.latestEpisodeId).toBe("001");
+    });
+  });
+});
+
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import * as fs from "fs";
 import * as path from "path";
