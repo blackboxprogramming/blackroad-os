@@ -19,6 +19,8 @@ jobs:
         run: node scripts/validate-registry.mjs
       - name: Validate Registry/agents.json
         run: node scripts/validate-agents.mjs
+      - name: Check agent roster matches index.html
+        run: node scripts/validate-agents-roster.mjs
       - name: Validate Registry/orgs.json + domains.json
         run: node scripts/validate-collections.mjs
       - name: Check index.html PRODUCTS is in sync with the registry
