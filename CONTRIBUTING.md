@@ -24,6 +24,26 @@ CI (`.github/workflows/registry.yml`) runs both on every push/PR and **fails
 if the registry is invalid or `index.html` has drifted** from it. That is what
 prevents two copies of the truth from diverging.
 
+## Windows are a registry too
+
+The OS windows/apps follow the same pattern. `Registry/windows.json` is the
+source of truth for every window (id, label, kind, status, DOM element, open/close
+functions). It generates the `WINDOW_REGISTRY` const in `index.html`; the
+`ACTION_TO_ROUTE` (folder/desktop click → route) and `CLOSE_BY_WIN_ID`
+(Esc / window-stack manager) maps **derive from it at runtime**, so the manifest
+is load-bearing — not decorative.
+
+```bash
+node scripts/sync-windows.mjs       # regenerate WINDOW_REGISTRY in index.html
+node scripts/validate-windows.mjs   # schema + cross-check vs index.html (DOM + fns)
+```
+
+The validator fails if the registry names a window whose element/functions are
+missing, or if `index.html` has a real window (a `closeXxx()` + `xxxWindow`
+element) that isn't in the registry. To add a window: build its markup +
+`openXxx`/`closeXxx` handlers as usual, then add one row to
+`Registry/windows.json` and run the two commands above.
+
 ## Branch & commit workflow
 
 1. **One branch per agent/task.** Never push directly to `main`. Each worker
@@ -61,6 +81,9 @@ To add/change a product: edit the JSON → `node scripts/sync-products.mjs` →
 
 | Task | Command |
 |------|---------|
-| Regenerate `index.html` from registry | `node scripts/sync-products.mjs` |
-| Fail if `index.html` drifted (CI mode) | `node scripts/sync-products.mjs --check` |
-| Validate the registry | `node scripts/validate-registry.mjs` |
+| Regenerate products in `index.html` | `node scripts/sync-products.mjs` |
+| Fail if products drifted (CI mode) | `node scripts/sync-products.mjs --check` |
+| Validate the product registry | `node scripts/validate-registry.mjs` |
+| Regenerate windows in `index.html` | `node scripts/sync-windows.mjs` |
+| Fail if windows drifted (CI mode) | `node scripts/sync-windows.mjs --check` |
+| Validate the window registry | `node scripts/validate-windows.mjs` |
