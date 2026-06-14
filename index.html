@@ -11774,187 +11774,590 @@
     { range: "172",     label: "Continue / Next Road" }
   ];
 
-  const DOMAINS = [
-    { num:"01", id:"blackroad-io", name:"blackroad.io",
-      board:"Product / RoadOS public universe",
-      status:"active", queue:12, blocked:2, stageIdx:7,
-      owns:["products","public app surfaces","RoadOS shell","demos","product visibility"],
-      permission:"open", receipts:"writing",
-      nextRoads:["product.blackroad.io","roadmap.blackroad.io","roadchain.io"],
-      products:["RoadOS","RoadWorld","RoadMap","RoadShow"],
-      agents:["Lucidia","Roadie","Aria","Sapphira"] },
-
-    { num:"02", id:"blackroad-company", name:"blackroad.company",
-      board:"Company / org operations",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["company surface","hiring","ops pages"],
-      permission:"awaiting CarKeys", receipts:"none yet",
-      nextRoads:["blackroadinc.us","blackroad.io"],
-      products:["OfficeRoad","RoadView"],
-      agents:["Theodosia","Octavia","Cecilia"] },
-
-    { num:"03", id:"blackroad-me", name:"blackroad.me",
-      board:"Personal / operator surface",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["personal pages","identity","profile"],
-      permission:"operator gated", receipts:"none yet",
-      nextRoads:["blackroad.io","lucidia.studio"],
-      products:["GloveBox","BackRoad"],
-      agents:["Cordelia","Anastasia","Seraphina"] },
-
-    { num:"04", id:"blackroad-network", name:"blackroad.network",
-      board:"Network / federation gates",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["federation peers","presence","routing"],
-      permission:"gated", receipts:"none yet",
-      nextRoads:["blackroad.systems","roadchain.io"],
-      products:["CarPool","RoadWire"],
-      agents:["Gaia","Aria","Lucidia"] },
-
-    { num:"05", id:"blackroad-systems", name:"blackroad.systems",
-      board:"Infra / runtime / system ops",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["runtime","deploy targets","health"],
-      permission:"gated", receipts:"none yet",
-      nextRoads:["blackroad.network","blackroadinc.us"],
-      products:["PitStop","HighWay","RoadView","Detour"],
-      agents:["Gaia","Silas","Seraphina"] },
-
-    { num:"06", id:"blackroadai-com", name:"blackroadai.com",
-      board:"AI / model surface",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["model endpoints","agent surface"],
-      permission:"secrets gated", receipts:"none yet",
-      nextRoads:["lucidiaqi.com","aliceqi.com"],
-      products:["RoadCode","RoadTrip","RoadView"],
-      agents:["Lucidia","Gematria","Sophia"] },
-
-    { num:"07", id:"blackroadinc-us", name:"blackroadinc.us",
-      board:"Legal entity / US incorporation",
-      status:"needs_permission", queue:3, blocked:1, stageIdx:5,
-      owns:["corporate filings","contracts surface"],
-      permission:"awaiting CarKeys + Atticus", receipts:"pending",
-      nextRoads:["blackroad.company","blackroad.io"],
-      products:["CarKeys","RoadCoin","RoadChain"],
-      agents:["Atticus","Valeria","Theodosia","Portia"] },
-
-    { num:"08", id:"blackroadqi-com", name:"blackroadqi.com",
-      board:"QI / quantum identity surface",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["qi identity","signed objects"],
-      permission:"gated", receipts:"none yet",
-      nextRoads:["blackroadquantum.com","lucidiaqi.com"],
-      products:["CarKeys","RoadChain"],
-      agents:["Seraphina","Gematria"] },
-
-    { num:"09", id:"blackroadquantum-com", name:"blackroadquantum.com",
-      board:"Quantum / research surface",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["research pages","math surface"],
-      permission:"open after publish", receipts:"none yet",
-      nextRoads:["blackroadquantum.net","blackroadquantum.info"],
-      products:["RoadBook","BlackBoard"],
-      agents:["Gematria","Ophelia","Sophia"] },
-
-    { num:"10", id:"blackroadquantum-info", name:"blackroadquantum.info",
-      board:"Quantum docs / informational",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["public docs","explainers"],
-      permission:"open", receipts:"none yet",
-      nextRoads:["blackroadquantum.com"],
-      products:["RoadBook","RoadShow"],
-      agents:["Cicero","Thalia"] },
-
-    { num:"11", id:"blackroadquantum-net", name:"blackroadquantum.net",
-      board:"Quantum / federation",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["peer network for quantum nodes"],
-      permission:"gated", receipts:"none yet",
-      nextRoads:["blackroad.network"],
-      products:["RoadWire","CarPool"],
-      agents:["Gaia","Lucidia"] },
-
-    { num:"12", id:"blackroadquantum-shop", name:"blackroadquantum.shop",
-      board:"Quantum / commerce",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["paid quantum products"],
-      permission:"payment gated", receipts:"none yet",
-      nextRoads:["blackroadquantum.store","roadcoin.io"],
-      products:["RoadCoin","OneWay"],
-      agents:["Valeria","Calliope"] },
-
-    { num:"13", id:"blackroadquantum-store", name:"blackroadquantum.store",
-      board:"Quantum / catalog",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["storefront catalog"],
-      permission:"gated", receipts:"none yet",
-      nextRoads:["blackroadquantum.shop"],
-      products:["RoadCoin","RoadShow"],
-      agents:["Calliope","Sapphira"] },
-
-    { num:"14", id:"blackboxprogramming-io", name:"blackboxprogramming.io",
-      board:"Engineering / public dev surface",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["dev docs","public engineering pages"],
-      permission:"open", receipts:"none yet",
-      nextRoads:["blackroadai.com","blackroad.io"],
-      products:["RoadCode","RoadBook"],
-      agents:["Sebastian","Elias","Cicero"] },
-
-    { num:"15", id:"aliceqi-com", name:"aliceqi.com",
-      board:"Alice — file / index assistant surface",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["alice agent endpoints"],
-      permission:"gated", receipts:"none yet",
-      nextRoads:["lucidiaqi.com","blackroadqi.com"],
-      products:["RoadBook","GloveBox"],
-      agents:["Alice","Anastasia"] },
-
-    { num:"16", id:"lucidia-earth", name:"lucidia.earth",
-      board:"Lucidia — public lighthouse",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["lucidia public face"],
-      permission:"open", receipts:"none yet",
-      nextRoads:["lucidia.studio","blackroad.io"],
-      products:["RoadOS","RoadShow"],
-      agents:["Lucidia","Calliope"] },
-
-    { num:"17", id:"lucidia-studio", name:"lucidia.studio",
-      board:"Lucidia studio / making things",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["studio sessions","creative pipelines"],
-      permission:"gated", receipts:"none yet",
-      nextRoads:["lucidia.earth","lucidiaqi.com"],
-      products:["BlackBoard","RoadBand","RoadStream"],
-      agents:["Sapphira","Lyra","Calliope"] },
-
-    { num:"18", id:"lucidiaqi-com", name:"lucidiaqi.com",
-      board:"Lucidia QI — agent identity",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["lucidia signed identity"],
-      permission:"gated", receipts:"none yet",
-      nextRoads:["blackroadqi.com","aliceqi.com"],
-      products:["CarKeys","RoadChain"],
-      agents:["Lucidia","Seraphina"] },
-
-    { num:"19", id:"roadchain-io", name:"roadchain.io",
-      board:"Receipts / chain-of-custody",
-      status:"needs_proof", queue:2, blocked:0, stageIdx:6,
-      owns:["receipts ledger","audit surface"],
-      permission:"write gated", receipts:"scaffolded",
-      nextRoads:["blackroad.io","roadcoin.io"],
-      products:["RoadChain","RoadView"],
-      agents:["Theodosia","Anastasia","Seraphina"] },
-
-    { num:"20", id:"roadcoin-io", name:"roadcoin.io",
-      board:"Payments / credits",
-      status:"needs_permission", queue:1, blocked:1, stageIdx:6,
-      owns:["credits ledger","billing surface"],
-      permission:"payment gated", receipts:"none yet",
-      nextRoads:["roadchain.io","blackroad.io"],
-      products:["RoadCoin"],
-      agents:["Valeria","Theodosia","Atticus"] }
+  /* AUTO-GENERATED:DOMAINS:START — source of truth: Registry/domains.json · regenerate: node scripts/sync-collections.mjs · do not hand-edit */
+  const DOMAINS =
+  [
+    {
+      "num": "01",
+      "id": "blackroad-io",
+      "name": "blackroad.io",
+      "board": "Product / RoadOS public universe",
+      "status": "active",
+      "queue": 12,
+      "blocked": 2,
+      "stageIdx": 7,
+      "owns": [
+        "products",
+        "public app surfaces",
+        "RoadOS shell",
+        "demos",
+        "product visibility"
+      ],
+      "permission": "open",
+      "receipts": "writing",
+      "nextRoads": [
+        "product.blackroad.io",
+        "roadmap.blackroad.io",
+        "roadchain.io"
+      ],
+      "products": [
+        "RoadOS",
+        "RoadWorld",
+        "RoadMap",
+        "RoadShow"
+      ],
+      "agents": [
+        "Lucidia",
+        "Roadie",
+        "Aria",
+        "Sapphira"
+      ]
+    },
+    {
+      "num": "02",
+      "id": "blackroad-company",
+      "name": "blackroad.company",
+      "board": "Company / org operations",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "company surface",
+        "hiring",
+        "ops pages"
+      ],
+      "permission": "awaiting CarKeys",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroadinc.us",
+        "blackroad.io"
+      ],
+      "products": [
+        "OfficeRoad",
+        "RoadView"
+      ],
+      "agents": [
+        "Theodosia",
+        "Octavia",
+        "Cecilia"
+      ]
+    },
+    {
+      "num": "03",
+      "id": "blackroad-me",
+      "name": "blackroad.me",
+      "board": "Personal / operator surface",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "personal pages",
+        "identity",
+        "profile"
+      ],
+      "permission": "operator gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroad.io",
+        "lucidia.studio"
+      ],
+      "products": [
+        "GloveBox",
+        "BackRoad"
+      ],
+      "agents": [
+        "Cordelia",
+        "Anastasia",
+        "Seraphina"
+      ]
+    },
+    {
+      "num": "04",
+      "id": "blackroad-network",
+      "name": "blackroad.network",
+      "board": "Network / federation gates",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "federation peers",
+        "presence",
+        "routing"
+      ],
+      "permission": "gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroad.systems",
+        "roadchain.io"
+      ],
+      "products": [
+        "CarPool",
+        "RoadWire"
+      ],
+      "agents": [
+        "Gaia",
+        "Aria",
+        "Lucidia"
+      ]
+    },
+    {
+      "num": "05",
+      "id": "blackroad-systems",
+      "name": "blackroad.systems",
+      "board": "Infra / runtime / system ops",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "runtime",
+        "deploy targets",
+        "health"
+      ],
+      "permission": "gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroad.network",
+        "blackroadinc.us"
+      ],
+      "products": [
+        "PitStop",
+        "HighWay",
+        "RoadView",
+        "Detour"
+      ],
+      "agents": [
+        "Gaia",
+        "Silas",
+        "Seraphina"
+      ]
+    },
+    {
+      "num": "06",
+      "id": "blackroadai-com",
+      "name": "blackroadai.com",
+      "board": "AI / model surface",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "model endpoints",
+        "agent surface"
+      ],
+      "permission": "secrets gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "lucidiaqi.com",
+        "aliceqi.com"
+      ],
+      "products": [
+        "RoadCode",
+        "RoadTrip",
+        "RoadView"
+      ],
+      "agents": [
+        "Lucidia",
+        "Gematria",
+        "Sophia"
+      ]
+    },
+    {
+      "num": "07",
+      "id": "blackroadinc-us",
+      "name": "blackroadinc.us",
+      "board": "Legal entity / US incorporation",
+      "status": "needs_permission",
+      "queue": 3,
+      "blocked": 1,
+      "stageIdx": 5,
+      "owns": [
+        "corporate filings",
+        "contracts surface"
+      ],
+      "permission": "awaiting CarKeys + Atticus",
+      "receipts": "pending",
+      "nextRoads": [
+        "blackroad.company",
+        "blackroad.io"
+      ],
+      "products": [
+        "CarKeys",
+        "RoadCoin",
+        "RoadChain"
+      ],
+      "agents": [
+        "Atticus",
+        "Valeria",
+        "Theodosia",
+        "Portia"
+      ]
+    },
+    {
+      "num": "08",
+      "id": "blackroadqi-com",
+      "name": "blackroadqi.com",
+      "board": "QI / quantum identity surface",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "qi identity",
+        "signed objects"
+      ],
+      "permission": "gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroadquantum.com",
+        "lucidiaqi.com"
+      ],
+      "products": [
+        "CarKeys",
+        "RoadChain"
+      ],
+      "agents": [
+        "Seraphina",
+        "Gematria"
+      ]
+    },
+    {
+      "num": "09",
+      "id": "blackroadquantum-com",
+      "name": "blackroadquantum.com",
+      "board": "Quantum / research surface",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "research pages",
+        "math surface"
+      ],
+      "permission": "open after publish",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroadquantum.net",
+        "blackroadquantum.info"
+      ],
+      "products": [
+        "RoadBook",
+        "BlackBoard"
+      ],
+      "agents": [
+        "Gematria",
+        "Ophelia",
+        "Sophia"
+      ]
+    },
+    {
+      "num": "10",
+      "id": "blackroadquantum-info",
+      "name": "blackroadquantum.info",
+      "board": "Quantum docs / informational",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "public docs",
+        "explainers"
+      ],
+      "permission": "open",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroadquantum.com"
+      ],
+      "products": [
+        "RoadBook",
+        "RoadShow"
+      ],
+      "agents": [
+        "Cicero",
+        "Thalia"
+      ]
+    },
+    {
+      "num": "11",
+      "id": "blackroadquantum-net",
+      "name": "blackroadquantum.net",
+      "board": "Quantum / federation",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "peer network for quantum nodes"
+      ],
+      "permission": "gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroad.network"
+      ],
+      "products": [
+        "RoadWire",
+        "CarPool"
+      ],
+      "agents": [
+        "Gaia",
+        "Lucidia"
+      ]
+    },
+    {
+      "num": "12",
+      "id": "blackroadquantum-shop",
+      "name": "blackroadquantum.shop",
+      "board": "Quantum / commerce",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "paid quantum products"
+      ],
+      "permission": "payment gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroadquantum.store",
+        "roadcoin.io"
+      ],
+      "products": [
+        "RoadCoin",
+        "OneWay"
+      ],
+      "agents": [
+        "Valeria",
+        "Calliope"
+      ]
+    },
+    {
+      "num": "13",
+      "id": "blackroadquantum-store",
+      "name": "blackroadquantum.store",
+      "board": "Quantum / catalog",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "storefront catalog"
+      ],
+      "permission": "gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroadquantum.shop"
+      ],
+      "products": [
+        "RoadCoin",
+        "RoadShow"
+      ],
+      "agents": [
+        "Calliope",
+        "Sapphira"
+      ]
+    },
+    {
+      "num": "14",
+      "id": "blackboxprogramming-io",
+      "name": "blackboxprogramming.io",
+      "board": "Engineering / public dev surface",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "dev docs",
+        "public engineering pages"
+      ],
+      "permission": "open",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroadai.com",
+        "blackroad.io"
+      ],
+      "products": [
+        "RoadCode",
+        "RoadBook"
+      ],
+      "agents": [
+        "Sebastian",
+        "Elias",
+        "Cicero"
+      ]
+    },
+    {
+      "num": "15",
+      "id": "aliceqi-com",
+      "name": "aliceqi.com",
+      "board": "Alice — file / index assistant surface",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "alice agent endpoints"
+      ],
+      "permission": "gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "lucidiaqi.com",
+        "blackroadqi.com"
+      ],
+      "products": [
+        "RoadBook",
+        "GloveBox"
+      ],
+      "agents": [
+        "Alice",
+        "Anastasia"
+      ]
+    },
+    {
+      "num": "16",
+      "id": "lucidia-earth",
+      "name": "lucidia.earth",
+      "board": "Lucidia — public lighthouse",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "lucidia public face"
+      ],
+      "permission": "open",
+      "receipts": "none yet",
+      "nextRoads": [
+        "lucidia.studio",
+        "blackroad.io"
+      ],
+      "products": [
+        "RoadOS",
+        "RoadShow"
+      ],
+      "agents": [
+        "Lucidia",
+        "Calliope"
+      ]
+    },
+    {
+      "num": "17",
+      "id": "lucidia-studio",
+      "name": "lucidia.studio",
+      "board": "Lucidia studio / making things",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "studio sessions",
+        "creative pipelines"
+      ],
+      "permission": "gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "lucidia.earth",
+        "lucidiaqi.com"
+      ],
+      "products": [
+        "BlackBoard",
+        "RoadBand",
+        "RoadStream"
+      ],
+      "agents": [
+        "Sapphira",
+        "Lyra",
+        "Calliope"
+      ]
+    },
+    {
+      "num": "18",
+      "id": "lucidiaqi-com",
+      "name": "lucidiaqi.com",
+      "board": "Lucidia QI — agent identity",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "lucidia signed identity"
+      ],
+      "permission": "gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroadqi.com",
+        "aliceqi.com"
+      ],
+      "products": [
+        "CarKeys",
+        "RoadChain"
+      ],
+      "agents": [
+        "Lucidia",
+        "Seraphina"
+      ]
+    },
+    {
+      "num": "19",
+      "id": "roadchain-io",
+      "name": "roadchain.io",
+      "board": "Receipts / chain-of-custody",
+      "status": "needs_proof",
+      "queue": 2,
+      "blocked": 0,
+      "stageIdx": 6,
+      "owns": [
+        "receipts ledger",
+        "audit surface"
+      ],
+      "permission": "write gated",
+      "receipts": "scaffolded",
+      "nextRoads": [
+        "blackroad.io",
+        "roadcoin.io"
+      ],
+      "products": [
+        "RoadChain",
+        "RoadView"
+      ],
+      "agents": [
+        "Theodosia",
+        "Anastasia",
+        "Seraphina"
+      ]
+    },
+    {
+      "num": "20",
+      "id": "roadcoin-io",
+      "name": "roadcoin.io",
+      "board": "Payments / credits",
+      "status": "needs_permission",
+      "queue": 1,
+      "blocked": 1,
+      "stageIdx": 6,
+      "owns": [
+        "credits ledger",
+        "billing surface"
+      ],
+      "permission": "payment gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "roadchain.io",
+        "blackroad.io"
+      ],
+      "products": [
+        "RoadCoin"
+      ],
+      "agents": [
+        "Valeria",
+        "Theodosia",
+        "Atticus"
+      ]
+    }
   ];
+  /* AUTO-GENERATED:DOMAINS:END */
 
   let selectedDomainId = DOMAINS[0].id;
 
@@ -12142,229 +12545,589 @@
   // ===== ORGANIZATIONS WINDOW =====
   // 20 ownership cabinets. ACTIVE: Primary, Products, Agents. NEXT: Code. Others PLANNED.
   // catalogOwner: "products" or "agents" → org owns the full 27-cabinet.
-  const ORGS = [
-    { num:"01", id:"br-os-company", name:"BlackRoad-OS-Company",
-      purpose:"company / legal / hiring / public face",
-      status:"planned",
-      products:["RoadWorld","OfficeRoad"],
-      domains:["blackroad.company","blackroadinc.us"],
-      agents:["Theodosia","Octavia","Atticus","Valeria"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"legal entity + Atticus review",
-      blocker:"incorporation pending",
-      next:"scope company surface" },
-
-    { num:"02", id:"br-os-primary", name:"BlackRoad-OS-Primary",
-      purpose:"root canon, RoadOS shell, master operating map",
-      status:"active",
-      products:["RoadOS","RoadMap"],
-      domains:["blackroad.io","blackroad.systems"],
-      agents:["Lucidia","Roadie","Theodosia","Olympia"],
-      repos:3, docs:8, builds:12, receipts:"writing", releases:"v0.x", archive:"open",
-      releaseGate:"operator approval + RoadChain receipt",
-      blocker:"none",
-      next:"wire registry view" },
-
-    { num:"03", id:"br-os-products", name:"BlackRoad-OS-Products",
-      purpose:"product cabinet — 27 product surfaces",
-      status:"active",
-      catalogOwner:"products",
-      products:["RoadOS","RoadCode","RoadBook","RoadTrip"],
-      domains:["blackroad.io"],
-      agents:["Sapphira","Roadie","Octavia","Calliope"],
-      repos:1, docs:4, builds:6, receipts:"writing", releases:"v0.1", archive:"open",
-      releaseGate:"per-product owner sign-off",
-      blocker:"none",
-      next:"build Apps page" },
-
-    { num:"04", id:"br-os-cloud", name:"BlackRoad-OS-Cloud",
-      purpose:"cloud / hosting / deploy targets",
-      status:"planned",
-      products:["HighWay","PitStop","Detour"],
-      domains:["blackroad.systems"],
-      agents:["Gaia","Silas","Seraphina"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"infra audit",
-      blocker:"deploy target undecided",
-      next:"choose host" },
-
-    { num:"05", id:"br-os-network", name:"BlackRoad-OS-Network",
-      purpose:"network / federation / peers",
-      status:"planned",
-      products:["CarPool","RoadWire"],
-      domains:["blackroad.network","blackroadquantum.net"],
-      agents:["Gaia","Aria","Lucidia"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"peer policy",
-      blocker:"peer spec",
-      next:"spec peers" },
-
-    { num:"06", id:"br-os-agents", name:"BlackRoad-OS-Agents",
-      purpose:"27-agent roster + dispatch",
-      status:"active",
-      catalogOwner:"agents",
-      products:["RoadOS","RoadTrip"],
-      domains:["blackroadai.com"],
-      agents:["Lucidia","Roadie","Octavia","Sebastian"],
-      repos:1, docs:2, builds:3, receipts:"writing", releases:"v0.1", archive:"open",
-      releaseGate:"Octavia review",
-      blocker:"none",
-      next:"live agent telemetry" },
-
-    { num:"07", id:"br-os-code", name:"BlackRoad-OS-Code",
-      purpose:"build / run / deploy room and code knowledge",
-      status:"next",
-      products:["RoadCode"],
-      domains:["code.blackroad.io","blackboxprogramming.io"],
-      agents:["Roadie","Sebastian","Elias","Silas","Aria"],
-      repos:0, docs:1, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"Silas tests + CarKeys",
-      blocker:"MVP scope",
-      next:"Open RoadCode MVP window" },
-
-    { num:"08", id:"br-os-data", name:"BlackRoad-OS-Data",
-      purpose:"data / catalogs / indexes",
-      status:"planned",
-      products:["RoadView","RoadBook"],
-      domains:["blackroad.systems"],
-      agents:["Alice","Anastasia","Gaia"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"schema review",
-      blocker:"storage TBD",
-      next:"choose storage layer" },
-
-    { num:"09", id:"br-os-memory", name:"BlackRoad-OS-Memory",
-      purpose:"memory / continuity / archive",
-      status:"planned",
-      products:["RoadBook","GloveBox"],
-      domains:["aliceqi.com"],
-      agents:["Anastasia","Alice","Ophelia"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"continuity proof",
-      blocker:"model TBD",
-      next:"spec memory format" },
-
-    { num:"10", id:"br-os-studio", name:"BlackRoad-OS-Studio",
-      purpose:"making / canvas / creative pipelines",
-      status:"planned",
-      products:["BlackBoard","RoadBand","RoadStream"],
-      domains:["lucidia.studio"],
-      agents:["Sapphira","Lyra","Calliope"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"studio sign-off",
-      blocker:"surfaces TBD",
-      next:"scope studio MVP" },
-
-    { num:"11", id:"br-os-media", name:"BlackRoad-OS-Media",
-      purpose:"audio / video / streaming",
-      status:"planned",
-      products:["RoadBand","RoadStream","RoadShow"],
-      domains:["stream.blackroad.io"],
-      agents:["Lyra","Aria","Sapphira"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"media license",
-      blocker:"licensing",
-      next:"choose codecs" },
-
-    { num:"12", id:"br-os-interactive", name:"BlackRoad-OS-Interactive",
-      purpose:"games / play / interactive",
-      status:"planned",
-      products:["RoadSport","CarPool"],
-      domains:["roadsport.blackroad.io"],
-      agents:["Lyra","Sapphira","Aria"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"play test",
-      blocker:"scope",
-      next:"pick first game" },
-
-    { num:"13", id:"br-os-hardware", name:"BlackRoad-OS-Hardware",
-      purpose:"devices / Pi / on-device runtimes",
-      status:"planned",
-      products:["PitStop","Detour","GloveBox"],
-      domains:["blackroad.systems"],
-      agents:["Gaia","Seraphina"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"hardware audit",
-      blocker:"device list",
-      next:"confirm Pi 5 target" },
-
-    { num:"14", id:"br-os-security", name:"BlackRoad-OS-Security",
-      purpose:"keys / secrets / audits / gates",
-      status:"planned",
-      products:["CarKeys","RoadChain"],
-      domains:["carkeys.blackroad.io","blackroadqi.com"],
-      agents:["Seraphina","Atticus","Theodosia"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"security audit",
-      blocker:"secrets store choice",
-      next:"pick vault" },
-
-    { num:"15", id:"br-os-education", name:"BlackRoad-OS-Education",
-      purpose:"teach / explain / docs / tutorials",
-      status:"planned",
-      products:["RoadBook","RoadShow","RoadSide"],
-      domains:["blackroadquantum.info"],
-      agents:["Thalia","Cicero","Cordelia"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"pedagogy review",
-      blocker:"audience TBD",
-      next:"outline first lesson" },
-
-    { num:"16", id:"br-os-research", name:"BlackRoad-OS-Research",
-      purpose:"research / papers / math",
-      status:"planned",
-      products:["BlackBoard","RoadBook"],
-      domains:["blackroadquantum.com"],
-      agents:["Gematria","Ophelia","Sophia"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"peer review",
-      blocker:"scope",
-      next:"pick first paper" },
-
-    { num:"17", id:"br-os-labs", name:"BlackRoad-OS-Labs",
-      purpose:"experiments / prototypes / unstable surfaces",
-      status:"planned",
-      products:["RoadSport","BlackBoard"],
-      domains:["blackroadquantum.com"],
-      agents:["Sebastian","Sapphira","Gematria"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"stability gate",
-      blocker:"none",
-      next:"open first lab" },
-
-    { num:"18", id:"br-os-foundation", name:"BlackRoad-OS-Foundation",
-      purpose:"nonprofit / open / public good",
-      status:"planned",
-      products:["RoadBook","RoadSide"],
-      domains:["blackroad.io"],
-      agents:["Cordelia","Atticus","Thalia"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"legal entity",
-      blocker:"501(c) filing",
-      next:"scope foundation" },
-
-    { num:"19", id:"br-os-ventures", name:"BlackRoad-OS-Ventures",
-      purpose:"commercial / payments / commerce",
-      status:"planned",
-      products:["RoadCoin","OneWay"],
-      domains:["roadcoin.io","blackroadquantum.shop"],
-      agents:["Valeria","Theodosia","Calliope"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"payments gate",
-      blocker:"commerce path",
-      next:"commerce wiring" },
-
-    { num:"20", id:"br-os-archive", name:"BlackRoad-OS-Archive",
-      purpose:"cold storage / receipts / history",
-      status:"planned",
-      products:["RoadChain","GloveBox"],
-      domains:["roadchain.io"],
-      agents:["Theodosia","Anastasia"],
-      repos:0, docs:0, builds:0, receipts:"writing-soon", releases:"none yet", archive:"open",
-      releaseGate:"append-only proof",
-      blocker:"storage TBD",
-      next:"spec archive layout" }
+  /* AUTO-GENERATED:ORGS:START — source of truth: Registry/orgs.json · regenerate: node scripts/sync-collections.mjs · do not hand-edit */
+  const ORGS =
+  [
+    {
+      "num": "01",
+      "id": "br-os-company",
+      "name": "BlackRoad-OS-Company",
+      "purpose": "company / legal / hiring / public face",
+      "status": "planned",
+      "products": [
+        "RoadWorld",
+        "OfficeRoad"
+      ],
+      "domains": [
+        "blackroad.company",
+        "blackroadinc.us"
+      ],
+      "agents": [
+        "Theodosia",
+        "Octavia",
+        "Atticus",
+        "Valeria"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "legal entity + Atticus review",
+      "blocker": "incorporation pending",
+      "next": "scope company surface"
+    },
+    {
+      "num": "02",
+      "id": "br-os-primary",
+      "name": "BlackRoad-OS-Primary",
+      "purpose": "root canon, RoadOS shell, master operating map",
+      "status": "active",
+      "products": [
+        "RoadOS",
+        "RoadMap"
+      ],
+      "domains": [
+        "blackroad.io",
+        "blackroad.systems"
+      ],
+      "agents": [
+        "Lucidia",
+        "Roadie",
+        "Theodosia",
+        "Olympia"
+      ],
+      "repos": 3,
+      "docs": 8,
+      "builds": 12,
+      "receipts": "writing",
+      "releases": "v0.x",
+      "archive": "open",
+      "releaseGate": "operator approval + RoadChain receipt",
+      "blocker": "none",
+      "next": "wire registry view"
+    },
+    {
+      "num": "03",
+      "id": "br-os-products",
+      "name": "BlackRoad-OS-Products",
+      "purpose": "product cabinet — 27 product surfaces",
+      "status": "active",
+      "catalogOwner": "products",
+      "products": [
+        "RoadOS",
+        "RoadCode",
+        "RoadBook",
+        "RoadTrip"
+      ],
+      "domains": [
+        "blackroad.io"
+      ],
+      "agents": [
+        "Sapphira",
+        "Roadie",
+        "Octavia",
+        "Calliope"
+      ],
+      "repos": 1,
+      "docs": 4,
+      "builds": 6,
+      "receipts": "writing",
+      "releases": "v0.1",
+      "archive": "open",
+      "releaseGate": "per-product owner sign-off",
+      "blocker": "none",
+      "next": "build Apps page"
+    },
+    {
+      "num": "04",
+      "id": "br-os-cloud",
+      "name": "BlackRoad-OS-Cloud",
+      "purpose": "cloud / hosting / deploy targets",
+      "status": "planned",
+      "products": [
+        "HighWay",
+        "PitStop",
+        "Detour"
+      ],
+      "domains": [
+        "blackroad.systems"
+      ],
+      "agents": [
+        "Gaia",
+        "Silas",
+        "Seraphina"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "infra audit",
+      "blocker": "deploy target undecided",
+      "next": "choose host"
+    },
+    {
+      "num": "05",
+      "id": "br-os-network",
+      "name": "BlackRoad-OS-Network",
+      "purpose": "network / federation / peers",
+      "status": "planned",
+      "products": [
+        "CarPool",
+        "RoadWire"
+      ],
+      "domains": [
+        "blackroad.network",
+        "blackroadquantum.net"
+      ],
+      "agents": [
+        "Gaia",
+        "Aria",
+        "Lucidia"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "peer policy",
+      "blocker": "peer spec",
+      "next": "spec peers"
+    },
+    {
+      "num": "06",
+      "id": "br-os-agents",
+      "name": "BlackRoad-OS-Agents",
+      "purpose": "27-agent roster + dispatch",
+      "status": "active",
+      "catalogOwner": "agents",
+      "products": [
+        "RoadOS",
+        "RoadTrip"
+      ],
+      "domains": [
+        "blackroadai.com"
+      ],
+      "agents": [
+        "Lucidia",
+        "Roadie",
+        "Octavia",
+        "Sebastian"
+      ],
+      "repos": 1,
+      "docs": 2,
+      "builds": 3,
+      "receipts": "writing",
+      "releases": "v0.1",
+      "archive": "open",
+      "releaseGate": "Octavia review",
+      "blocker": "none",
+      "next": "live agent telemetry"
+    },
+    {
+      "num": "07",
+      "id": "br-os-code",
+      "name": "BlackRoad-OS-Code",
+      "purpose": "build / run / deploy room and code knowledge",
+      "status": "next",
+      "products": [
+        "RoadCode"
+      ],
+      "domains": [
+        "code.blackroad.io",
+        "blackboxprogramming.io"
+      ],
+      "agents": [
+        "Roadie",
+        "Sebastian",
+        "Elias",
+        "Silas",
+        "Aria"
+      ],
+      "repos": 0,
+      "docs": 1,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "Silas tests + CarKeys",
+      "blocker": "MVP scope",
+      "next": "Open RoadCode MVP window"
+    },
+    {
+      "num": "08",
+      "id": "br-os-data",
+      "name": "BlackRoad-OS-Data",
+      "purpose": "data / catalogs / indexes",
+      "status": "planned",
+      "products": [
+        "RoadView",
+        "RoadBook"
+      ],
+      "domains": [
+        "blackroad.systems"
+      ],
+      "agents": [
+        "Alice",
+        "Anastasia",
+        "Gaia"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "schema review",
+      "blocker": "storage TBD",
+      "next": "choose storage layer"
+    },
+    {
+      "num": "09",
+      "id": "br-os-memory",
+      "name": "BlackRoad-OS-Memory",
+      "purpose": "memory / continuity / archive",
+      "status": "planned",
+      "products": [
+        "RoadBook",
+        "GloveBox"
+      ],
+      "domains": [
+        "aliceqi.com"
+      ],
+      "agents": [
+        "Anastasia",
+        "Alice",
+        "Ophelia"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "continuity proof",
+      "blocker": "model TBD",
+      "next": "spec memory format"
+    },
+    {
+      "num": "10",
+      "id": "br-os-studio",
+      "name": "BlackRoad-OS-Studio",
+      "purpose": "making / canvas / creative pipelines",
+      "status": "planned",
+      "products": [
+        "BlackBoard",
+        "RoadBand",
+        "RoadStream"
+      ],
+      "domains": [
+        "lucidia.studio"
+      ],
+      "agents": [
+        "Sapphira",
+        "Lyra",
+        "Calliope"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "studio sign-off",
+      "blocker": "surfaces TBD",
+      "next": "scope studio MVP"
+    },
+    {
+      "num": "11",
+      "id": "br-os-media",
+      "name": "BlackRoad-OS-Media",
+      "purpose": "audio / video / streaming",
+      "status": "planned",
+      "products": [
+        "RoadBand",
+        "RoadStream",
+        "RoadShow"
+      ],
+      "domains": [
+        "stream.blackroad.io"
+      ],
+      "agents": [
+        "Lyra",
+        "Aria",
+        "Sapphira"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "media license",
+      "blocker": "licensing",
+      "next": "choose codecs"
+    },
+    {
+      "num": "12",
+      "id": "br-os-interactive",
+      "name": "BlackRoad-OS-Interactive",
+      "purpose": "games / play / interactive",
+      "status": "planned",
+      "products": [
+        "RoadSport",
+        "CarPool"
+      ],
+      "domains": [
+        "roadsport.blackroad.io"
+      ],
+      "agents": [
+        "Lyra",
+        "Sapphira",
+        "Aria"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "play test",
+      "blocker": "scope",
+      "next": "pick first game"
+    },
+    {
+      "num": "13",
+      "id": "br-os-hardware",
+      "name": "BlackRoad-OS-Hardware",
+      "purpose": "devices / Pi / on-device runtimes",
+      "status": "planned",
+      "products": [
+        "PitStop",
+        "Detour",
+        "GloveBox"
+      ],
+      "domains": [
+        "blackroad.systems"
+      ],
+      "agents": [
+        "Gaia",
+        "Seraphina"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "hardware audit",
+      "blocker": "device list",
+      "next": "confirm Pi 5 target"
+    },
+    {
+      "num": "14",
+      "id": "br-os-security",
+      "name": "BlackRoad-OS-Security",
+      "purpose": "keys / secrets / audits / gates",
+      "status": "planned",
+      "products": [
+        "CarKeys",
+        "RoadChain"
+      ],
+      "domains": [
+        "carkeys.blackroad.io",
+        "blackroadqi.com"
+      ],
+      "agents": [
+        "Seraphina",
+        "Atticus",
+        "Theodosia"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "security audit",
+      "blocker": "secrets store choice",
+      "next": "pick vault"
+    },
+    {
+      "num": "15",
+      "id": "br-os-education",
+      "name": "BlackRoad-OS-Education",
+      "purpose": "teach / explain / docs / tutorials",
+      "status": "planned",
+      "products": [
+        "RoadBook",
+        "RoadShow",
+        "RoadSide"
+      ],
+      "domains": [
+        "blackroadquantum.info"
+      ],
+      "agents": [
+        "Thalia",
+        "Cicero",
+        "Cordelia"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "pedagogy review",
+      "blocker": "audience TBD",
+      "next": "outline first lesson"
+    },
+    {
+      "num": "16",
+      "id": "br-os-research",
+      "name": "BlackRoad-OS-Research",
+      "purpose": "research / papers / math",
+      "status": "planned",
+      "products": [
+        "BlackBoard",
+        "RoadBook"
+      ],
+      "domains": [
+        "blackroadquantum.com"
+      ],
+      "agents": [
+        "Gematria",
+        "Ophelia",
+        "Sophia"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "peer review",
+      "blocker": "scope",
+      "next": "pick first paper"
+    },
+    {
+      "num": "17",
+      "id": "br-os-labs",
+      "name": "BlackRoad-OS-Labs",
+      "purpose": "experiments / prototypes / unstable surfaces",
+      "status": "planned",
+      "products": [
+        "RoadSport",
+        "BlackBoard"
+      ],
+      "domains": [
+        "blackroadquantum.com"
+      ],
+      "agents": [
+        "Sebastian",
+        "Sapphira",
+        "Gematria"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "stability gate",
+      "blocker": "none",
+      "next": "open first lab"
+    },
+    {
+      "num": "18",
+      "id": "br-os-foundation",
+      "name": "BlackRoad-OS-Foundation",
+      "purpose": "nonprofit / open / public good",
+      "status": "planned",
+      "products": [
+        "RoadBook",
+        "RoadSide"
+      ],
+      "domains": [
+        "blackroad.io"
+      ],
+      "agents": [
+        "Cordelia",
+        "Atticus",
+        "Thalia"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "legal entity",
+      "blocker": "501(c) filing",
+      "next": "scope foundation"
+    },
+    {
+      "num": "19",
+      "id": "br-os-ventures",
+      "name": "BlackRoad-OS-Ventures",
+      "purpose": "commercial / payments / commerce",
+      "status": "planned",
+      "products": [
+        "RoadCoin",
+        "OneWay"
+      ],
+      "domains": [
+        "roadcoin.io",
+        "blackroadquantum.shop"
+      ],
+      "agents": [
+        "Valeria",
+        "Theodosia",
+        "Calliope"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "payments gate",
+      "blocker": "commerce path",
+      "next": "commerce wiring"
+    },
+    {
+      "num": "20",
+      "id": "br-os-archive",
+      "name": "BlackRoad-OS-Archive",
+      "purpose": "cold storage / receipts / history",
+      "status": "planned",
+      "products": [
+        "RoadChain",
+        "GloveBox"
+      ],
+      "domains": [
+        "roadchain.io"
+      ],
+      "agents": [
+        "Theodosia",
+        "Anastasia"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "writing-soon",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "append-only proof",
+      "blocker": "storage TBD",
+      "next": "spec archive layout"
+    }
   ];
+  /* AUTO-GENERATED:ORGS:END */
 
   let selectedOrgId = ORGS[0].id;
 

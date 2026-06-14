@@ -72,3 +72,6 @@ To add/change a product: edit the JSON → `node scripts/sync-products.mjs` →
 | Fail if a folder `product.json` drifted (CI mode) | `node scripts/sync-product-folders.mjs --check` |
 | Validate the product registry | `node scripts/validate-registry.mjs` |
 | Validate the agent registry | `node scripts/validate-agents.mjs` |
+| Regenerate `index.html` ORGS + DOMAINS | `node scripts/sync-collections.mjs` |
+| Fail if ORGS/DOMAINS drifted (CI mode) | `node scripts/sync-collections.mjs --check` |
+| Validate the org + domain registries | `node scripts/validate-collections.mjs` |
