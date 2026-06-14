@@ -1,0 +1,27 @@
+{
+  "number": "22",
+  "id": "roadshow",
+  "slug": "roadshow",
+  "name": "RoadShow",
+  "role": "demos / showcase",
+  "status": "planned",
+  "meaning": "showcase / demo runner",
+  "does": [
+    "present slides",
+    "run demos"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "roadshow.blackroad.io",
+  "agents": [
+    "Calliope",
+    "Sapphira",
+    "Aria"
+  ],
+  "receipts": [
+    "roadshow.demo.run"
+  ],
+  "carkeys": [
+    "none"
+  ],
+  "next": "scope MVP"
+}

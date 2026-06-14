@@ -1,0 +1,29 @@
+{
+  "number": "14",
+  "id": "carpool",
+  "slug": "carpool",
+  "name": "CarPool",
+  "role": "shared rooms",
+  "status": "planned",
+  "meaning": "shared rooms / multi-user sessions",
+  "does": [
+    "rooms",
+    "presence",
+    "shared state"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "carpool.blackroad.io",
+  "agents": [
+    "Aria",
+    "Cecilia",
+    "Lucidia"
+  ],
+  "receipts": [
+    "carpool.joined",
+    "carpool.left"
+  ],
+  "carkeys": [
+    "room access gated"
+  ],
+  "next": "scope MVP"
+}

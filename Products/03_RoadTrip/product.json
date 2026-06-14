@@ -1,1 +1,30 @@
-{"id": 3, "slug": "roadtrip", "name": "RoadTrip", "number": "03", "category": "Collaboration", "definition": "Solo operator + multi-agent workspace where one human works with many intelligences.", "boundary": "Personal mission room. Not group collaboration (that's CarPool).", "mvp": "Bring multiple models/agents into one visible workspace with task routing and handoffs.", "status": "level_4_builder_ready", "implementation_status": "planned", "risk_level": "low", "primary_agents": ["Roadie", "Sophia", "Cordelia"], "primary_handoff": "RoadCode, RoadView, RoadWire, RoadMap", "next_action": "Implement multi-agent workspace with context handoff"}
+{
+  "number": "03",
+  "id": "roadtrip",
+  "slug": "roadtrip",
+  "name": "RoadTrip",
+  "role": "parallel agent lanes",
+  "status": "planned",
+  "meaning": "parallel agent lanes for long tasks",
+  "does": [
+    "lane orchestration",
+    "agent handoffs",
+    "progress tracking"
+  ],
+  "org": "BlackRoad-Agents",
+  "domain": "trip.blackroad.io",
+  "agents": [
+    "Lucidia",
+    "Octavia",
+    "Sebastian",
+    "Roadie"
+  ],
+  "receipts": [
+    "roadtrip.lane.started",
+    "roadtrip.handoff"
+  ],
+  "carkeys": [
+    "agent dispatch gated"
+  ],
+  "next": "scope MVP"
+}

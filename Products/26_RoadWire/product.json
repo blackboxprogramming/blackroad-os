@@ -1,0 +1,29 @@
+{
+  "number": "26",
+  "id": "roadwire",
+  "slug": "roadwire",
+  "name": "RoadWire",
+  "role": "comms / signals",
+  "status": "planned",
+  "meaning": "comms / signaling / pubsub",
+  "does": [
+    "pubsub",
+    "signals",
+    "events"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "wire.blackroad.io",
+  "agents": [
+    "Aria",
+    "Gaia",
+    "Seraphina"
+  ],
+  "receipts": [
+    "roadwire.signal",
+    "roadwire.subscribed"
+  ],
+  "carkeys": [
+    "pubsub gated"
+  ],
+  "next": "scope MVP"
+}

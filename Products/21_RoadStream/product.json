@@ -1,0 +1,28 @@
+{
+  "number": "21",
+  "id": "roadstream",
+  "slug": "roadstream",
+  "name": "RoadStream",
+  "role": "live / streaming",
+  "status": "planned",
+  "meaning": "live streaming / video",
+  "does": [
+    "live feed",
+    "recording"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "stream.blackroad.io",
+  "agents": [
+    "Aria",
+    "Lyra",
+    "Sapphira"
+  ],
+  "receipts": [
+    "roadstream.live",
+    "roadstream.recorded"
+  ],
+  "carkeys": [
+    "stream key gated"
+  ],
+  "next": "scope MVP"
+}

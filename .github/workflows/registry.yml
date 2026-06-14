@@ -19,3 +19,5 @@ jobs:
         run: node scripts/validate-registry.mjs
       - name: Check index.html is in sync with the registry
         run: node scripts/sync-products.mjs --check
+      - name: Check per-folder product.json is in sync with the registry
+        run: node scripts/sync-product-folders.mjs --check

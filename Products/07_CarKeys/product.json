@@ -1,0 +1,29 @@
+{
+  "number": "07",
+  "id": "carkeys",
+  "slug": "carkeys",
+  "name": "CarKeys",
+  "role": "auth / secrets / gates",
+  "status": "planned",
+  "meaning": "keys, secrets, permission gates",
+  "does": [
+    "vault",
+    "scope tokens",
+    "gate actions"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "carkeys.blackroad.io",
+  "agents": [
+    "Seraphina",
+    "Atticus",
+    "Theodosia"
+  ],
+  "receipts": [
+    "carkeys.granted",
+    "carkeys.revoked"
+  ],
+  "carkeys": [
+    "self-managed"
+  ],
+  "next": "scope MVP"
+}

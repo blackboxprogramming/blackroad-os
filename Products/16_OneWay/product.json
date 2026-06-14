@@ -1,0 +1,28 @@
+{
+  "number": "16",
+  "id": "oneway",
+  "slug": "oneway",
+  "name": "OneWay",
+  "role": "broadcast / publish",
+  "status": "planned",
+  "meaning": "outbound broadcasts / publish",
+  "does": [
+    "publish posts",
+    "push notifications"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "oneway.blackroad.io",
+  "agents": [
+    "Calliope",
+    "Cicero",
+    "Aria"
+  ],
+  "receipts": [
+    "oneway.published",
+    "oneway.delivered"
+  ],
+  "carkeys": [
+    "publish gated"
+  ],
+  "next": "scope MVP"
+}

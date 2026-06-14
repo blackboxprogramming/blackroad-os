@@ -1,0 +1,33 @@
+{
+  "number": "19",
+  "id": "roadsport",
+  "slug": "roadsport",
+  "name": "RoadSport",
+  "role": "movement / training / sports",
+  "status": "mvp-stub",
+  "meaning": "movement, training, sports planning (no medical, no betting)",
+  "does": [
+    "movement plan",
+    "training",
+    "practice",
+    "workout",
+    "progress",
+    "recovery"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "roadsport.blackroad.io",
+  "agents": [
+    "Lyra",
+    "Sapphira",
+    "Aria"
+  ],
+  "receipts": [
+    "roadsport.plan.created",
+    "roadsport.handoff.created",
+    "roadsport.safety_review_needed"
+  ],
+  "carkeys": [
+    "health/wearable/biometric/location → CarKeys gated"
+  ],
+  "next": "open RoadSport MVP"
+}

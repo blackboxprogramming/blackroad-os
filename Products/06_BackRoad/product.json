@@ -1,1 +1,28 @@
-{"id": 6, "slug": "backroad", "name": "BackRoad", "number": "06", "category": "Social", "definition": "Social layer with aggregated feeds and native community features.", "boundary": "Social viewing and posting. Business execution routes to RoadWork.", "mvp": "Unified social feed + native posting with ownership.", "status": "level_4_builder_ready", "implementation_status": "planned", "risk_level": "low", "primary_agents": ["Cecilia", "Aria"], "primary_handoff": "RoadWork, RoadWire, RoadShow", "next_action": "Implement feed aggregation and native posting"}
+{
+  "number": "06",
+  "id": "backroad",
+  "slug": "backroad",
+  "name": "BackRoad",
+  "role": "private / restricted path",
+  "status": "planned",
+  "meaning": "operator-only restricted area",
+  "does": [
+    "restricted ops",
+    "operator tools"
+  ],
+  "org": "BlackRoad-Private",
+  "domain": "backroad.blackroad.io",
+  "agents": [
+    "Seraphina",
+    "Atticus",
+    "Lucidia"
+  ],
+  "receipts": [
+    "backroad.access",
+    "backroad.denied"
+  ],
+  "carkeys": [
+    "operator gated"
+  ],
+  "next": "scope MVP"
+}

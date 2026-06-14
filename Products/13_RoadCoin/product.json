@@ -1,0 +1,29 @@
+{
+  "number": "13",
+  "id": "roadcoin",
+  "slug": "roadcoin",
+  "name": "RoadCoin",
+  "role": "payments / billing",
+  "status": "planned",
+  "meaning": "payments, credits, billing",
+  "does": [
+    "credits ledger",
+    "pricing",
+    "invoices"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "roadcoin.blackroad.io",
+  "agents": [
+    "Valeria",
+    "Theodosia",
+    "Atticus"
+  ],
+  "receipts": [
+    "roadcoin.charged",
+    "roadcoin.refunded"
+  ],
+  "carkeys": [
+    "payment gated"
+  ],
+  "next": "scope MVP"
+}

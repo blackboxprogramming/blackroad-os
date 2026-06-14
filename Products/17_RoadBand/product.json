@@ -1,0 +1,29 @@
+{
+  "number": "17",
+  "id": "roadband",
+  "slug": "roadband",
+  "name": "RoadBand",
+  "role": "audio / music",
+  "status": "planned",
+  "meaning": "audio / music / radio",
+  "does": [
+    "play",
+    "stream",
+    "score"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "roadband.blackroad.io",
+  "agents": [
+    "Lyra",
+    "Aria",
+    "Sapphira"
+  ],
+  "receipts": [
+    "roadband.played",
+    "roadband.streamed"
+  ],
+  "carkeys": [
+    "none"
+  ],
+  "next": "scope MVP"
+}
