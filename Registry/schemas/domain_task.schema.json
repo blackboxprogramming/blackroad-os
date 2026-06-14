@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DomainTask",
+  "type": "object",
+  "required": ["id", "title", "domain", "current_step_172", "owner_product"],
+  "properties": {
+    "id": {"type": "string"},
+    "title": {"type": "string"},
+    "domain": {"type": "string"},
+    "current_step_172": {"type": "integer"},
+    "command_lane": {"type": "string"},
+    "owner_org": {"type": "string"},
+    "owner_product": {"type": "string"},
+    "assigned_agent": {"type": "string"},
+    "status": {"type": "string"},
+    "permission_state": {"type": "string"},
+    "proof_state": {"type": "string"},
+    "receipt_state": {"type": "string"},
+    "next_step": {"type": "integer"},
+    "next_domain": {"type": "string"}
+  }
+}
