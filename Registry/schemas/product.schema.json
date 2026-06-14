@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BlackRoad Product",
+  "type": "object",
+  "required": ["id", "slug", "name", "number", "definition", "status"],
+  "properties": {
+    "id": { "type": "integer" },
+    "slug": { "type": "string" },
+    "name": { "type": "string" },
+    "number": { "type": "string" },
+    "category": { "type": "string" },
+    "definition": { "type": "string" },
+    "boundary": { "type": "string" },
+    "mvp": { "type": "string" },
+    "status": { "enum": ["level_0_empty", "level_1_named", "level_2_described", "level_3_canon_clear", "level_4_builder_ready", "level_5_implementation_ready"] },
+    "implementation_status": { "enum": ["planned", "mock", "partial", "real", "blocked"] },
+    "risk_level": { "enum": ["low", "medium", "high"] },
+    "primary_agents": { "type": "array", "items": { "type": "string" } },
+    "primary_handoff": { "type": "string" },
+    "next_action": { "type": "string" }
+  }
+}
