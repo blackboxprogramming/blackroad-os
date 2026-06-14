@@ -40,6 +40,10 @@ for (const c of COLLECTIONS) {
   const seenId = new Set(), seenNum = new Set();
   for (const [i, r] of rows.entries()) {
     const where = `${c.key}[${i}] (${r?.name ?? r?.id ?? "?"})`;
+    if (r === null || typeof r !== "object" || Array.isArray(r)) {
+      fail(`${where}: must be an object`);
+      continue;
+    }
     for (const req of schema.required) {
       if (r[req] === undefined) fail(`${where}: missing required field "${req}"`);
     }
@@ -47,15 +51,22 @@ for (const c of COLLECTIONS) {
       const spec = schema.properties[key];
       if (!spec) { fail(`${where}: unknown field "${key}"`); continue; }
       if (spec.enum && !spec.enum.includes(val)) fail(`${where}: "${key}"="${val}" not in [${spec.enum.join(", ")}]`);
-      if (spec.type === "array" && !Array.isArray(val)) fail(`${where}: "${key}" must be an array`);
+      if (spec.type === "array") {
+        if (!Array.isArray(val)) fail(`${where}: "${key}" must be an array`);
+        else if (spec.items?.type === "string") {
+          val.forEach((item, j) => {
+            if (typeof item !== "string") fail(`${where}: "${key}[${j}]" must be a string`);
+          });
+        }
+      }
       if (spec.type === "string" && typeof val !== "string") fail(`${where}: "${key}" must be a string`);
       if (spec.type === "integer" && !Number.isInteger(val)) fail(`${where}: "${key}" must be an integer`);
       if (spec.pattern && typeof val === "string" && !new RegExp(spec.pattern).test(val)) {
         fail(`${where}: "${key}"="${val}" fails pattern ${spec.pattern}`);
       }
     }
-    if (r.id) { if (seenId.has(r.id)) fail(`duplicate id "${r.id}"`); seenId.add(r.id); }
-    if (r.num) { if (seenNum.has(r.num)) fail(`duplicate num "${r.num}"`); seenNum.add(r.num); }
+    if (r.id !== undefined) { if (seenId.has(r.id)) fail(`duplicate id "${r.id}"`); seenId.add(r.id); }
+    if (r.num !== undefined) { if (seenNum.has(r.num)) fail(`duplicate num "${r.num}"`); seenNum.add(r.num); }
   }
   for (let n = 1; n <= c.count; n++) {
     const k = String(n).padStart(2, "0");

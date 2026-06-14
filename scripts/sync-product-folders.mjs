@@ -34,14 +34,23 @@ for (const name of readdirSync(PRODUCTS_DIR, { withFileTypes: true })) {
 
 const serialize = (record) => JSON.stringify(record, null, 2) + "\n";
 
+// Product numbers that legitimately have no Products/ folder. Only HighWay (18)
+// is top-level infrastructure; any other missing folder is drift and must fail.
+const NO_FOLDER_OK = new Set(["18"]);
+
 const check = process.argv.includes("--check");
 const stale = [];
 const written = [];
 const noFolder = [];
+const missing = [];
 
 for (const p of reg.products) {
   const folder = folderByNumber.get(p.number);
-  if (!folder) { noFolder.push(`${p.number} ${p.name}`); continue; }
+  if (!folder) {
+    noFolder.push(`${p.number} ${p.name}`);
+    if (!NO_FOLDER_OK.has(p.number)) missing.push(`Products/${p.number}_* (for ${p.name})`);
+    continue;
+  }
   const file = join(PRODUCTS_DIR, folder, "product.json");
   const want = serialize(p);
   const have = existsSync(file) ? readFileSync(file, "utf8") : null;
@@ -52,9 +61,15 @@ for (const p of reg.products) {
 }
 
 if (check) {
-  if (stale.length) {
-    console.error(`✗ ${stale.length} per-folder product.json out of sync with the registry:`);
-    for (const s of stale) console.error("  - " + s);
+  if (stale.length || missing.length) {
+    if (stale.length) {
+      console.error(`✗ ${stale.length} per-folder product.json out of sync with the registry:`);
+      for (const s of stale) console.error("  - " + s);
+    }
+    if (missing.length) {
+      console.error(`✗ ${missing.length} registry product(s) with no Products/ folder (drift):`);
+      for (const m of missing) console.error("  - " + m);
+    }
     console.error("  Run: node scripts/sync-product-folders.mjs  then commit Products/.");
     process.exit(1);
   }

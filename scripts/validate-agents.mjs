@@ -30,6 +30,10 @@ if (reg.total_agents !== undefined && reg.total_agents !== agents?.length) {
 const seenId = new Set(), seenSlug = new Set(), seenNum = new Set();
 for (const [i, a] of (agents ?? []).entries()) {
   const where = `agent[${i}] (${a?.name ?? a?.slug ?? "?"})`;
+  if (a === null || typeof a !== "object" || Array.isArray(a)) {
+    fail(`${where}: must be an object`);
+    continue;
+  }
   for (const req of schema.required) {
     if (a[req] === undefined) fail(`${where}: missing required field "${req}"`);
   }
@@ -38,7 +42,14 @@ for (const [i, a] of (agents ?? []).entries()) {
     if (!spec) { fail(`${where}: unknown field "${key}"`); continue; }
     if (spec.type === "integer" && !Number.isInteger(val)) fail(`${where}: "${key}" must be an integer`);
     if (spec.type === "string" && typeof val !== "string") fail(`${where}: "${key}" must be a string`);
-    if (spec.type === "array" && !Array.isArray(val)) fail(`${where}: "${key}" must be an array`);
+    if (spec.type === "array") {
+      if (!Array.isArray(val)) fail(`${where}: "${key}" must be an array`);
+      else if (spec.items?.type === "string") {
+        val.forEach((item, j) => {
+          if (typeof item !== "string") fail(`${where}: "${key}[${j}]" must be a string`);
+        });
+      }
+    }
   }
   if (a.number && !/^[0-9]{2}$/.test(a.number)) fail(`${where}: number "${a.number}" must be two digits`);
   if (a.slug && a.name && a.slug !== a.name.toLowerCase()) {
