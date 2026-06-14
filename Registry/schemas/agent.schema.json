@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BlackRoad Agent",
+  "type": "object",
+  "required": ["id", "slug", "name", "number", "role"],
+  "properties": {
+    "id": { "type": "integer" },
+    "slug": { "type": "string" },
+    "name": { "type": "string" },
+    "number": { "type": "string" },
+    "role": { "type": "string" },
+    "primary_products": { "type": "array", "items": { "type": "string" } },
+    "permissions": { "type": "array", "items": { "type": "string" } },
+    "status": { "type": "string" }
+  }
+}
