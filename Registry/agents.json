@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-06-14",
+  "total_agents": 27,
+  "agents": [
+    {"id": 1, "slug": "lucidia", "name": "Lucidia", "number": "01", "role": "Orchestration and continuity keeper", "primary_products": ["RoadOS", "Canon"], "status": "active"},
+    {"id": 2, "slug": "roadie", "name": "Roadie", "number": "02", "role": "Operator support and RoadOS guide", "primary_products": ["RoadOS", "RoadCode"], "status": "active"},
+    {"id": 3, "slug": "sophia", "name": "Sophia", "number": "03", "role": "Judgment, ethics, and tutoring", "primary_products": ["PitStop", "RoadTrip"], "status": "active"}
+  ]
+}
