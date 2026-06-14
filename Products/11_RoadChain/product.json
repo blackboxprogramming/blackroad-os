@@ -1,0 +1,16 @@
+{
+  "id": 11,
+  "slug": "roadchain",
+  "name": "RoadChain",
+  "number": "11",
+  "category": "Provenance",
+  "definition": "Receipt layer for provenance, hashes, audit trails, and proof.",
+  "boundary": "Make important actions inspectable without overclaiming legal compliance.",
+  "mvp": "Record and verify meaningful events with receipts.",
+  "status": "level_4_builder_ready",
+  "implementation_status": "planned",
+  "risk_level": "medium",
+  "primary_agents": ["Portia", "Theodosia"],
+  "primary_handoff": "RoadMap, CarKeys, HighWay, Detour",
+  "next_action": "Define core receipt events and verification logic"
+}
