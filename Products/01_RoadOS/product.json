@@ -1,0 +1,16 @@
+{
+  "id": 1,
+  "slug": "roados",
+  "name": "RoadOS",
+  "number": "01",
+  "category": "Operating Spine",
+  "definition": "Browser-native BlackRoad computer. One-tab operating environment.",
+  "boundary": "The workspace/computer shell. Other products build and run inside it.",
+  "mvp": "Route a command/intent to the right product/file/action and give a safe next step.",
+  "status": "level_4_builder_ready",
+  "implementation_status": "planned",
+  "risk_level": "medium",
+  "primary_agents": ["Roadie", "Lucidia"],
+  "primary_handoff": "RoadCode, RoadTrip, RoadView, RoadChain",
+  "next_action": "Build command dock + product launcher"
+}
