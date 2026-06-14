@@ -1,38 +1,289 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "last_updated": "2026-06-14",
+  "note": "Single source of truth for the 27 products. The PRODUCTS array in index.html is generated from this file by scripts/sync-products.mjs. Do not hand-edit the generated block in index.html.",
   "products": [
     {
-      "id": 1,
-      "slug": "roados",
-      "name": "RoadOS",
-      "number": "01",
+      "number": "01", "id": "roados", "slug": "roados", "name": "RoadOS",
+      "role": "browser-native computer", "status": "active",
+      "meaning": "browser-native computer",
+      "does": ["shell + folder nav", "window management", "app routing", "system clock + chat"],
+      "org": "BlackRoad-OS-Primary", "domain": "blackroad.io",
+      "agents": ["Lucidia", "Roadie", "Aria", "Silas"],
+      "receipts": ["roados.boot", "roados.window.opened", "roados.app.routed"],
+      "carkeys": ["none"], "next": "wire command routing",
       "category": "Operating Spine",
       "definition": "Browser-native BlackRoad computer. One-tab operating environment.",
       "boundary": "RoadOS is the workspace/computer shell. RoadCode builds inside it.",
       "mvp": "Route a command/intent to the right product/file/action and give a safe next step.",
-      "status": "canon_ready",
-      "implementation_status": "planned",
-      "risk_level": "medium",
-      "primary_agents": ["Roadie", "Lucidia"],
-      "primary_handoff": "RoadCode, RoadTrip, RoadView",
-      "next_action": "Build command dock + product launcher UI skeleton"
+      "implementation_status": "planned", "risk_level": "medium",
+      "primary_handoff": "RoadCode, RoadTrip, RoadView"
     },
     {
-      "id": 2,
-      "slug": "roadcode",
-      "name": "RoadCode",
-      "number": "02",
+      "number": "02", "id": "roadcode", "slug": "roadcode", "name": "RoadCode",
+      "role": "build / run / deploy room", "status": "next",
+      "meaning": "build / run / deploy room",
+      "does": ["repo inspect", "patch plan", "test run", "logs", "deploy readiness", "domain route"],
+      "org": "BlackRoad-OS-Primary", "domain": "code.blackroad.io",
+      "agents": ["Roadie", "Sebastian", "Elias", "Silas", "Aria"],
+      "receipts": ["roadcode.repo.inspected", "roadcode.patch.planned", "roadcode.test.checked"],
+      "carkeys": ["secrets gated", "deploy gated", "SSH gated"], "next": "Open RoadCode MVP window",
       "category": "Operating Spine",
       "definition": "End-to-end coding, building, debugging, hosting, deployment system.",
       "boundary": "From idea to running system without the 'now what?' cliff.",
       "mvp": "Inspect repo, plan patch, route to correct agent, explain deployment.",
-      "status": "canon_ready",
-      "implementation_status": "planned",
-      "risk_level": "medium",
-      "primary_agents": ["Sebastian", "Elias", "Silas"],
-      "primary_handoff": "RoadOS, HighWay, RoadChain",
-      "next_action": "Implement 172-step routing + patch planning"
+      "implementation_status": "planned", "risk_level": "medium",
+      "primary_handoff": "RoadOS, HighWay, RoadChain"
+    },
+    {
+      "number": "03", "id": "roadtrip", "slug": "roadtrip", "name": "RoadTrip",
+      "role": "parallel agent lanes", "status": "planned",
+      "meaning": "parallel agent lanes for long tasks",
+      "does": ["lane orchestration", "agent handoffs", "progress tracking"],
+      "org": "BlackRoad-Agents", "domain": "trip.blackroad.io",
+      "agents": ["Lucidia", "Octavia", "Sebastian", "Roadie"],
+      "receipts": ["roadtrip.lane.started", "roadtrip.handoff"],
+      "carkeys": ["agent dispatch gated"], "next": "scope MVP"
+    },
+    {
+      "number": "04", "id": "pitstop", "slug": "pitstop", "name": "PitStop",
+      "role": "pause / debug / repair", "status": "planned",
+      "meaning": "stop the system, inspect, repair",
+      "does": ["freeze state", "snapshot", "diagnose", "repair"],
+      "org": "BlackRoad-OS-Primary", "domain": "pitstop.blackroad.io",
+      "agents": ["Gaia", "Silas", "Seraphina", "Octavia"],
+      "receipts": ["pitstop.freeze", "pitstop.repair"],
+      "carkeys": ["process control gated"], "next": "scope MVP"
+    },
+    {
+      "number": "05", "id": "roadwork", "slug": "roadwork", "name": "RoadWork",
+      "role": "work-in-progress board", "status": "planned",
+      "meaning": "in-progress projects board",
+      "does": ["WIP board", "blockers", "ETAs"],
+      "org": "BlackRoad-OS-Primary", "domain": "roadwork.blackroad.io",
+      "agents": ["Celeste", "Octavia", "Roadie"],
+      "receipts": ["roadwork.task.added", "roadwork.blocker.flagged"],
+      "carkeys": ["none"], "next": "scope MVP"
+    },
+    {
+      "number": "06", "id": "backroad", "slug": "backroad", "name": "BackRoad",
+      "role": "private / restricted path", "status": "planned",
+      "meaning": "operator-only restricted area",
+      "does": ["restricted ops", "operator tools"],
+      "org": "BlackRoad-Private", "domain": "backroad.blackroad.io",
+      "agents": ["Seraphina", "Atticus", "Lucidia"],
+      "receipts": ["backroad.access", "backroad.denied"],
+      "carkeys": ["operator gated"], "next": "scope MVP"
+    },
+    {
+      "number": "07", "id": "carkeys", "slug": "carkeys", "name": "CarKeys",
+      "role": "auth / secrets / gates", "status": "planned",
+      "meaning": "keys, secrets, permission gates",
+      "does": ["vault", "scope tokens", "gate actions"],
+      "org": "BlackRoad-OS-Primary", "domain": "carkeys.blackroad.io",
+      "agents": ["Seraphina", "Atticus", "Theodosia"],
+      "receipts": ["carkeys.granted", "carkeys.revoked"],
+      "carkeys": ["self-managed"], "next": "scope MVP"
+    },
+    {
+      "number": "08", "id": "roadbook", "slug": "roadbook", "name": "RoadBook",
+      "role": "knowledge / notes", "status": "planned",
+      "meaning": "knowledge base, indexed notes",
+      "does": ["note capture", "indexing", "search", "linking"],
+      "org": "BlackRoad-Knowledge", "domain": "roadbook.blackroad.io",
+      "agents": ["Alice", "Anastasia", "Ophelia", "Cicero"],
+      "receipts": ["roadbook.note.saved", "roadbook.indexed"],
+      "carkeys": ["none"], "next": "scope MVP"
+    },
+    {
+      "number": "09", "id": "roadworld", "slug": "roadworld", "name": "RoadWorld",
+      "role": "public / world-facing", "status": "planned",
+      "meaning": "public landing / world view",
+      "does": ["public site", "marketing surface"],
+      "org": "BlackRoad-OS-Primary", "domain": "blackroad.io",
+      "agents": ["Calliope", "Cicero", "Sapphira"],
+      "receipts": ["roadworld.page.published"],
+      "carkeys": ["none"], "next": "scope MVP"
+    },
+    {
+      "number": "10", "id": "roadview", "slug": "roadview", "name": "RoadView",
+      "role": "dashboards / monitors", "status": "planned",
+      "meaning": "dashboards / live observation",
+      "does": ["live metrics", "charts", "alerts"],
+      "org": "BlackRoad-OS-Primary", "domain": "roadview.blackroad.io",
+      "agents": ["Gaia", "Theodosia", "Sapphira"],
+      "receipts": ["roadview.metric", "roadview.alert"],
+      "carkeys": ["telemetry read gated"], "next": "scope MVP"
+    },
+    {
+      "number": "11", "id": "roadchain", "slug": "roadchain", "name": "RoadChain",
+      "role": "ledger / receipts", "status": "planned",
+      "meaning": "receipts, ledger, chain-of-custody",
+      "does": ["append-only log", "chain verify", "export"],
+      "org": "BlackRoad-OS-Primary", "domain": "roadchain.blackroad.io",
+      "agents": ["Theodosia", "Anastasia", "Seraphina"],
+      "receipts": ["roadchain.entry", "roadchain.verified"],
+      "carkeys": ["write gated", "read open"], "next": "scope MVP"
+    },
+    {
+      "number": "12", "id": "roadside", "slug": "roadside", "name": "RoadSide",
+      "role": "assistance / quick help", "status": "planned",
+      "meaning": "help / support / quick fixes",
+      "does": ["help drawer", "fix-it bots", "FAQ"],
+      "org": "BlackRoad-OS-Primary", "domain": "roadside.blackroad.io",
+      "agents": ["Thalia", "Cordelia", "Roadie"],
+      "receipts": ["roadside.ticket.opened"],
+      "carkeys": ["none"], "next": "scope MVP"
+    },
+    {
+      "number": "13", "id": "roadcoin", "slug": "roadcoin", "name": "RoadCoin",
+      "role": "payments / billing", "status": "planned",
+      "meaning": "payments, credits, billing",
+      "does": ["credits ledger", "pricing", "invoices"],
+      "org": "BlackRoad-OS-Primary", "domain": "roadcoin.blackroad.io",
+      "agents": ["Valeria", "Theodosia", "Atticus"],
+      "receipts": ["roadcoin.charged", "roadcoin.refunded"],
+      "carkeys": ["payment gated"], "next": "scope MVP"
+    },
+    {
+      "number": "14", "id": "carpool", "slug": "carpool", "name": "CarPool",
+      "role": "shared rooms", "status": "planned",
+      "meaning": "shared rooms / multi-user sessions",
+      "does": ["rooms", "presence", "shared state"],
+      "org": "BlackRoad-OS-Primary", "domain": "carpool.blackroad.io",
+      "agents": ["Aria", "Cecilia", "Lucidia"],
+      "receipts": ["carpool.joined", "carpool.left"],
+      "carkeys": ["room access gated"], "next": "scope MVP"
+    },
+    {
+      "number": "15", "id": "blackboard", "slug": "blackboard", "name": "BlackBoard",
+      "role": "canvas / freeform", "status": "planned",
+      "meaning": "shared canvas / whiteboard",
+      "does": ["draw", "place tiles", "link", "export"],
+      "org": "BlackRoad-Knowledge", "domain": "blackboard.blackroad.io",
+      "agents": ["Sapphira", "Calliope", "Thalia"],
+      "receipts": ["blackboard.stroke", "blackboard.saved"],
+      "carkeys": ["none"], "next": "scope MVP"
+    },
+    {
+      "number": "16", "id": "oneway", "slug": "oneway", "name": "OneWay",
+      "role": "broadcast / publish", "status": "planned",
+      "meaning": "outbound broadcasts / publish",
+      "does": ["publish posts", "push notifications"],
+      "org": "BlackRoad-OS-Primary", "domain": "oneway.blackroad.io",
+      "agents": ["Calliope", "Cicero", "Aria"],
+      "receipts": ["oneway.published", "oneway.delivered"],
+      "carkeys": ["publish gated"], "next": "scope MVP"
+    },
+    {
+      "number": "17", "id": "roadband", "slug": "roadband", "name": "RoadBand",
+      "role": "audio / music", "status": "planned",
+      "meaning": "audio / music / radio",
+      "does": ["play", "stream", "score"],
+      "org": "BlackRoad-OS-Primary", "domain": "roadband.blackroad.io",
+      "agents": ["Lyra", "Aria", "Sapphira"],
+      "receipts": ["roadband.played", "roadband.streamed"],
+      "carkeys": ["none"], "next": "scope MVP"
+    },
+    {
+      "number": "18", "id": "highway", "slug": "highway", "name": "HighWay",
+      "role": "high-throughput batch", "status": "planned",
+      "meaning": "high-throughput fast lane",
+      "does": ["batch ops", "bulk pipelines"],
+      "org": "BlackRoad-OS-Primary", "domain": "highway.blackroad.io",
+      "agents": ["Gaia", "Sebastian", "Lucidia"],
+      "receipts": ["highway.batch.started"],
+      "carkeys": ["bulk action gated"], "next": "scope MVP"
+    },
+    {
+      "number": "19", "id": "roadsport", "slug": "roadsport", "name": "RoadSport",
+      "role": "movement / training / sports", "status": "mvp-stub",
+      "meaning": "movement, training, sports planning (no medical, no betting)",
+      "does": ["movement plan", "training", "practice", "workout", "progress", "recovery"],
+      "org": "BlackRoad-OS-Primary", "domain": "roadsport.blackroad.io",
+      "agents": ["Lyra", "Sapphira", "Aria"],
+      "receipts": ["roadsport.plan.created", "roadsport.handoff.created", "roadsport.safety_review_needed"],
+      "carkeys": ["health/wearable/biometric/location → CarKeys gated"], "next": "open RoadSport MVP"
+    },
+    {
+      "number": "20", "id": "officeroad", "slug": "officeroad", "name": "OfficeRoad",
+      "role": "docs / sheets", "status": "planned",
+      "meaning": "work office (docs, sheets)",
+      "does": ["docs", "sheets", "slides"],
+      "org": "BlackRoad-OS-Primary", "domain": "office.blackroad.io",
+      "agents": ["Cicero", "Cecilia", "Alice"],
+      "receipts": ["officeroad.doc.saved"],
+      "carkeys": ["none"], "next": "scope MVP"
+    },
+    {
+      "number": "21", "id": "roadstream", "slug": "roadstream", "name": "RoadStream",
+      "role": "live / streaming", "status": "planned",
+      "meaning": "live streaming / video",
+      "does": ["live feed", "recording"],
+      "org": "BlackRoad-OS-Primary", "domain": "stream.blackroad.io",
+      "agents": ["Aria", "Lyra", "Sapphira"],
+      "receipts": ["roadstream.live", "roadstream.recorded"],
+      "carkeys": ["stream key gated"], "next": "scope MVP"
+    },
+    {
+      "number": "22", "id": "roadshow", "slug": "roadshow", "name": "RoadShow",
+      "role": "demos / showcase", "status": "planned",
+      "meaning": "showcase / demo runner",
+      "does": ["present slides", "run demos"],
+      "org": "BlackRoad-OS-Primary", "domain": "roadshow.blackroad.io",
+      "agents": ["Calliope", "Sapphira", "Aria"],
+      "receipts": ["roadshow.demo.run"],
+      "carkeys": ["none"], "next": "scope MVP"
+    },
+    {
+      "number": "23", "id": "roundabout", "slug": "roundabout", "name": "RoundAbout",
+      "role": "discovery / explore", "status": "planned",
+      "meaning": "discovery / explore",
+      "does": ["recommend", "explore", "loop"],
+      "org": "BlackRoad-OS-Primary", "domain": "roundabout.blackroad.io",
+      "agents": ["Ophelia", "Alice", "Sophia"],
+      "receipts": ["roundabout.explored"],
+      "carkeys": ["none"], "next": "scope MVP"
+    },
+    {
+      "number": "24", "id": "glovebox", "slug": "glovebox", "name": "GloveBox",
+      "role": "personal / private kit", "status": "planned",
+      "meaning": "personal kit / private items",
+      "does": ["personal store", "quick stash"],
+      "org": "BlackRoad-Private", "domain": "glovebox.blackroad.io",
+      "agents": ["Anastasia", "Alice", "Seraphina"],
+      "receipts": ["glovebox.stored", "glovebox.opened"],
+      "carkeys": ["personal gated"], "next": "scope MVP"
+    },
+    {
+      "number": "25", "id": "roadmap", "slug": "roadmap", "name": "RoadMap",
+      "role": "plan / horizon", "status": "planned",
+      "meaning": "roadmap / planning",
+      "does": ["goals", "milestones", "status"],
+      "org": "BlackRoad-OS-Primary", "domain": "roadmap.blackroad.io",
+      "agents": ["Celeste", "Octavia", "Lucidia"],
+      "receipts": ["roadmap.milestone.set"],
+      "carkeys": ["none"], "next": "scope MVP"
+    },
+    {
+      "number": "26", "id": "roadwire", "slug": "roadwire", "name": "RoadWire",
+      "role": "comms / signals", "status": "planned",
+      "meaning": "comms / signaling / pubsub",
+      "does": ["pubsub", "signals", "events"],
+      "org": "BlackRoad-OS-Primary", "domain": "wire.blackroad.io",
+      "agents": ["Aria", "Gaia", "Seraphina"],
+      "receipts": ["roadwire.signal", "roadwire.subscribed"],
+      "carkeys": ["pubsub gated"], "next": "scope MVP"
+    },
+    {
+      "number": "27", "id": "detour", "slug": "detour", "name": "Detour",
+      "role": "fallback / fail-safe", "status": "planned",
+      "meaning": "fallback / alternate route",
+      "does": ["degraded mode", "backup paths"],
+      "org": "BlackRoad-OS-Primary", "domain": "detour.blackroad.io",
+      "agents": ["Gaia", "Seraphina", "Lucidia"],
+      "receipts": ["detour.activated", "detour.cleared"],
+      "carkeys": ["failover gated"], "next": "scope MVP"
     }
   ]
 }

@@ -1,0 +1,21 @@
+name: Registry
+
+# Guards the single source of truth. Every push / PR must keep
+# Registry/products.json valid AND index.html in sync with it.
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Validate Registry/products.json
+        run: node scripts/validate-registry.mjs
+      - name: Check index.html is in sync with the registry
+        run: node scripts/sync-products.mjs --check
