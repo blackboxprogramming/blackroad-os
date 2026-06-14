@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-06-14",
+  "products": [
+    {
+      "id": 1,
+      "slug": "roados",
+      "name": "RoadOS",
+      "number": "01",
+      "category": "Operating Spine",
+      "definition": "Browser-native BlackRoad computer. One-tab operating environment.",
+      "boundary": "RoadOS is the workspace/computer shell. RoadCode builds inside it.",
+      "mvp": "Route a command/intent to the right product/file/action and give a safe next step.",
+      "status": "canon_ready",
+      "implementation_status": "planned",
+      "risk_level": "medium",
+      "primary_agents": ["Roadie", "Lucidia"],
+      "primary_handoff": "RoadCode, RoadTrip, RoadView",
+      "next_action": "Build command dock + product launcher UI skeleton"
+    },
+    {
+      "id": 2,
+      "slug": "roadcode",
+      "name": "RoadCode",
+      "number": "02",
+      "category": "Operating Spine",
+      "definition": "End-to-end coding, building, debugging, hosting, deployment system.",
+      "boundary": "From idea to running system without the 'now what?' cliff.",
+      "mvp": "Inspect repo, plan patch, route to correct agent, explain deployment.",
+      "status": "canon_ready",
+      "implementation_status": "planned",
+      "risk_level": "medium",
+      "primary_agents": ["Sebastian", "Elias", "Silas"],
+      "primary_handoff": "RoadOS, HighWay, RoadChain",
+      "next_action": "Implement 172-step routing + patch planning"
+    }
+  ]
+}
