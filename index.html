@@ -15584,9 +15584,21 @@
     if (el) el.textContent = text;
   }
 
+  // Route extension points. Each window registers a pre-route guard (veto a
+  // command before dispatch) or a post-route hook (react after a successful
+  // route) instead of re-wrapping the global route() in an 18-deep decorator
+  // chain. Registration order is preserved as run order.
+  const ROUTE_GUARDS = [];
+  const ROUTE_HOOKS = [];
+  const registerRouteGuard = (fn) => ROUTE_GUARDS.push(fn);
+  const onRouted = (fn) => ROUTE_HOOKS.push(fn);
+
   function route(idOrCommand, source = "click") {
     const raw = String(idOrCommand || "").trim().toLowerCase();
     if (!raw) return false;
+    for (const guard of ROUTE_GUARDS) {
+      if (guard(raw, source, idOrCommand) === false) return false;
+    }
 
     let target = ROUTES.find(r => r.id === raw);
     if (!target) target = ROUTES.find(r => r.aliases.includes(raw));
@@ -15655,6 +15667,7 @@
     if (pusher) {
       pusher("theodosia", `receipt: ${target.writesReceiptStub} · source=${source}`);
     }
+    for (const hook of ROUTE_HOOKS) hook(raw, source);
     return true;
   }
 
@@ -16121,17 +16134,13 @@
   ALL_PALETTE.push({ cmd: "open code",       target: "roadcode", label: "RoadCode", kind: "open" });
 
   // Wrap route() so RoadCode-bound commands switch tabs after open.
-  const _baseRoute = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute(idOrCommand, source);
-    if (ok && ROADCODE_VERB_TABS[raw]) {
+  onRouted((raw) => {
+    if (ROADCODE_VERB_TABS[raw]) {
       RC_STATE.activeTab = ROADCODE_VERB_TABS[raw];
       renderRcTabs();
       renderRcTabContent();
     }
-    return ok;
-  };
+  });
 
   // ===== ROADTRIP MVP WINDOW =====
   // Solo operator + agents/models mission room. No autonomy claims, no fake
@@ -16711,19 +16720,15 @@
   ALL_PALETTE.push({ cmd: "open mission room", target: "roadtrip", label: "RoadTrip", kind: "open" });
 
   // Wrap route() again so RoadTrip verbs trigger the matching button after open.
-  const _baseRoute2 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute2(idOrCommand, source);
-    if (ok && ROADTRIP_VERB_BUTTONS[raw]) {
+  onRouted((raw) => {
+    if (ROADTRIP_VERB_BUTTONS[raw]) {
       const btnId = ROADTRIP_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADWIRE MVP WINDOW =====
   // Durable communication layer. Stores decisions, handoffs, summaries, notices,
@@ -17263,19 +17268,15 @@
   ALL_PALETTE.push({ cmd: "open durable messages",  target: "roadwire", label: "RoadWire", kind: "open" });
 
   // Wrap route() so RoadWire verbs trigger the matching button after open.
-  const _baseRoute3 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute3(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(ROADWIRE_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(ROADWIRE_VERB_BUTTONS, raw)) {
       const btnId = ROADWIRE_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADVIEW MVP WINDOW =====
   // Search with visible lanes, consent state, agent browse traces.
@@ -17962,27 +17963,21 @@
   ALL_PALETTE.push({ cmd: "open search",   target: "roadview", label: "RoadView", kind: "open" });
 
   // Wrap route() again — handles tab switching + button triggering for RoadView verbs.
-  const _baseRoute4 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute4(idOrCommand, source);
-    if (ok) {
-      const tabs = ROADVIEW_VERB_TABS[raw];
-      if (tabs) {
-        if (tabs.center) RV_STATE.activeTab = tabs.center;
-        if (tabs.side)   RV_STATE.activeSideTab = tabs.side;
-        renderRoadview();
-      }
-      if (Object.prototype.hasOwnProperty.call(ROADVIEW_VERB_BUTTONS, raw)) {
-        const btnId = ROADVIEW_VERB_BUTTONS[raw];
-        if (btnId) {
-          const b = document.getElementById(btnId);
-          if (b) setTimeout(() => b.click(), 30);
-        }
+  onRouted((raw) => {
+    const tabs = ROADVIEW_VERB_TABS[raw];
+    if (tabs) {
+      if (tabs.center) RV_STATE.activeTab = tabs.center;
+      if (tabs.side)   RV_STATE.activeSideTab = tabs.side;
+      renderRoadview();
+    }
+    if (Object.prototype.hasOwnProperty.call(ROADVIEW_VERB_BUTTONS, raw)) {
+      const btnId = ROADVIEW_VERB_BUTTONS[raw];
+      if (btnId) {
+        const b = document.getElementById(btnId);
+        if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADBOOK MVP WINDOW =====
   // Durable knowledge + publishing. No fake citations, no fake "published",
@@ -18758,27 +18753,21 @@
   ALL_PALETTE.push({ cmd: "open library",  target: "roadbook", label: "RoadBook", kind: "open" });
 
   // Wrap route() again — handle RoadBook tab switching + button triggering.
-  const _baseRoute5 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute5(idOrCommand, source);
-    if (ok) {
-      const tabs = ROADBOOK_VERB_TABS[raw];
-      if (tabs) {
-        if (tabs.center) RB_STATE.activeTab = tabs.center;
-        if (tabs.side)   RB_STATE.activeSideTab = tabs.side;
-        renderRoadbook();
-      }
-      if (Object.prototype.hasOwnProperty.call(ROADBOOK_VERB_BUTTONS, raw)) {
-        const btnId = ROADBOOK_VERB_BUTTONS[raw];
-        if (btnId) {
-          const b = document.getElementById(btnId);
-          if (b) setTimeout(() => b.click(), 30);
-        }
+  onRouted((raw) => {
+    const tabs = ROADBOOK_VERB_TABS[raw];
+    if (tabs) {
+      if (tabs.center) RB_STATE.activeTab = tabs.center;
+      if (tabs.side)   RB_STATE.activeSideTab = tabs.side;
+      renderRoadbook();
+    }
+    if (Object.prototype.hasOwnProperty.call(ROADBOOK_VERB_BUTTONS, raw)) {
+      const btnId = ROADBOOK_VERB_BUTTONS[raw];
+      if (btnId) {
+        const b = document.getElementById(btnId);
+        if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== BLACKBOARD MVP WINDOW =====
   // Visual creation studio. No real editor — wireframe + structured stubs.
@@ -19613,27 +19602,21 @@
   ALL_PALETTE.push({ cmd: "open visual studio",  target: "blackboard", label: "BlackBoard", kind: "open" });
 
   // Wrap route() — sixth wrapper, chains cleanly.
-  const _baseRoute6 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute6(idOrCommand, source);
-    if (ok) {
-      const tabs = BLACKBOARD_VERB_TABS[raw];
-      if (tabs) {
-        if (tabs.center) BB_STATE.activeTab = tabs.center;
-        if (tabs.side)   BB_STATE.activeSideTab = tabs.side;
-        renderBlackboard();
-      }
-      if (Object.prototype.hasOwnProperty.call(BLACKBOARD_VERB_BUTTONS, raw)) {
-        const btnId = BLACKBOARD_VERB_BUTTONS[raw];
-        if (btnId) {
-          const b = document.getElementById(btnId);
-          if (b) setTimeout(() => b.click(), 30);
-        }
+  onRouted((raw) => {
+    const tabs = BLACKBOARD_VERB_TABS[raw];
+    if (tabs) {
+      if (tabs.center) BB_STATE.activeTab = tabs.center;
+      if (tabs.side)   BB_STATE.activeSideTab = tabs.side;
+      renderBlackboard();
+    }
+    if (Object.prototype.hasOwnProperty.call(BLACKBOARD_VERB_BUTTONS, raw)) {
+      const btnId = BLACKBOARD_VERB_BUTTONS[raw];
+      if (btnId) {
+        const b = document.getElementById(btnId);
+        if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADSHOW MVP WINDOW =====
   // Programming/curation layer. No real publishing, no real broadcast.
@@ -20409,27 +20392,21 @@
   ALL_PALETTE.push({ cmd: "open show",     target: "roadshow", label: "RoadShow", kind: "open" });
 
   // Wrap route() — seventh wrapper.
-  const _baseRoute7 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute7(idOrCommand, source);
-    if (ok) {
-      const tabs = ROADSHOW_VERB_TABS[raw];
-      if (tabs) {
-        if (tabs.center) RS_STATE.activeTab = tabs.center;
-        if (tabs.side)   RS_STATE.activeSideTab = tabs.side;
-        renderRoadshow();
-      }
-      if (Object.prototype.hasOwnProperty.call(ROADSHOW_VERB_BUTTONS, raw)) {
-        const btnId = ROADSHOW_VERB_BUTTONS[raw];
-        if (btnId) {
-          const b = document.getElementById(btnId);
-          if (b) setTimeout(() => b.click(), 30);
-        }
+  onRouted((raw) => {
+    const tabs = ROADSHOW_VERB_TABS[raw];
+    if (tabs) {
+      if (tabs.center) RS_STATE.activeTab = tabs.center;
+      if (tabs.side)   RS_STATE.activeSideTab = tabs.side;
+      renderRoadshow();
+    }
+    if (Object.prototype.hasOwnProperty.call(ROADSHOW_VERB_BUTTONS, raw)) {
+      const btnId = ROADSHOW_VERB_BUTTONS[raw];
+      if (btnId) {
+        const b = document.getElementById(btnId);
+        if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== BACKROAD MVP WINDOW =====
   // Social / community draft layer. NO real posting. NO real follower counts.
@@ -21242,27 +21219,21 @@
   ALL_PALETTE.push({ cmd: "open community", target: "backroad", label: "BackRoad", kind: "open" });
 
   // Wrap route() — eighth wrapper.
-  const _baseRoute8 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute8(idOrCommand, source);
-    if (ok) {
-      const tabs = BACKROAD_VERB_TABS[raw];
-      if (tabs) {
-        if (tabs.center) BR_STATE.activeTab = tabs.center;
-        if (tabs.side)   BR_STATE.activeSideTab = tabs.side;
-        renderBackroad();
-      }
-      if (Object.prototype.hasOwnProperty.call(BACKROAD_VERB_BUTTONS, raw)) {
-        const btnId = BACKROAD_VERB_BUTTONS[raw];
-        if (btnId) {
-          const b = document.getElementById(btnId);
-          if (b) setTimeout(() => b.click(), 30);
-        }
+  onRouted((raw) => {
+    const tabs = BACKROAD_VERB_TABS[raw];
+    if (tabs) {
+      if (tabs.center) BR_STATE.activeTab = tabs.center;
+      if (tabs.side)   BR_STATE.activeSideTab = tabs.side;
+      renderBackroad();
+    }
+    if (Object.prototype.hasOwnProperty.call(BACKROAD_VERB_BUTTONS, raw)) {
+      const btnId = BACKROAD_VERB_BUTTONS[raw];
+      if (btnId) {
+        const b = document.getElementById(btnId);
+        if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADSTREAM MVP WINDOW =====
   // Media pipeline + continuity. NOT live. NOT uploaded. NOT streamed.
@@ -22171,27 +22142,21 @@
   ALL_PALETTE.push({ cmd: "open media pipeline", target: "roadstream", label: "RoadStream", kind: "open" });
 
   // Wrap route() — ninth wrapper.
-  const _baseRoute9 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute9(idOrCommand, source);
-    if (ok) {
-      const tabs = ROADSTREAM_VERB_TABS[raw];
-      if (tabs) {
-        if (tabs.center) RSM_STATE.activeTab = tabs.center;
-        if (tabs.side)   RSM_STATE.activeSideTab = tabs.side;
-        renderRoadstream();
-      }
-      if (Object.prototype.hasOwnProperty.call(ROADSTREAM_VERB_BUTTONS, raw)) {
-        const btnId = ROADSTREAM_VERB_BUTTONS[raw];
-        if (btnId) {
-          const b = document.getElementById(btnId);
-          if (b) setTimeout(() => b.click(), 30);
-        }
+  onRouted((raw) => {
+    const tabs = ROADSTREAM_VERB_TABS[raw];
+    if (tabs) {
+      if (tabs.center) RSM_STATE.activeTab = tabs.center;
+      if (tabs.side)   RSM_STATE.activeSideTab = tabs.side;
+      renderRoadstream();
+    }
+    if (Object.prototype.hasOwnProperty.call(ROADSTREAM_VERB_BUTTONS, raw)) {
+      const btnId = ROADSTREAM_VERB_BUTTONS[raw];
+      if (btnId) {
+        const b = document.getElementById(btnId);
+        if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADBAND MVP WINDOW =====
   // Music/audio planning layer. NO real audio generation. NO real stems.
@@ -23001,19 +22966,15 @@
   ALL_PALETTE.push({ cmd: "open audio studio", target: "roadband", label: "RoadBand", kind: "open" });
 
   // Wrap route() — tenth wrapper.
-  const _baseRoute10 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute10(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(ROADBAND_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(ROADBAND_VERB_BUTTONS, raw)) {
       const btnId = ROADBAND_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== PITSTOP MVP WINDOW =====
   // Learning portal. Teaches; does not dump answers.
@@ -23765,19 +23726,15 @@
   ALL_PALETTE.push({ cmd: "open learning", target: "pitstop", label: "PitStop", kind: "open" });
 
   // Wrap route() — eleventh wrapper.
-  const _baseRoute11 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute11(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(PITSTOP_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(PITSTOP_VERB_BUTTONS, raw)) {
       const btnId = PITSTOP_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADWORLD MVP WINDOW =====
   // Worlds, simulations, playable plans. No real game engine. No multiplayer.
@@ -24528,19 +24485,15 @@
   ALL_PALETTE.push({ cmd: "open world builder", target: "roadworld", label: "RoadWorld", kind: "open" });
 
   // Wrap route() — twelfth wrapper.
-  const _baseRoute12 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute12(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(ROADWORLD_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(ROADWORLD_VERB_BUTTONS, raw)) {
       const btnId = ROADWORLD_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== CARPOOL MVP WINDOW =====
   // Human + agent collaboration rooms.
@@ -25283,19 +25236,15 @@
   ALL_PALETTE.push({ cmd: "open collaboration room",  target: "carpool", label: "CarPool", kind: "open" });
 
   // Wrap route() — thirteenth wrapper.
-  const _baseRoute13 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute13(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(CARPOOL_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(CARPOOL_VERB_BUTTONS, raw)) {
       const btnId = CARPOOL_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADWORK MVP WINDOW =====
   // Business/ops layer. No legal/tax/financial advice as final authority.
@@ -26081,19 +26030,15 @@
   ALL_PALETTE.push({ cmd: "open business ops",target: "roadwork", label: "RoadWork", kind: "open" });
 
   // Wrap route() — fourteenth wrapper.
-  const _baseRoute14 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute14(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(ROADWORK_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(ROADWORK_VERB_BUTTONS, raw)) {
       const btnId = ROADWORK_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADSIDE MVP WINDOW =====
   // Help / support / routing desk. No fake human support. No fake tickets.
@@ -26853,19 +26798,15 @@
   ALL_PALETTE.push({ cmd: "open support",  target: "roadside", label: "RoadSide", kind: "open" });
 
   // Wrap route() — fifteenth wrapper.
-  const _baseRoute15 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute15(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(ROADSIDE_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(ROADSIDE_VERB_BUTTONS, raw)) {
       const btnId = ROADSIDE_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ONEWAY MVP WINDOW =====
   // Controlled data flow. No fake real data movement.
@@ -27603,19 +27544,15 @@
   ALL_PALETTE.push({ cmd: "open data flow", target: "oneway", label: "OneWay", kind: "open" });
 
   // Wrap route() — sixteenth wrapper.
-  const _baseRoute16 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute16(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(ONEWAY_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(ONEWAY_VERB_BUTTONS, raw)) {
       const btnId = ONEWAY_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== HIGHWAY MVP WINDOW =====
   // Infrastructure / deploy readiness. No fake live claims. No fake hosting.
@@ -28486,19 +28423,15 @@
   ALL_PALETTE.push({ cmd: "open deploy readiness", target: "highway", label: "HighWay", kind: "open" });
 
   // Wrap route() — seventeenth wrapper.
-  const _baseRoute17 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute17(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(HIGHWAY_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(HIGHWAY_VERB_BUTTONS, raw)) {
       const btnId = HIGHWAY_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===========================================================
   // ===== RoadSport MVP =====
@@ -29364,23 +29297,21 @@
   ALL_PALETTE.push({ cmd: "open training",  target: "roadsport", label: "RoadSport", kind: "open" });
 
   // Wrap route() — eighteenth wrapper.
-  const _baseRoute18 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
+  registerRouteGuard((raw) => {
     if (rspContainsAny(raw, BET_FLAGS)) {
       console.log("[roadsport] refused betting phrase");
       return false;
     }
-    const ok = _baseRoute18(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(ROADSPORT_VERB_BUTTONS, raw)) {
+  });
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(ROADSPORT_VERB_BUTTONS, raw)) {
       const btnId = ROADSPORT_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== WINDOW STACK MANAGER =====
   // All ~27 window root elements share CSS `z-index: 30`. That makes focus/raise
