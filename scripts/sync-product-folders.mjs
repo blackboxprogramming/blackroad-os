@@ -43,12 +43,19 @@ const stale = [];
 const written = [];
 const noFolder = [];
 const missing = [];
+const unexpected = [];
 
 for (const p of reg.products) {
   const folder = folderByNumber.get(p.number);
   if (!folder) {
     noFolder.push(`${p.number} ${p.name}`);
     if (!NO_FOLDER_OK.has(p.number)) missing.push(`Products/${p.number}_* (for ${p.name})`);
+    continue;
+  }
+  // A product on the no-folder allowlist must NOT have a Products/ folder.
+  // If one appears (e.g. a stray/leftover dir), that is drift, not something to sync.
+  if (NO_FOLDER_OK.has(p.number)) {
+    unexpected.push(`Products/${folder} (product ${p.number}/${p.name} must have no Products/ folder)`);
     continue;
   }
   const file = join(PRODUCTS_DIR, folder, "product.json");
@@ -61,7 +68,7 @@ for (const p of reg.products) {
 }
 
 if (check) {
-  if (stale.length || missing.length) {
+  if (stale.length || missing.length || unexpected.length) {
     if (stale.length) {
       console.error(`✗ ${stale.length} per-folder product.json out of sync with the registry:`);
       for (const s of stale) console.error("  - " + s);
@@ -70,11 +77,19 @@ if (check) {
       console.error(`✗ ${missing.length} registry product(s) with no Products/ folder (drift):`);
       for (const m of missing) console.error("  - " + m);
     }
+    if (unexpected.length) {
+      console.error(`✗ ${unexpected.length} unexpected Products/ folder(s) (drift):`);
+      for (const u of unexpected) console.error("  - " + u);
+    }
     console.error("  Run: node scripts/sync-product-folders.mjs  then commit Products/.");
     process.exit(1);
   }
   console.log("✓ All per-folder product.json are in sync with Registry/products.json");
 } else {
+  if (unexpected.length) {
+    console.warn(`  warning: ${unexpected.length} unexpected Products/ folder(s) left untouched:`);
+    for (const u of unexpected) console.warn("  - " + u);
+  }
   console.log(`✓ Wrote ${written.length} product.json from the registry` +
     (written.length ? " (" + written.length + " updated)" : " (all already current)"));
 }
