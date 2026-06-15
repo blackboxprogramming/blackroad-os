@@ -1,0 +1,28 @@
+{
+  "number": "25",
+  "id": "roadmap",
+  "slug": "roadmap",
+  "name": "RoadMap",
+  "role": "plan / horizon",
+  "status": "planned",
+  "meaning": "roadmap / planning",
+  "does": [
+    "goals",
+    "milestones",
+    "status"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "roadmap.blackroad.io",
+  "agents": [
+    "Celeste",
+    "Octavia",
+    "Lucidia"
+  ],
+  "receipts": [
+    "roadmap.milestone.set"
+  ],
+  "carkeys": [
+    "none"
+  ],
+  "next": "scope MVP"
+}

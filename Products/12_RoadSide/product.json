@@ -1,0 +1,28 @@
+{
+  "number": "12",
+  "id": "roadside",
+  "slug": "roadside",
+  "name": "RoadSide",
+  "role": "assistance / quick help",
+  "status": "planned",
+  "meaning": "help / support / quick fixes",
+  "does": [
+    "help drawer",
+    "fix-it bots",
+    "FAQ"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "roadside.blackroad.io",
+  "agents": [
+    "Thalia",
+    "Cordelia",
+    "Roadie"
+  ],
+  "receipts": [
+    "roadside.ticket.opened"
+  ],
+  "carkeys": [
+    "none"
+  ],
+  "next": "scope MVP"
+}

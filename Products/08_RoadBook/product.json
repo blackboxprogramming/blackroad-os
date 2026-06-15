@@ -1,1 +1,31 @@
-{"id": 8, "slug": "roadbook", "name": "RoadBook", "number": "08", "category": "Publishing", "definition": "Digital-native publishing for books, essays, research, narration, and provenance.", "boundary": "Write, publish, review, and preserve text/audio work with ownership.", "mvp": "Full publishing lifecycle with versioning and rights management.", "status": "level_4_builder_ready", "implementation_status": "planned", "risk_level": "medium", "primary_agents": ["Cicero", "Calliope", "Theodosia"], "primary_handoff": "RoadView, BlackBoard, RoadChain, RoadWork", "next_action": "Implement versioning and rights tracking"}
+{
+  "number": "08",
+  "id": "roadbook",
+  "slug": "roadbook",
+  "name": "RoadBook",
+  "role": "knowledge / notes",
+  "status": "planned",
+  "meaning": "knowledge base, indexed notes",
+  "does": [
+    "note capture",
+    "indexing",
+    "search",
+    "linking"
+  ],
+  "org": "BlackRoad-Knowledge",
+  "domain": "roadbook.blackroad.io",
+  "agents": [
+    "Alice",
+    "Anastasia",
+    "Ophelia",
+    "Cicero"
+  ],
+  "receipts": [
+    "roadbook.note.saved",
+    "roadbook.indexed"
+  ],
+  "carkeys": [
+    "none"
+  ],
+  "next": "scope MVP"
+}

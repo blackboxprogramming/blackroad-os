@@ -1,0 +1,28 @@
+{
+  "number": "24",
+  "id": "glovebox",
+  "slug": "glovebox",
+  "name": "GloveBox",
+  "role": "personal / private kit",
+  "status": "planned",
+  "meaning": "personal kit / private items",
+  "does": [
+    "personal store",
+    "quick stash"
+  ],
+  "org": "BlackRoad-Private",
+  "domain": "glovebox.blackroad.io",
+  "agents": [
+    "Anastasia",
+    "Alice",
+    "Seraphina"
+  ],
+  "receipts": [
+    "glovebox.stored",
+    "glovebox.opened"
+  ],
+  "carkeys": [
+    "personal gated"
+  ],
+  "next": "scope MVP"
+}

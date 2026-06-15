@@ -1,16 +1,39 @@
 {
-  "id": 1,
+  "number": "01",
+  "id": "roados",
   "slug": "roados",
   "name": "RoadOS",
-  "number": "01",
+  "role": "browser-native computer",
+  "status": "active",
+  "meaning": "browser-native computer",
+  "does": [
+    "shell + folder nav",
+    "window management",
+    "app routing",
+    "system clock + chat"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "blackroad.io",
+  "agents": [
+    "Lucidia",
+    "Roadie",
+    "Aria",
+    "Silas"
+  ],
+  "receipts": [
+    "roados.boot",
+    "roados.window.opened",
+    "roados.app.routed"
+  ],
+  "carkeys": [
+    "none"
+  ],
+  "next": "wire command routing",
   "category": "Operating Spine",
   "definition": "Browser-native BlackRoad computer. One-tab operating environment.",
-  "boundary": "The workspace/computer shell. Other products build and run inside it.",
+  "boundary": "RoadOS is the workspace/computer shell. RoadCode builds inside it.",
   "mvp": "Route a command/intent to the right product/file/action and give a safe next step.",
-  "status": "level_4_builder_ready",
   "implementation_status": "planned",
   "risk_level": "medium",
-  "primary_agents": ["Roadie", "Lucidia"],
-  "primary_handoff": "RoadCode, RoadTrip, RoadView, RoadChain",
-  "next_action": "Build command dock + product launcher"
+  "primary_handoff": "RoadCode, RoadTrip, RoadView"
 }

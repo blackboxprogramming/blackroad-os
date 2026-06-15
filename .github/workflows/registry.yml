@@ -17,5 +17,15 @@ jobs:
           node-version: "20"
       - name: Validate Registry/products.json
         run: node scripts/validate-registry.mjs
-      - name: Check index.html is in sync with the registry
+      - name: Validate Registry/agents.json
+        run: node scripts/validate-agents.mjs
+      - name: Check agent roster matches index.html
+        run: node scripts/validate-agents-roster.mjs
+      - name: Validate Registry/orgs.json + domains.json
+        run: node scripts/validate-collections.mjs
+      - name: Check index.html PRODUCTS is in sync with the registry
         run: node scripts/sync-products.mjs --check
+      - name: Check index.html ORGS + DOMAINS are in sync with their registries
+        run: node scripts/sync-collections.mjs --check
+      - name: Check per-folder product.json is in sync with the registry
+        run: node scripts/sync-product-folders.mjs --check

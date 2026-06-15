@@ -1,0 +1,28 @@
+{
+  "number": "23",
+  "id": "roundabout",
+  "slug": "roundabout",
+  "name": "RoundAbout",
+  "role": "discovery / explore",
+  "status": "planned",
+  "meaning": "discovery / explore",
+  "does": [
+    "recommend",
+    "explore",
+    "loop"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "roundabout.blackroad.io",
+  "agents": [
+    "Ophelia",
+    "Alice",
+    "Sophia"
+  ],
+  "receipts": [
+    "roundabout.explored"
+  ],
+  "carkeys": [
+    "none"
+  ],
+  "next": "scope MVP"
+}

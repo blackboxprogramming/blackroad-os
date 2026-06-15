@@ -1,0 +1,547 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-06-15",
+  "total_lanes": 16,
+  "note": "Single source of truth for the 16 CarKeys permission lanes. The CARKEYS_LANES array in index.html is generated from this by scripts/sync-collections.mjs. grants[] is seed data; the desktop mutates an in-memory copy at runtime.",
+  "lanes": [
+    {
+      "num": "01",
+      "id": "operator-identity",
+      "name": "Operator Identity",
+      "status": "ready",
+      "risk": "critical",
+      "purpose": "identifies who can approve, revoke, and reset everything in RoadOS",
+      "permissionTypes": [
+        "own",
+        "approve",
+        "revoke",
+        "delegate",
+        "reset"
+      ],
+      "defaultRule": "only one operator at a time",
+      "operatorRule": "Alexandria / Alexa is the operator",
+      "riskRules": [
+        "operator authority cannot be silently transferred",
+        "handoff requires receipt + reauth",
+        "operator reset requires hardware proof"
+      ],
+      "connected": [
+        "all lanes"
+      ],
+      "receiptTypes": [
+        "OPERATOR_SET",
+        "OPERATOR_HANDOFF",
+        "OPERATOR_REAUTH",
+        "OPERATOR_RESET"
+      ],
+      "grants": [
+        {
+          "id": "grant-operator-0001",
+          "subject": "Alexandria / Alexa",
+          "scope": [
+            "own",
+            "approve",
+            "revoke",
+            "delegate",
+            "reset"
+          ],
+          "status": "approved",
+          "grantedAt": "2026-06-10T00:00:00Z",
+          "expiresAt": "never"
+        }
+      ],
+      "next": "keep stable"
+    },
+    {
+      "num": "02",
+      "id": "agent-permissions",
+      "name": "Agent Permissions",
+      "status": "ready",
+      "risk": "high",
+      "purpose": "controls what each agent may view, suggest, draft, execute, or escalate",
+      "permissionTypes": [
+        "view",
+        "suggest",
+        "draft",
+        "route",
+        "review",
+        "test",
+        "write",
+        "execute",
+        "deploy",
+        "publish",
+        "delete",
+        "revoke"
+      ],
+      "defaultRule": "agents can suggest before they can act",
+      "operatorRule": "Alexandria / Alexa is the operator. Agents do not approve themselves. Irreversible actions require operator approval or an explicit permission grant.",
+      "riskRules": [
+        "secrets are never shown raw",
+        "API keys stay gated",
+        "deploy actions require approval",
+        "delete actions require approval",
+        "external provider actions require scoped grants",
+        "public publishing requires review"
+      ],
+      "connected": [
+        "RoadOS",
+        "RoadCode",
+        "RoadTrip",
+        "OneWay",
+        "HighWay",
+        "RoadChain",
+        "RoadMap",
+        "Detour"
+      ],
+      "receiptTypes": [
+        "CARKEYS_GRANT_REQUESTED",
+        "CARKEYS_GRANT_APPROVED",
+        "CARKEYS_GRANT_DENIED",
+        "CARKEYS_GRANT_REVOKED",
+        "CARKEYS_SCOPE_CHANGED",
+        "CARKEYS_UNSAFE_BLOCKED"
+      ],
+      "grants": [],
+      "seedAllAgents": true,
+      "next": "keep default view/suggest grants; gate write/execute per agent"
+    },
+    {
+      "num": "03",
+      "id": "product-permissions",
+      "name": "Product Permissions",
+      "status": "next",
+      "risk": "medium",
+      "purpose": "which products can be opened, configured, launched, suspended, or archived",
+      "permissionTypes": [
+        "open",
+        "configure",
+        "wire",
+        "launch",
+        "suspend",
+        "archive"
+      ],
+      "defaultRule": "opening is allowed; mutating actions are gated",
+      "operatorRule": "only the operator can launch or archive a product",
+      "riskRules": [
+        "launch requires approval",
+        "archive requires approval",
+        "configure logs to ProductReceipts"
+      ],
+      "connected": [
+        "27 products"
+      ],
+      "receiptTypes": [
+        "PRODUCT_OPENED",
+        "PRODUCT_CONFIGURED",
+        "PRODUCT_LAUNCHED",
+        "PRODUCT_SUSPENDED",
+        "PRODUCT_ARCHIVED"
+      ],
+      "grants": [],
+      "next": "scope product permission grants"
+    },
+    {
+      "num": "04",
+      "id": "domain-permissions",
+      "name": "Domain Permissions",
+      "status": "planned",
+      "risk": "high",
+      "purpose": "which domains can be routed, redirected, or have boards opened",
+      "permissionTypes": [
+        "route",
+        "redirect",
+        "open_board",
+        "set_owner"
+      ],
+      "defaultRule": "routes reviewable; redirects require approval",
+      "operatorRule": "only operator can change a domain owner",
+      "riskRules": [
+        "redirect requires approval",
+        "owner change requires approval"
+      ],
+      "connected": [
+        "20 domains"
+      ],
+      "receiptTypes": [
+        "DOMAIN_ROUTE_OPENED",
+        "DOMAIN_REDIRECT_SET",
+        "DOMAIN_OWNER_CHANGED"
+      ],
+      "grants": [],
+      "next": "pair with Workflow Receipts"
+    },
+    {
+      "num": "05",
+      "id": "org-permissions",
+      "name": "Organization Permissions",
+      "status": "planned",
+      "risk": "medium",
+      "purpose": "which orgs can manage products, domains, repos, agents",
+      "permissionTypes": [
+        "manage_products",
+        "manage_domains",
+        "manage_repos",
+        "manage_agents"
+      ],
+      "defaultRule": "each org manages its own",
+      "operatorRule": "cross-org actions require operator approval",
+      "riskRules": [
+        "cross-org actions require operator",
+        "new orgs require Atticus review"
+      ],
+      "connected": [
+        "20 orgs"
+      ],
+      "receiptTypes": [
+        "ORG_MANAGE_GRANTED",
+        "ORG_CROSS_BORDER"
+      ],
+      "grants": [],
+      "next": "scope org permission grants"
+    },
+    {
+      "num": "06",
+      "id": "repo-access",
+      "name": "Repo Access",
+      "status": "planned",
+      "risk": "high",
+      "purpose": "which subjects can read, write, branch, merge, or delete repos",
+      "permissionTypes": [
+        "read",
+        "write",
+        "create_branch",
+        "merge",
+        "delete"
+      ],
+      "defaultRule": "read open within own org",
+      "operatorRule": "write/merge gated for non-operators; delete requires operator",
+      "riskRules": [
+        "delete requires operator approval",
+        "force-push prohibited without explicit grant"
+      ],
+      "connected": [
+        "BlackRoad-OS-Code",
+        "BlackRoad-OS-Primary"
+      ],
+      "receiptTypes": [
+        "REPO_READ",
+        "REPO_WRITTEN",
+        "REPO_BRANCHED",
+        "REPO_MERGED",
+        "REPO_DELETED"
+      ],
+      "grants": [],
+      "next": "identify repo source of truth"
+    },
+    {
+      "num": "07",
+      "id": "file-access",
+      "name": "File Access",
+      "status": "planned",
+      "risk": "high",
+      "purpose": "which subjects can list, read, write, move, or delete files",
+      "permissionTypes": [
+        "list",
+        "read",
+        "write",
+        "move",
+        "delete"
+      ],
+      "defaultRule": "list open; write gated",
+      "operatorRule": "delete requires operator approval",
+      "riskRules": [
+        "delete requires operator",
+        "writes to canon files require approval"
+      ],
+      "connected": [
+        "Alice",
+        "RoadBook"
+      ],
+      "receiptTypes": [
+        "FILE_LIST",
+        "FILE_READ",
+        "FILE_WRITTEN",
+        "FILE_DELETED"
+      ],
+      "grants": [],
+      "next": "choose a file root"
+    },
+    {
+      "num": "08",
+      "id": "terminal-access",
+      "name": "Terminal Access",
+      "status": "planned",
+      "risk": "critical",
+      "purpose": "which subjects can run shell commands",
+      "permissionTypes": [
+        "read_only",
+        "read_write",
+        "dangerous"
+      ],
+      "defaultRule": "terminal access denied by default",
+      "operatorRule": "dangerous commands require operator approval each time",
+      "riskRules": [
+        "sandbox required before any grant",
+        "dangerous = operator per-command",
+        "no rm -rf without operator + Seraphina"
+      ],
+      "connected": [
+        "Sebastian",
+        "Gaia"
+      ],
+      "receiptTypes": [
+        "TERMINAL_OPEN",
+        "TERMINAL_COMMAND",
+        "TERMINAL_REFUSED"
+      ],
+      "grants": [],
+      "next": "terminal sandbox needed first"
+    },
+    {
+      "num": "09",
+      "id": "deploy-access",
+      "name": "Deploy Access",
+      "status": "planned",
+      "risk": "critical",
+      "purpose": "who can ship code to a domain",
+      "permissionTypes": [
+        "stage",
+        "preview",
+        "deploy",
+        "rollback"
+      ],
+      "defaultRule": "only operator can deploy to ACTIVE domains",
+      "operatorRule": "all deploys require receipts (DeploymentReceipts)",
+      "riskRules": [
+        "stage/preview are reversible",
+        "deploy to ACTIVE requires operator + receipt",
+        "rollback requires operator"
+      ],
+      "connected": [
+        "Silas",
+        "BlackRoad-OS-Cloud",
+        "blackroad.io"
+      ],
+      "receiptTypes": [
+        "DEPLOY_STARTED",
+        "DEPLOY_PASSED",
+        "DEPLOY_FAILED",
+        "DEPLOY_ROLLED_BACK"
+      ],
+      "grants": [],
+      "next": "requires Deployment Receipts lane first"
+    },
+    {
+      "num": "10",
+      "id": "api-keys",
+      "name": "API Keys",
+      "status": "locked",
+      "risk": "critical",
+      "purpose": "storage and gating of API keys",
+      "permissionTypes": [
+        "store",
+        "retrieve",
+        "use",
+        "rotate",
+        "revoke"
+      ],
+      "defaultRule": "no API keys stored in this UI",
+      "operatorRule": "real key storage requires a vault implementation outside the browser",
+      "riskRules": [
+        "raw key material never enters this page",
+        "vault required before any grant",
+        "even the existence of a key is gated"
+      ],
+      "connected": [
+        "external services (none active)"
+      ],
+      "receiptTypes": [
+        "KEY_REQUESTED",
+        "KEY_GRANTED",
+        "KEY_REVOKED",
+        "KEY_ROTATED"
+      ],
+      "grants": [],
+      "lockedReason": "no vault. no real keys exist or can be created from this UI.",
+      "next": "pick a vault (1Password / KMS / Bitwarden) and integrate"
+    },
+    {
+      "num": "11",
+      "id": "provider-accounts",
+      "name": "Provider Accounts",
+      "status": "locked",
+      "risk": "critical",
+      "purpose": "which third-party providers are linked",
+      "permissionTypes": [
+        "link",
+        "verify",
+        "use",
+        "unlink"
+      ],
+      "defaultRule": "no providers connected",
+      "operatorRule": "provider linking requires explicit operator OAuth outside this UI",
+      "riskRules": [
+        "no provider connects through this page",
+        "OAuth never collected here",
+        "scopes defined before any link"
+      ],
+      "connected": [
+        "external providers (none linked)"
+      ],
+      "receiptTypes": [
+        "PROVIDER_LINKED",
+        "PROVIDER_USED",
+        "PROVIDER_UNLINKED"
+      ],
+      "grants": [],
+      "lockedReason": "no OAuth implemented. no providers can be linked from this UI.",
+      "next": "design provider scoping before linking any"
+    },
+    {
+      "num": "12",
+      "id": "local-node",
+      "name": "Local Node Access",
+      "status": "planned",
+      "risk": "high",
+      "purpose": "which local nodes (Pi 5, Mac) can be acted on",
+      "permissionTypes": [
+        "view",
+        "control",
+        "restart",
+        "shutdown"
+      ],
+      "defaultRule": "view open within operator network",
+      "operatorRule": "shutdown requires operator approval",
+      "riskRules": [
+        "shutdown requires operator",
+        "restart logs to HardwareReceipts"
+      ],
+      "connected": [
+        "cecilia Pi 5",
+        "MacBook"
+      ],
+      "receiptTypes": [
+        "NODE_VIEWED",
+        "NODE_CONTROLLED",
+        "NODE_RESTARTED",
+        "NODE_SHUTDOWN"
+      ],
+      "grants": [],
+      "next": "enumerate nodes"
+    },
+    {
+      "num": "13",
+      "id": "browser-sessions",
+      "name": "Browser Sessions",
+      "status": "planned",
+      "risk": "medium",
+      "purpose": "which browser sessions are active for the operator",
+      "permissionTypes": [
+        "open",
+        "close",
+        "freeze",
+        "log"
+      ],
+      "defaultRule": "log only",
+      "operatorRule": "close requires operator confirmation",
+      "riskRules": [
+        "freeze logs to RoadChain",
+        "close-on-others requires operator"
+      ],
+      "connected": [
+        "RoadOS shell"
+      ],
+      "receiptTypes": [
+        "SESSION_OPEN",
+        "SESSION_CLOSED",
+        "SESSION_FROZEN"
+      ],
+      "grants": [],
+      "next": "spec session log"
+    },
+    {
+      "num": "14",
+      "id": "oneway-grants",
+      "name": "OneWay Data Grants",
+      "status": "planned",
+      "risk": "high",
+      "purpose": "scoped outbound data grants (publish, broadcast, send)",
+      "permissionTypes": [
+        "publish",
+        "broadcast",
+        "send_email",
+        "send_message"
+      ],
+      "defaultRule": "publishing requires review",
+      "operatorRule": "outbound payloads require Cordelia + Atticus sign-off",
+      "riskRules": [
+        "outbound = explicit review",
+        "Cordelia checks tone / harm",
+        "Atticus checks legality"
+      ],
+      "connected": [
+        "OneWay",
+        "Calliope",
+        "Aria"
+      ],
+      "receiptTypes": [
+        "ONEWAY_PUBLISHED",
+        "ONEWAY_BROADCASTED",
+        "ONEWAY_REJECTED"
+      ],
+      "grants": [],
+      "next": "scope outbound payload review"
+    },
+    {
+      "num": "15",
+      "id": "revoked-expired",
+      "name": "Revoked / Expired Grants",
+      "status": "planned",
+      "risk": "info",
+      "purpose": "history of grants that no longer apply",
+      "permissionTypes": [
+        "(read-only audit lane)"
+      ],
+      "defaultRule": "history append-only",
+      "operatorRule": "revocations cannot be silently un-revoked",
+      "riskRules": [
+        "history is append-only",
+        "resurrection requires fresh grant"
+      ],
+      "connected": [
+        "all grant-issuing lanes"
+      ],
+      "receiptTypes": [
+        "aggregated from other lanes"
+      ],
+      "grants": [],
+      "next": "build aggregator view"
+    },
+    {
+      "num": "16",
+      "id": "unsafe-blocked",
+      "name": "Unsafe / Blocked Requests",
+      "status": "ready",
+      "risk": "info",
+      "purpose": "intake for permission requests that were refused for safety reasons",
+      "permissionTypes": [
+        "(intake-only — no grants ever issued from here)"
+      ],
+      "defaultRule": "all entries are blocked",
+      "operatorRule": "operator can review but cannot silently approve — requires explicit override receipt",
+      "riskRules": [
+        "intake-only, no outgoing grants",
+        "every block written to RoadChain",
+        "operator override leaves a paper trail"
+      ],
+      "connected": [
+        "all lanes"
+      ],
+      "receiptTypes": [
+        "CARKEYS_UNSAFE_BLOCKED"
+      ],
+      "grants": [],
+      "next": "route any blocked stub here as a check"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "number": "15",
+  "id": "blackboard",
+  "slug": "blackboard",
+  "name": "BlackBoard",
+  "role": "canvas / freeform",
+  "status": "planned",
+  "meaning": "shared canvas / whiteboard",
+  "does": [
+    "draw",
+    "place tiles",
+    "link",
+    "export"
+  ],
+  "org": "BlackRoad-Knowledge",
+  "domain": "blackboard.blackroad.io",
+  "agents": [
+    "Sapphira",
+    "Calliope",
+    "Thalia"
+  ],
+  "receipts": [
+    "blackboard.stroke",
+    "blackboard.saved"
+  ],
+  "carkeys": [
+    "none"
+  ],
+  "next": "scope MVP"
+}

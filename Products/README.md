@@ -9,7 +9,7 @@ See individual product folders for full canon definitions.
 ## Structure
 Each product folder contains:
 - README.md (meaning, boundary, MVP, integrations)
-- product.json (machine-readable)
+- product.json (machine-readable — **generated** from `Registry/products.json`, do not hand-edit)
 - routing.md
 - schema.md (if applicable)
 - status.md

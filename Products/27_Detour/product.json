@@ -1,0 +1,28 @@
+{
+  "number": "27",
+  "id": "detour",
+  "slug": "detour",
+  "name": "Detour",
+  "role": "fallback / fail-safe",
+  "status": "planned",
+  "meaning": "fallback / alternate route",
+  "does": [
+    "degraded mode",
+    "backup paths"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "detour.blackroad.io",
+  "agents": [
+    "Gaia",
+    "Seraphina",
+    "Lucidia"
+  ],
+  "receipts": [
+    "detour.activated",
+    "detour.cleared"
+  ],
+  "carkeys": [
+    "failover gated"
+  ],
+  "next": "scope MVP"
+}

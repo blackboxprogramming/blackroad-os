@@ -11774,187 +11774,590 @@
     { range: "172",     label: "Continue / Next Road" }
   ];
 
-  const DOMAINS = [
-    { num:"01", id:"blackroad-io", name:"blackroad.io",
-      board:"Product / RoadOS public universe",
-      status:"active", queue:12, blocked:2, stageIdx:7,
-      owns:["products","public app surfaces","RoadOS shell","demos","product visibility"],
-      permission:"open", receipts:"writing",
-      nextRoads:["product.blackroad.io","roadmap.blackroad.io","roadchain.io"],
-      products:["RoadOS","RoadWorld","RoadMap","RoadShow"],
-      agents:["Lucidia","Roadie","Aria","Sapphira"] },
-
-    { num:"02", id:"blackroad-company", name:"blackroad.company",
-      board:"Company / org operations",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["company surface","hiring","ops pages"],
-      permission:"awaiting CarKeys", receipts:"none yet",
-      nextRoads:["blackroadinc.us","blackroad.io"],
-      products:["OfficeRoad","RoadView"],
-      agents:["Theodosia","Octavia","Cecilia"] },
-
-    { num:"03", id:"blackroad-me", name:"blackroad.me",
-      board:"Personal / operator surface",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["personal pages","identity","profile"],
-      permission:"operator gated", receipts:"none yet",
-      nextRoads:["blackroad.io","lucidia.studio"],
-      products:["GloveBox","BackRoad"],
-      agents:["Cordelia","Anastasia","Seraphina"] },
-
-    { num:"04", id:"blackroad-network", name:"blackroad.network",
-      board:"Network / federation gates",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["federation peers","presence","routing"],
-      permission:"gated", receipts:"none yet",
-      nextRoads:["blackroad.systems","roadchain.io"],
-      products:["CarPool","RoadWire"],
-      agents:["Gaia","Aria","Lucidia"] },
-
-    { num:"05", id:"blackroad-systems", name:"blackroad.systems",
-      board:"Infra / runtime / system ops",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["runtime","deploy targets","health"],
-      permission:"gated", receipts:"none yet",
-      nextRoads:["blackroad.network","blackroadinc.us"],
-      products:["PitStop","HighWay","RoadView","Detour"],
-      agents:["Gaia","Silas","Seraphina"] },
-
-    { num:"06", id:"blackroadai-com", name:"blackroadai.com",
-      board:"AI / model surface",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["model endpoints","agent surface"],
-      permission:"secrets gated", receipts:"none yet",
-      nextRoads:["lucidiaqi.com","aliceqi.com"],
-      products:["RoadCode","RoadTrip","RoadView"],
-      agents:["Lucidia","Gematria","Sophia"] },
-
-    { num:"07", id:"blackroadinc-us", name:"blackroadinc.us",
-      board:"Legal entity / US incorporation",
-      status:"needs_permission", queue:3, blocked:1, stageIdx:5,
-      owns:["corporate filings","contracts surface"],
-      permission:"awaiting CarKeys + Atticus", receipts:"pending",
-      nextRoads:["blackroad.company","blackroad.io"],
-      products:["CarKeys","RoadCoin","RoadChain"],
-      agents:["Atticus","Valeria","Theodosia","Portia"] },
-
-    { num:"08", id:"blackroadqi-com", name:"blackroadqi.com",
-      board:"QI / quantum identity surface",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["qi identity","signed objects"],
-      permission:"gated", receipts:"none yet",
-      nextRoads:["blackroadquantum.com","lucidiaqi.com"],
-      products:["CarKeys","RoadChain"],
-      agents:["Seraphina","Gematria"] },
-
-    { num:"09", id:"blackroadquantum-com", name:"blackroadquantum.com",
-      board:"Quantum / research surface",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["research pages","math surface"],
-      permission:"open after publish", receipts:"none yet",
-      nextRoads:["blackroadquantum.net","blackroadquantum.info"],
-      products:["RoadBook","BlackBoard"],
-      agents:["Gematria","Ophelia","Sophia"] },
-
-    { num:"10", id:"blackroadquantum-info", name:"blackroadquantum.info",
-      board:"Quantum docs / informational",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["public docs","explainers"],
-      permission:"open", receipts:"none yet",
-      nextRoads:["blackroadquantum.com"],
-      products:["RoadBook","RoadShow"],
-      agents:["Cicero","Thalia"] },
-
-    { num:"11", id:"blackroadquantum-net", name:"blackroadquantum.net",
-      board:"Quantum / federation",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["peer network for quantum nodes"],
-      permission:"gated", receipts:"none yet",
-      nextRoads:["blackroad.network"],
-      products:["RoadWire","CarPool"],
-      agents:["Gaia","Lucidia"] },
-
-    { num:"12", id:"blackroadquantum-shop", name:"blackroadquantum.shop",
-      board:"Quantum / commerce",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["paid quantum products"],
-      permission:"payment gated", receipts:"none yet",
-      nextRoads:["blackroadquantum.store","roadcoin.io"],
-      products:["RoadCoin","OneWay"],
-      agents:["Valeria","Calliope"] },
-
-    { num:"13", id:"blackroadquantum-store", name:"blackroadquantum.store",
-      board:"Quantum / catalog",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["storefront catalog"],
-      permission:"gated", receipts:"none yet",
-      nextRoads:["blackroadquantum.shop"],
-      products:["RoadCoin","RoadShow"],
-      agents:["Calliope","Sapphira"] },
-
-    { num:"14", id:"blackboxprogramming-io", name:"blackboxprogramming.io",
-      board:"Engineering / public dev surface",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["dev docs","public engineering pages"],
-      permission:"open", receipts:"none yet",
-      nextRoads:["blackroadai.com","blackroad.io"],
-      products:["RoadCode","RoadBook"],
-      agents:["Sebastian","Elias","Cicero"] },
-
-    { num:"15", id:"aliceqi-com", name:"aliceqi.com",
-      board:"Alice — file / index assistant surface",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["alice agent endpoints"],
-      permission:"gated", receipts:"none yet",
-      nextRoads:["lucidiaqi.com","blackroadqi.com"],
-      products:["RoadBook","GloveBox"],
-      agents:["Alice","Anastasia"] },
-
-    { num:"16", id:"lucidia-earth", name:"lucidia.earth",
-      board:"Lucidia — public lighthouse",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["lucidia public face"],
-      permission:"open", receipts:"none yet",
-      nextRoads:["lucidia.studio","blackroad.io"],
-      products:["RoadOS","RoadShow"],
-      agents:["Lucidia","Calliope"] },
-
-    { num:"17", id:"lucidia-studio", name:"lucidia.studio",
-      board:"Lucidia studio / making things",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["studio sessions","creative pipelines"],
-      permission:"gated", receipts:"none yet",
-      nextRoads:["lucidia.earth","lucidiaqi.com"],
-      products:["BlackBoard","RoadBand","RoadStream"],
-      agents:["Sapphira","Lyra","Calliope"] },
-
-    { num:"18", id:"lucidiaqi-com", name:"lucidiaqi.com",
-      board:"Lucidia QI — agent identity",
-      status:"planned", queue:0, blocked:0, stageIdx:0,
-      owns:["lucidia signed identity"],
-      permission:"gated", receipts:"none yet",
-      nextRoads:["blackroadqi.com","aliceqi.com"],
-      products:["CarKeys","RoadChain"],
-      agents:["Lucidia","Seraphina"] },
-
-    { num:"19", id:"roadchain-io", name:"roadchain.io",
-      board:"Receipts / chain-of-custody",
-      status:"needs_proof", queue:2, blocked:0, stageIdx:6,
-      owns:["receipts ledger","audit surface"],
-      permission:"write gated", receipts:"scaffolded",
-      nextRoads:["blackroad.io","roadcoin.io"],
-      products:["RoadChain","RoadView"],
-      agents:["Theodosia","Anastasia","Seraphina"] },
-
-    { num:"20", id:"roadcoin-io", name:"roadcoin.io",
-      board:"Payments / credits",
-      status:"needs_permission", queue:1, blocked:1, stageIdx:6,
-      owns:["credits ledger","billing surface"],
-      permission:"payment gated", receipts:"none yet",
-      nextRoads:["roadchain.io","blackroad.io"],
-      products:["RoadCoin"],
-      agents:["Valeria","Theodosia","Atticus"] }
+  /* AUTO-GENERATED:DOMAINS:START — source of truth: Registry/domains.json · regenerate: node scripts/sync-collections.mjs · do not hand-edit */
+  const DOMAINS =
+  [
+    {
+      "num": "01",
+      "id": "blackroad-io",
+      "name": "blackroad.io",
+      "board": "Product / RoadOS public universe",
+      "status": "active",
+      "queue": 12,
+      "blocked": 2,
+      "stageIdx": 7,
+      "owns": [
+        "products",
+        "public app surfaces",
+        "RoadOS shell",
+        "demos",
+        "product visibility"
+      ],
+      "permission": "open",
+      "receipts": "writing",
+      "nextRoads": [
+        "product.blackroad.io",
+        "roadmap.blackroad.io",
+        "roadchain.io"
+      ],
+      "products": [
+        "RoadOS",
+        "RoadWorld",
+        "RoadMap",
+        "RoadShow"
+      ],
+      "agents": [
+        "Lucidia",
+        "Roadie",
+        "Aria",
+        "Sapphira"
+      ]
+    },
+    {
+      "num": "02",
+      "id": "blackroad-company",
+      "name": "blackroad.company",
+      "board": "Company / org operations",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "company surface",
+        "hiring",
+        "ops pages"
+      ],
+      "permission": "awaiting CarKeys",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroadinc.us",
+        "blackroad.io"
+      ],
+      "products": [
+        "OfficeRoad",
+        "RoadView"
+      ],
+      "agents": [
+        "Theodosia",
+        "Octavia",
+        "Cecilia"
+      ]
+    },
+    {
+      "num": "03",
+      "id": "blackroad-me",
+      "name": "blackroad.me",
+      "board": "Personal / operator surface",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "personal pages",
+        "identity",
+        "profile"
+      ],
+      "permission": "operator gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroad.io",
+        "lucidia.studio"
+      ],
+      "products": [
+        "GloveBox",
+        "BackRoad"
+      ],
+      "agents": [
+        "Cordelia",
+        "Anastasia",
+        "Seraphina"
+      ]
+    },
+    {
+      "num": "04",
+      "id": "blackroad-network",
+      "name": "blackroad.network",
+      "board": "Network / federation gates",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "federation peers",
+        "presence",
+        "routing"
+      ],
+      "permission": "gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroad.systems",
+        "roadchain.io"
+      ],
+      "products": [
+        "CarPool",
+        "RoadWire"
+      ],
+      "agents": [
+        "Gaia",
+        "Aria",
+        "Lucidia"
+      ]
+    },
+    {
+      "num": "05",
+      "id": "blackroad-systems",
+      "name": "blackroad.systems",
+      "board": "Infra / runtime / system ops",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "runtime",
+        "deploy targets",
+        "health"
+      ],
+      "permission": "gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroad.network",
+        "blackroadinc.us"
+      ],
+      "products": [
+        "PitStop",
+        "HighWay",
+        "RoadView",
+        "Detour"
+      ],
+      "agents": [
+        "Gaia",
+        "Silas",
+        "Seraphina"
+      ]
+    },
+    {
+      "num": "06",
+      "id": "blackroadai-com",
+      "name": "blackroadai.com",
+      "board": "AI / model surface",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "model endpoints",
+        "agent surface"
+      ],
+      "permission": "secrets gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "lucidiaqi.com",
+        "aliceqi.com"
+      ],
+      "products": [
+        "RoadCode",
+        "RoadTrip",
+        "RoadView"
+      ],
+      "agents": [
+        "Lucidia",
+        "Gematria",
+        "Sophia"
+      ]
+    },
+    {
+      "num": "07",
+      "id": "blackroadinc-us",
+      "name": "blackroadinc.us",
+      "board": "Legal entity / US incorporation",
+      "status": "needs_permission",
+      "queue": 3,
+      "blocked": 1,
+      "stageIdx": 5,
+      "owns": [
+        "corporate filings",
+        "contracts surface"
+      ],
+      "permission": "awaiting CarKeys + Atticus",
+      "receipts": "pending",
+      "nextRoads": [
+        "blackroad.company",
+        "blackroad.io"
+      ],
+      "products": [
+        "CarKeys",
+        "RoadCoin",
+        "RoadChain"
+      ],
+      "agents": [
+        "Atticus",
+        "Valeria",
+        "Theodosia",
+        "Portia"
+      ]
+    },
+    {
+      "num": "08",
+      "id": "blackroadqi-com",
+      "name": "blackroadqi.com",
+      "board": "QI / quantum identity surface",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "qi identity",
+        "signed objects"
+      ],
+      "permission": "gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroadquantum.com",
+        "lucidiaqi.com"
+      ],
+      "products": [
+        "CarKeys",
+        "RoadChain"
+      ],
+      "agents": [
+        "Seraphina",
+        "Gematria"
+      ]
+    },
+    {
+      "num": "09",
+      "id": "blackroadquantum-com",
+      "name": "blackroadquantum.com",
+      "board": "Quantum / research surface",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "research pages",
+        "math surface"
+      ],
+      "permission": "open after publish",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroadquantum.net",
+        "blackroadquantum.info"
+      ],
+      "products": [
+        "RoadBook",
+        "BlackBoard"
+      ],
+      "agents": [
+        "Gematria",
+        "Ophelia",
+        "Sophia"
+      ]
+    },
+    {
+      "num": "10",
+      "id": "blackroadquantum-info",
+      "name": "blackroadquantum.info",
+      "board": "Quantum docs / informational",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "public docs",
+        "explainers"
+      ],
+      "permission": "open",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroadquantum.com"
+      ],
+      "products": [
+        "RoadBook",
+        "RoadShow"
+      ],
+      "agents": [
+        "Cicero",
+        "Thalia"
+      ]
+    },
+    {
+      "num": "11",
+      "id": "blackroadquantum-net",
+      "name": "blackroadquantum.net",
+      "board": "Quantum / federation",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "peer network for quantum nodes"
+      ],
+      "permission": "gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroad.network"
+      ],
+      "products": [
+        "RoadWire",
+        "CarPool"
+      ],
+      "agents": [
+        "Gaia",
+        "Lucidia"
+      ]
+    },
+    {
+      "num": "12",
+      "id": "blackroadquantum-shop",
+      "name": "blackroadquantum.shop",
+      "board": "Quantum / commerce",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "paid quantum products"
+      ],
+      "permission": "payment gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroadquantum.store",
+        "roadcoin.io"
+      ],
+      "products": [
+        "RoadCoin",
+        "OneWay"
+      ],
+      "agents": [
+        "Valeria",
+        "Calliope"
+      ]
+    },
+    {
+      "num": "13",
+      "id": "blackroadquantum-store",
+      "name": "blackroadquantum.store",
+      "board": "Quantum / catalog",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "storefront catalog"
+      ],
+      "permission": "gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroadquantum.shop"
+      ],
+      "products": [
+        "RoadCoin",
+        "RoadShow"
+      ],
+      "agents": [
+        "Calliope",
+        "Sapphira"
+      ]
+    },
+    {
+      "num": "14",
+      "id": "blackboxprogramming-io",
+      "name": "blackboxprogramming.io",
+      "board": "Engineering / public dev surface",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "dev docs",
+        "public engineering pages"
+      ],
+      "permission": "open",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroadai.com",
+        "blackroad.io"
+      ],
+      "products": [
+        "RoadCode",
+        "RoadBook"
+      ],
+      "agents": [
+        "Sebastian",
+        "Elias",
+        "Cicero"
+      ]
+    },
+    {
+      "num": "15",
+      "id": "aliceqi-com",
+      "name": "aliceqi.com",
+      "board": "Alice — file / index assistant surface",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "alice agent endpoints"
+      ],
+      "permission": "gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "lucidiaqi.com",
+        "blackroadqi.com"
+      ],
+      "products": [
+        "RoadBook",
+        "GloveBox"
+      ],
+      "agents": [
+        "Alice",
+        "Anastasia"
+      ]
+    },
+    {
+      "num": "16",
+      "id": "lucidia-earth",
+      "name": "lucidia.earth",
+      "board": "Lucidia — public lighthouse",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "lucidia public face"
+      ],
+      "permission": "open",
+      "receipts": "none yet",
+      "nextRoads": [
+        "lucidia.studio",
+        "blackroad.io"
+      ],
+      "products": [
+        "RoadOS",
+        "RoadShow"
+      ],
+      "agents": [
+        "Lucidia",
+        "Calliope"
+      ]
+    },
+    {
+      "num": "17",
+      "id": "lucidia-studio",
+      "name": "lucidia.studio",
+      "board": "Lucidia studio / making things",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "studio sessions",
+        "creative pipelines"
+      ],
+      "permission": "gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "lucidia.earth",
+        "lucidiaqi.com"
+      ],
+      "products": [
+        "BlackBoard",
+        "RoadBand",
+        "RoadStream"
+      ],
+      "agents": [
+        "Sapphira",
+        "Lyra",
+        "Calliope"
+      ]
+    },
+    {
+      "num": "18",
+      "id": "lucidiaqi-com",
+      "name": "lucidiaqi.com",
+      "board": "Lucidia QI — agent identity",
+      "status": "planned",
+      "queue": 0,
+      "blocked": 0,
+      "stageIdx": 0,
+      "owns": [
+        "lucidia signed identity"
+      ],
+      "permission": "gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "blackroadqi.com",
+        "aliceqi.com"
+      ],
+      "products": [
+        "CarKeys",
+        "RoadChain"
+      ],
+      "agents": [
+        "Lucidia",
+        "Seraphina"
+      ]
+    },
+    {
+      "num": "19",
+      "id": "roadchain-io",
+      "name": "roadchain.io",
+      "board": "Receipts / chain-of-custody",
+      "status": "needs_proof",
+      "queue": 2,
+      "blocked": 0,
+      "stageIdx": 6,
+      "owns": [
+        "receipts ledger",
+        "audit surface"
+      ],
+      "permission": "write gated",
+      "receipts": "scaffolded",
+      "nextRoads": [
+        "blackroad.io",
+        "roadcoin.io"
+      ],
+      "products": [
+        "RoadChain",
+        "RoadView"
+      ],
+      "agents": [
+        "Theodosia",
+        "Anastasia",
+        "Seraphina"
+      ]
+    },
+    {
+      "num": "20",
+      "id": "roadcoin-io",
+      "name": "roadcoin.io",
+      "board": "Payments / credits",
+      "status": "needs_permission",
+      "queue": 1,
+      "blocked": 1,
+      "stageIdx": 6,
+      "owns": [
+        "credits ledger",
+        "billing surface"
+      ],
+      "permission": "payment gated",
+      "receipts": "none yet",
+      "nextRoads": [
+        "roadchain.io",
+        "blackroad.io"
+      ],
+      "products": [
+        "RoadCoin"
+      ],
+      "agents": [
+        "Valeria",
+        "Theodosia",
+        "Atticus"
+      ]
+    }
   ];
+  /* AUTO-GENERATED:DOMAINS:END */
 
   let selectedDomainId = DOMAINS[0].id;
 
@@ -12142,229 +12545,589 @@
   // ===== ORGANIZATIONS WINDOW =====
   // 20 ownership cabinets. ACTIVE: Primary, Products, Agents. NEXT: Code. Others PLANNED.
   // catalogOwner: "products" or "agents" → org owns the full 27-cabinet.
-  const ORGS = [
-    { num:"01", id:"br-os-company", name:"BlackRoad-OS-Company",
-      purpose:"company / legal / hiring / public face",
-      status:"planned",
-      products:["RoadWorld","OfficeRoad"],
-      domains:["blackroad.company","blackroadinc.us"],
-      agents:["Theodosia","Octavia","Atticus","Valeria"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"legal entity + Atticus review",
-      blocker:"incorporation pending",
-      next:"scope company surface" },
-
-    { num:"02", id:"br-os-primary", name:"BlackRoad-OS-Primary",
-      purpose:"root canon, RoadOS shell, master operating map",
-      status:"active",
-      products:["RoadOS","RoadMap"],
-      domains:["blackroad.io","blackroad.systems"],
-      agents:["Lucidia","Roadie","Theodosia","Olympia"],
-      repos:3, docs:8, builds:12, receipts:"writing", releases:"v0.x", archive:"open",
-      releaseGate:"operator approval + RoadChain receipt",
-      blocker:"none",
-      next:"wire registry view" },
-
-    { num:"03", id:"br-os-products", name:"BlackRoad-OS-Products",
-      purpose:"product cabinet — 27 product surfaces",
-      status:"active",
-      catalogOwner:"products",
-      products:["RoadOS","RoadCode","RoadBook","RoadTrip"],
-      domains:["blackroad.io"],
-      agents:["Sapphira","Roadie","Octavia","Calliope"],
-      repos:1, docs:4, builds:6, receipts:"writing", releases:"v0.1", archive:"open",
-      releaseGate:"per-product owner sign-off",
-      blocker:"none",
-      next:"build Apps page" },
-
-    { num:"04", id:"br-os-cloud", name:"BlackRoad-OS-Cloud",
-      purpose:"cloud / hosting / deploy targets",
-      status:"planned",
-      products:["HighWay","PitStop","Detour"],
-      domains:["blackroad.systems"],
-      agents:["Gaia","Silas","Seraphina"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"infra audit",
-      blocker:"deploy target undecided",
-      next:"choose host" },
-
-    { num:"05", id:"br-os-network", name:"BlackRoad-OS-Network",
-      purpose:"network / federation / peers",
-      status:"planned",
-      products:["CarPool","RoadWire"],
-      domains:["blackroad.network","blackroadquantum.net"],
-      agents:["Gaia","Aria","Lucidia"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"peer policy",
-      blocker:"peer spec",
-      next:"spec peers" },
-
-    { num:"06", id:"br-os-agents", name:"BlackRoad-OS-Agents",
-      purpose:"27-agent roster + dispatch",
-      status:"active",
-      catalogOwner:"agents",
-      products:["RoadOS","RoadTrip"],
-      domains:["blackroadai.com"],
-      agents:["Lucidia","Roadie","Octavia","Sebastian"],
-      repos:1, docs:2, builds:3, receipts:"writing", releases:"v0.1", archive:"open",
-      releaseGate:"Octavia review",
-      blocker:"none",
-      next:"live agent telemetry" },
-
-    { num:"07", id:"br-os-code", name:"BlackRoad-OS-Code",
-      purpose:"build / run / deploy room and code knowledge",
-      status:"next",
-      products:["RoadCode"],
-      domains:["code.blackroad.io","blackboxprogramming.io"],
-      agents:["Roadie","Sebastian","Elias","Silas","Aria"],
-      repos:0, docs:1, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"Silas tests + CarKeys",
-      blocker:"MVP scope",
-      next:"Open RoadCode MVP window" },
-
-    { num:"08", id:"br-os-data", name:"BlackRoad-OS-Data",
-      purpose:"data / catalogs / indexes",
-      status:"planned",
-      products:["RoadView","RoadBook"],
-      domains:["blackroad.systems"],
-      agents:["Alice","Anastasia","Gaia"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"schema review",
-      blocker:"storage TBD",
-      next:"choose storage layer" },
-
-    { num:"09", id:"br-os-memory", name:"BlackRoad-OS-Memory",
-      purpose:"memory / continuity / archive",
-      status:"planned",
-      products:["RoadBook","GloveBox"],
-      domains:["aliceqi.com"],
-      agents:["Anastasia","Alice","Ophelia"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"continuity proof",
-      blocker:"model TBD",
-      next:"spec memory format" },
-
-    { num:"10", id:"br-os-studio", name:"BlackRoad-OS-Studio",
-      purpose:"making / canvas / creative pipelines",
-      status:"planned",
-      products:["BlackBoard","RoadBand","RoadStream"],
-      domains:["lucidia.studio"],
-      agents:["Sapphira","Lyra","Calliope"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"studio sign-off",
-      blocker:"surfaces TBD",
-      next:"scope studio MVP" },
-
-    { num:"11", id:"br-os-media", name:"BlackRoad-OS-Media",
-      purpose:"audio / video / streaming",
-      status:"planned",
-      products:["RoadBand","RoadStream","RoadShow"],
-      domains:["stream.blackroad.io"],
-      agents:["Lyra","Aria","Sapphira"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"media license",
-      blocker:"licensing",
-      next:"choose codecs" },
-
-    { num:"12", id:"br-os-interactive", name:"BlackRoad-OS-Interactive",
-      purpose:"games / play / interactive",
-      status:"planned",
-      products:["RoadSport","CarPool"],
-      domains:["roadsport.blackroad.io"],
-      agents:["Lyra","Sapphira","Aria"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"play test",
-      blocker:"scope",
-      next:"pick first game" },
-
-    { num:"13", id:"br-os-hardware", name:"BlackRoad-OS-Hardware",
-      purpose:"devices / Pi / on-device runtimes",
-      status:"planned",
-      products:["PitStop","Detour","GloveBox"],
-      domains:["blackroad.systems"],
-      agents:["Gaia","Seraphina"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"hardware audit",
-      blocker:"device list",
-      next:"confirm Pi 5 target" },
-
-    { num:"14", id:"br-os-security", name:"BlackRoad-OS-Security",
-      purpose:"keys / secrets / audits / gates",
-      status:"planned",
-      products:["CarKeys","RoadChain"],
-      domains:["carkeys.blackroad.io","blackroadqi.com"],
-      agents:["Seraphina","Atticus","Theodosia"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"security audit",
-      blocker:"secrets store choice",
-      next:"pick vault" },
-
-    { num:"15", id:"br-os-education", name:"BlackRoad-OS-Education",
-      purpose:"teach / explain / docs / tutorials",
-      status:"planned",
-      products:["RoadBook","RoadShow","RoadSide"],
-      domains:["blackroadquantum.info"],
-      agents:["Thalia","Cicero","Cordelia"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"pedagogy review",
-      blocker:"audience TBD",
-      next:"outline first lesson" },
-
-    { num:"16", id:"br-os-research", name:"BlackRoad-OS-Research",
-      purpose:"research / papers / math",
-      status:"planned",
-      products:["BlackBoard","RoadBook"],
-      domains:["blackroadquantum.com"],
-      agents:["Gematria","Ophelia","Sophia"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"peer review",
-      blocker:"scope",
-      next:"pick first paper" },
-
-    { num:"17", id:"br-os-labs", name:"BlackRoad-OS-Labs",
-      purpose:"experiments / prototypes / unstable surfaces",
-      status:"planned",
-      products:["RoadSport","BlackBoard"],
-      domains:["blackroadquantum.com"],
-      agents:["Sebastian","Sapphira","Gematria"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"stability gate",
-      blocker:"none",
-      next:"open first lab" },
-
-    { num:"18", id:"br-os-foundation", name:"BlackRoad-OS-Foundation",
-      purpose:"nonprofit / open / public good",
-      status:"planned",
-      products:["RoadBook","RoadSide"],
-      domains:["blackroad.io"],
-      agents:["Cordelia","Atticus","Thalia"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"legal entity",
-      blocker:"501(c) filing",
-      next:"scope foundation" },
-
-    { num:"19", id:"br-os-ventures", name:"BlackRoad-OS-Ventures",
-      purpose:"commercial / payments / commerce",
-      status:"planned",
-      products:["RoadCoin","OneWay"],
-      domains:["roadcoin.io","blackroadquantum.shop"],
-      agents:["Valeria","Theodosia","Calliope"],
-      repos:0, docs:0, builds:0, receipts:"none yet", releases:"none yet", archive:"open",
-      releaseGate:"payments gate",
-      blocker:"commerce path",
-      next:"commerce wiring" },
-
-    { num:"20", id:"br-os-archive", name:"BlackRoad-OS-Archive",
-      purpose:"cold storage / receipts / history",
-      status:"planned",
-      products:["RoadChain","GloveBox"],
-      domains:["roadchain.io"],
-      agents:["Theodosia","Anastasia"],
-      repos:0, docs:0, builds:0, receipts:"writing-soon", releases:"none yet", archive:"open",
-      releaseGate:"append-only proof",
-      blocker:"storage TBD",
-      next:"spec archive layout" }
+  /* AUTO-GENERATED:ORGS:START — source of truth: Registry/orgs.json · regenerate: node scripts/sync-collections.mjs · do not hand-edit */
+  const ORGS =
+  [
+    {
+      "num": "01",
+      "id": "br-os-company",
+      "name": "BlackRoad-OS-Company",
+      "purpose": "company / legal / hiring / public face",
+      "status": "planned",
+      "products": [
+        "RoadWorld",
+        "OfficeRoad"
+      ],
+      "domains": [
+        "blackroad.company",
+        "blackroadinc.us"
+      ],
+      "agents": [
+        "Theodosia",
+        "Octavia",
+        "Atticus",
+        "Valeria"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "legal entity + Atticus review",
+      "blocker": "incorporation pending",
+      "next": "scope company surface"
+    },
+    {
+      "num": "02",
+      "id": "br-os-primary",
+      "name": "BlackRoad-OS-Primary",
+      "purpose": "root canon, RoadOS shell, master operating map",
+      "status": "active",
+      "products": [
+        "RoadOS",
+        "RoadMap"
+      ],
+      "domains": [
+        "blackroad.io",
+        "blackroad.systems"
+      ],
+      "agents": [
+        "Lucidia",
+        "Roadie",
+        "Theodosia",
+        "Olympia"
+      ],
+      "repos": 3,
+      "docs": 8,
+      "builds": 12,
+      "receipts": "writing",
+      "releases": "v0.x",
+      "archive": "open",
+      "releaseGate": "operator approval + RoadChain receipt",
+      "blocker": "none",
+      "next": "wire registry view"
+    },
+    {
+      "num": "03",
+      "id": "br-os-products",
+      "name": "BlackRoad-OS-Products",
+      "purpose": "product cabinet — 27 product surfaces",
+      "status": "active",
+      "catalogOwner": "products",
+      "products": [
+        "RoadOS",
+        "RoadCode",
+        "RoadBook",
+        "RoadTrip"
+      ],
+      "domains": [
+        "blackroad.io"
+      ],
+      "agents": [
+        "Sapphira",
+        "Roadie",
+        "Octavia",
+        "Calliope"
+      ],
+      "repos": 1,
+      "docs": 4,
+      "builds": 6,
+      "receipts": "writing",
+      "releases": "v0.1",
+      "archive": "open",
+      "releaseGate": "per-product owner sign-off",
+      "blocker": "none",
+      "next": "build Apps page"
+    },
+    {
+      "num": "04",
+      "id": "br-os-cloud",
+      "name": "BlackRoad-OS-Cloud",
+      "purpose": "cloud / hosting / deploy targets",
+      "status": "planned",
+      "products": [
+        "HighWay",
+        "PitStop",
+        "Detour"
+      ],
+      "domains": [
+        "blackroad.systems"
+      ],
+      "agents": [
+        "Gaia",
+        "Silas",
+        "Seraphina"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "infra audit",
+      "blocker": "deploy target undecided",
+      "next": "choose host"
+    },
+    {
+      "num": "05",
+      "id": "br-os-network",
+      "name": "BlackRoad-OS-Network",
+      "purpose": "network / federation / peers",
+      "status": "planned",
+      "products": [
+        "CarPool",
+        "RoadWire"
+      ],
+      "domains": [
+        "blackroad.network",
+        "blackroadquantum.net"
+      ],
+      "agents": [
+        "Gaia",
+        "Aria",
+        "Lucidia"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "peer policy",
+      "blocker": "peer spec",
+      "next": "spec peers"
+    },
+    {
+      "num": "06",
+      "id": "br-os-agents",
+      "name": "BlackRoad-OS-Agents",
+      "purpose": "27-agent roster + dispatch",
+      "status": "active",
+      "catalogOwner": "agents",
+      "products": [
+        "RoadOS",
+        "RoadTrip"
+      ],
+      "domains": [
+        "blackroadai.com"
+      ],
+      "agents": [
+        "Lucidia",
+        "Roadie",
+        "Octavia",
+        "Sebastian"
+      ],
+      "repos": 1,
+      "docs": 2,
+      "builds": 3,
+      "receipts": "writing",
+      "releases": "v0.1",
+      "archive": "open",
+      "releaseGate": "Octavia review",
+      "blocker": "none",
+      "next": "live agent telemetry"
+    },
+    {
+      "num": "07",
+      "id": "br-os-code",
+      "name": "BlackRoad-OS-Code",
+      "purpose": "build / run / deploy room and code knowledge",
+      "status": "next",
+      "products": [
+        "RoadCode"
+      ],
+      "domains": [
+        "code.blackroad.io",
+        "blackboxprogramming.io"
+      ],
+      "agents": [
+        "Roadie",
+        "Sebastian",
+        "Elias",
+        "Silas",
+        "Aria"
+      ],
+      "repos": 0,
+      "docs": 1,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "Silas tests + CarKeys",
+      "blocker": "MVP scope",
+      "next": "Open RoadCode MVP window"
+    },
+    {
+      "num": "08",
+      "id": "br-os-data",
+      "name": "BlackRoad-OS-Data",
+      "purpose": "data / catalogs / indexes",
+      "status": "planned",
+      "products": [
+        "RoadView",
+        "RoadBook"
+      ],
+      "domains": [
+        "blackroad.systems"
+      ],
+      "agents": [
+        "Alice",
+        "Anastasia",
+        "Gaia"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "schema review",
+      "blocker": "storage TBD",
+      "next": "choose storage layer"
+    },
+    {
+      "num": "09",
+      "id": "br-os-memory",
+      "name": "BlackRoad-OS-Memory",
+      "purpose": "memory / continuity / archive",
+      "status": "planned",
+      "products": [
+        "RoadBook",
+        "GloveBox"
+      ],
+      "domains": [
+        "aliceqi.com"
+      ],
+      "agents": [
+        "Anastasia",
+        "Alice",
+        "Ophelia"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "continuity proof",
+      "blocker": "model TBD",
+      "next": "spec memory format"
+    },
+    {
+      "num": "10",
+      "id": "br-os-studio",
+      "name": "BlackRoad-OS-Studio",
+      "purpose": "making / canvas / creative pipelines",
+      "status": "planned",
+      "products": [
+        "BlackBoard",
+        "RoadBand",
+        "RoadStream"
+      ],
+      "domains": [
+        "lucidia.studio"
+      ],
+      "agents": [
+        "Sapphira",
+        "Lyra",
+        "Calliope"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "studio sign-off",
+      "blocker": "surfaces TBD",
+      "next": "scope studio MVP"
+    },
+    {
+      "num": "11",
+      "id": "br-os-media",
+      "name": "BlackRoad-OS-Media",
+      "purpose": "audio / video / streaming",
+      "status": "planned",
+      "products": [
+        "RoadBand",
+        "RoadStream",
+        "RoadShow"
+      ],
+      "domains": [
+        "stream.blackroad.io"
+      ],
+      "agents": [
+        "Lyra",
+        "Aria",
+        "Sapphira"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "media license",
+      "blocker": "licensing",
+      "next": "choose codecs"
+    },
+    {
+      "num": "12",
+      "id": "br-os-interactive",
+      "name": "BlackRoad-OS-Interactive",
+      "purpose": "games / play / interactive",
+      "status": "planned",
+      "products": [
+        "RoadSport",
+        "CarPool"
+      ],
+      "domains": [
+        "roadsport.blackroad.io"
+      ],
+      "agents": [
+        "Lyra",
+        "Sapphira",
+        "Aria"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "play test",
+      "blocker": "scope",
+      "next": "pick first game"
+    },
+    {
+      "num": "13",
+      "id": "br-os-hardware",
+      "name": "BlackRoad-OS-Hardware",
+      "purpose": "devices / Pi / on-device runtimes",
+      "status": "planned",
+      "products": [
+        "PitStop",
+        "Detour",
+        "GloveBox"
+      ],
+      "domains": [
+        "blackroad.systems"
+      ],
+      "agents": [
+        "Gaia",
+        "Seraphina"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "hardware audit",
+      "blocker": "device list",
+      "next": "confirm Pi 5 target"
+    },
+    {
+      "num": "14",
+      "id": "br-os-security",
+      "name": "BlackRoad-OS-Security",
+      "purpose": "keys / secrets / audits / gates",
+      "status": "planned",
+      "products": [
+        "CarKeys",
+        "RoadChain"
+      ],
+      "domains": [
+        "carkeys.blackroad.io",
+        "blackroadqi.com"
+      ],
+      "agents": [
+        "Seraphina",
+        "Atticus",
+        "Theodosia"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "security audit",
+      "blocker": "secrets store choice",
+      "next": "pick vault"
+    },
+    {
+      "num": "15",
+      "id": "br-os-education",
+      "name": "BlackRoad-OS-Education",
+      "purpose": "teach / explain / docs / tutorials",
+      "status": "planned",
+      "products": [
+        "RoadBook",
+        "RoadShow",
+        "RoadSide"
+      ],
+      "domains": [
+        "blackroadquantum.info"
+      ],
+      "agents": [
+        "Thalia",
+        "Cicero",
+        "Cordelia"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "pedagogy review",
+      "blocker": "audience TBD",
+      "next": "outline first lesson"
+    },
+    {
+      "num": "16",
+      "id": "br-os-research",
+      "name": "BlackRoad-OS-Research",
+      "purpose": "research / papers / math",
+      "status": "planned",
+      "products": [
+        "BlackBoard",
+        "RoadBook"
+      ],
+      "domains": [
+        "blackroadquantum.com"
+      ],
+      "agents": [
+        "Gematria",
+        "Ophelia",
+        "Sophia"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "peer review",
+      "blocker": "scope",
+      "next": "pick first paper"
+    },
+    {
+      "num": "17",
+      "id": "br-os-labs",
+      "name": "BlackRoad-OS-Labs",
+      "purpose": "experiments / prototypes / unstable surfaces",
+      "status": "planned",
+      "products": [
+        "RoadSport",
+        "BlackBoard"
+      ],
+      "domains": [
+        "blackroadquantum.com"
+      ],
+      "agents": [
+        "Sebastian",
+        "Sapphira",
+        "Gematria"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "stability gate",
+      "blocker": "none",
+      "next": "open first lab"
+    },
+    {
+      "num": "18",
+      "id": "br-os-foundation",
+      "name": "BlackRoad-OS-Foundation",
+      "purpose": "nonprofit / open / public good",
+      "status": "planned",
+      "products": [
+        "RoadBook",
+        "RoadSide"
+      ],
+      "domains": [
+        "blackroad.io"
+      ],
+      "agents": [
+        "Cordelia",
+        "Atticus",
+        "Thalia"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "legal entity",
+      "blocker": "501(c) filing",
+      "next": "scope foundation"
+    },
+    {
+      "num": "19",
+      "id": "br-os-ventures",
+      "name": "BlackRoad-OS-Ventures",
+      "purpose": "commercial / payments / commerce",
+      "status": "planned",
+      "products": [
+        "RoadCoin",
+        "OneWay"
+      ],
+      "domains": [
+        "roadcoin.io",
+        "blackroadquantum.shop"
+      ],
+      "agents": [
+        "Valeria",
+        "Theodosia",
+        "Calliope"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "none yet",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "payments gate",
+      "blocker": "commerce path",
+      "next": "commerce wiring"
+    },
+    {
+      "num": "20",
+      "id": "br-os-archive",
+      "name": "BlackRoad-OS-Archive",
+      "purpose": "cold storage / receipts / history",
+      "status": "planned",
+      "products": [
+        "RoadChain",
+        "GloveBox"
+      ],
+      "domains": [
+        "roadchain.io"
+      ],
+      "agents": [
+        "Theodosia",
+        "Anastasia"
+      ],
+      "repos": 0,
+      "docs": 0,
+      "builds": 0,
+      "receipts": "writing-soon",
+      "releases": "none yet",
+      "archive": "open",
+      "releaseGate": "append-only proof",
+      "blocker": "storage TBD",
+      "next": "spec archive layout"
+    }
   ];
+  /* AUTO-GENERATED:ORGS:END */
 
   let selectedOrgId = ORGS[0].id;
 
@@ -12885,279 +13648,680 @@
   // ===== ROADMAP WINDOW =====
   // 20 lanes. DONE = shipping. ACTIVE = in flight now. NEXT = on deck.
   // FAKE_DONE = looks done, no receipt yet — honest flag for shell/window/chat.
-  const LANES = [
-    { num:"01", id:"home", name:"Home",
-      status:"done",
-      meaning:"home screen with folder cabinet, top/bottom bars, centered logo.",
-      currentlyExists:[
+  /* AUTO-GENERATED:LANES:START — source of truth: Registry/lanes.json · regenerate: node scripts/sync-collections.mjs · do not hand-edit */
+  const LANES =
+  [
+    {
+      "num": "01",
+      "id": "home",
+      "name": "Home",
+      "status": "done",
+      "meaning": "home screen with folder cabinet, top/bottom bars, centered logo.",
+      "currentlyExists": [
         "9 folders on a black desktop",
         "white top bar + clock",
         "white bottom taskbar + start button",
         "centered logo wallpaper"
       ],
-      needs:["nothing for v0"],
-      blockers:[],
-      proofNeeded:[
-        { t:"opens with 9 folders visible", ok:true },
-        { t:"folders click to highlight", ok:true },
-        { t:"start button shows menu", ok:true }
+      "needs": [
+        "nothing for v0"
       ],
-      next:"keep stable" },
-
-    { num:"02", id:"agents", name:"Agents",
-      status:"done",
-      meaning:"27-agent triple-rail control page with dispatch + chat.",
-      currentlyExists:["roster + status counts","detail panel","dispatch box","chat rail"],
-      needs:["real agent telemetry"],
-      blockers:[],
-      proofNeeded:[
-        { t:"opens from Home", ok:true },
-        { t:"agent click updates detail", ok:true },
-        { t:"dispatch flips status to working", ok:true }
+      "blockers": [],
+      "proofNeeded": [
+        {
+          "t": "opens with 9 folders visible",
+          "ok": true
+        },
+        {
+          "t": "folders click to highlight",
+          "ok": true
+        },
+        {
+          "t": "start button shows menu",
+          "ok": true
+        }
       ],
-      next:"hook real agent telemetry" },
-
-    { num:"03", id:"products", name:"Products",
-      status:"done",
-      meaning:"27-product catalog with status + next action per card.",
-      currentlyExists:["list + count tally","detail panel","bottom action bar","chat rail"],
-      needs:["per-product MVP windows"],
-      blockers:["25 products not built yet"],
-      proofNeeded:[
-        { t:"opens from Home", ok:true },
-        { t:"RoadOS shows ACTIVE", ok:true },
-        { t:"RoadCode shows NEXT", ok:true }
+      "next": "keep stable"
+    },
+    {
+      "num": "02",
+      "id": "agents",
+      "name": "Agents",
+      "status": "done",
+      "meaning": "27-agent triple-rail control page with dispatch + chat.",
+      "currentlyExists": [
+        "roster + status counts",
+        "detail panel",
+        "dispatch box",
+        "chat rail"
       ],
-      next:"build RoadCode MVP" },
-
-    { num:"04", id:"domains", name:"Domains",
-      status:"done",
-      meaning:"20-domain router console with 172 workflow stage + universal routes.",
-      currentlyExists:["list + status counts","detail with routes + pipeline","Open Board action"],
-      needs:["actual route handling"],
-      blockers:["hosting/DNS path undecided"],
-      proofNeeded:[
-        { t:"opens from Home", ok:true },
-        { t:"blackroad.io ACTIVE", ok:true },
-        { t:"OpenBoard disabled for non-active", ok:true }
+      "needs": [
+        "real agent telemetry"
       ],
-      next:"wire actual /dashboard route on blackroad.io" },
-
-    { num:"05", id:"organizations", name:"Organizations",
-      status:"done",
-      meaning:"20-org ownership cabinet with repo/build/receipt/release stats.",
-      currentlyExists:["list + status counts","catalog-owner expansion for Products + Agents orgs","stat grid"],
-      needs:["real repo/build/release counts"],
-      blockers:[],
-      proofNeeded:[
-        { t:"opens from Home", ok:true },
-        { t:"Primary, Products, Agents ACTIVE", ok:true },
-        { t:"catalog owners expand to all 27", ok:true }
+      "blockers": [],
+      "proofNeeded": [
+        {
+          "t": "opens from Home",
+          "ok": true
+        },
+        {
+          "t": "agent click updates detail",
+          "ok": true
+        },
+        {
+          "t": "dispatch flips status to working",
+          "ok": true
+        }
       ],
-      next:"wire real counts from sources" },
-
-    { num:"06", id:"registry", name:"Registry",
-      status:"done",
-      meaning:"16 canon tables, master canon counts, locked rules.",
-      currentlyExists:["16-table list","Master Canon counts","locked rules block","file-path list"],
-      needs:["actual JSON file generation"],
-      blockers:[],
-      proofNeeded:[
-        { t:"opens from Home", ok:true },
-        { t:"Master Canon shows 1/27/27/20/20", ok:true },
-        { t:"counts pull live from cabinet arrays", ok:true }
+      "next": "hook real agent telemetry"
+    },
+    {
+      "num": "03",
+      "id": "products",
+      "name": "Products",
+      "status": "done",
+      "meaning": "27-product catalog with status + next action per card.",
+      "currentlyExists": [
+        "list + count tally",
+        "detail panel",
+        "bottom action bar",
+        "chat rail"
       ],
-      next:"emit Registry/*.blackroad.json files" },
-
-    { num:"07", id:"roados-shell", name:"RoadOS Shell",
-      status:"fake_done",
-      meaning:"black background, white bars, clock, start menu, mutually-exclusive windows.",
-      currentlyExists:["black desktop","white top + bottom bars","clock","start menu","9 folders"],
-      needs:["boot receipt","idle receipt","unhandled-error receipt"],
-      blockers:[],
-      proofNeeded:[
-        { t:"emits receipt on boot", ok:false },
-        { t:"emits receipt on idle", ok:false },
-        { t:"emits receipt on click", ok:false }
+      "needs": [
+        "per-product MVP windows"
       ],
-      fakeNote:"Visible and working, but no receipt has ever been written. By the no-action-without-receipt rule, this is fake-done until receipts land.",
-      next:"write boot receipt on load" },
-
-    { num:"08", id:"command-routing", name:"Command Routing",
-      status:"next",
-      meaning:"RoadOS should understand clicks and commands, then route to the right page, product, agent, or next action.",
-      currentlyExists:[
-        "Home folders","Agents page","Products page","Domains page",
-        "Organizations page","Registry page","RoadMap page"
+      "blockers": [
+        "25 products not built yet"
       ],
-      needs:[
-        "folder click routing","Start menu routing","bottom action button routing",
-        "selected page state","current road label","receipt stub when action runs"
+      "proofNeeded": [
+        {
+          "t": "opens from Home",
+          "ok": true
+        },
+        {
+          "t": "RoadOS shows ACTIVE",
+          "ok": true
+        },
+        {
+          "t": "RoadCode shows NEXT",
+          "ok": true
+        }
       ],
-      blockers:[],
-      proofNeeded:[
-        { t:"click Home folder opens Home", ok:true },
-        { t:"click Products folder opens Products", ok:true },
-        { t:"click Agents folder opens Agents", ok:true },
-        { t:"click Domains folder opens Domains", ok:true },
-        { t:"click Organizations folder opens Organizations", ok:true },
-        { t:"click Registry opens Registry", ok:true },
-        { t:"click RoadMap opens RoadMap", ok:true },
-        { t:"Start menu items route", ok:false },
-        { t:"action button emits receipt", ok:false }
+      "next": "build RoadCode MVP"
+    },
+    {
+      "num": "04",
+      "id": "domains",
+      "name": "Domains",
+      "status": "done",
+      "meaning": "20-domain router console with 172 workflow stage + universal routes.",
+      "currentlyExists": [
+        "list + status counts",
+        "detail with routes + pipeline",
+        "Open Board action"
       ],
-      next:"wire command routing" },
-
-    { num:"09", id:"window-system", name:"Window System",
-      status:"fake_done",
-      meaning:"six mutually-exclusive windows + Esc-to-close.",
-      currentlyExists:["Home / Agents / Products / Domains / Orgs / Registry / RoadMap windows","Esc closes current","openX closes others"],
-      needs:["window state log","focus stack","minimize-to-taskbar"],
-      blockers:[],
-      proofNeeded:[
-        { t:"only one window open at a time", ok:true },
-        { t:"emits receipt on open/close", ok:false },
-        { t:"taskbar shows current window", ok:false }
+      "needs": [
+        "actual route handling"
       ],
-      fakeNote:"Works in practice but writes no state log. A reload loses everything; no proof of what was opened or when.",
-      next:"log window-open events to receipts" },
-
-    { num:"10", id:"chat-rail", name:"Chat Rail",
-      status:"fake_done",
-      meaning:"right-side chat panel in every cabinet window.",
-      currentlyExists:["seed messages","message bubbles","input + SEND button","local echo"],
-      needs:["real delivery to agents","persistence across reload","cross-window thread"],
-      blockers:["no backend chosen"],
-      proofNeeded:[
-        { t:"messages render", ok:true },
-        { t:"messages persist across reload", ok:false },
-        { t:"messages reach an actual agent", ok:false }
+      "blockers": [
+        "hosting/DNS path undecided"
       ],
-      fakeNote:"The chat is theatre. Your message never leaves the page. Looks right; proves nothing.",
-      next:"stub chat persistence (local first)" },
-
-    { num:"11", id:"receipts", name:"Receipts",
-      status:"next",
-      meaning:"every action emits an append-only receipt.",
-      currentlyExists:["chat shows receipt-shaped strings (theatre)"],
-      needs:["actual receipt log","stable schema","write+read API","verify chain"],
-      blockers:[],
-      proofNeeded:[
-        { t:"receipts.log file exists", ok:false },
-        { t:"one click → one receipt line", ok:false },
-        { t:"reload preserves receipts", ok:false }
+      "proofNeeded": [
+        {
+          "t": "opens from Home",
+          "ok": true
+        },
+        {
+          "t": "blackroad.io ACTIVE",
+          "ok": true
+        },
+        {
+          "t": "OpenBoard disabled for non-active",
+          "ok": true
+        }
       ],
-      next:"create receipts.log + write on every click" },
-
-    { num:"12", id:"carkeys", name:"CarKeys Permissions",
-      status:"planned",
-      meaning:"keys, secrets, gates on actions.",
-      currentlyExists:["status pills on products + domains saying things are gated"],
-      needs:["vault choice","scoped tokens","gate-check on action"],
-      blockers:["vault undecided"],
-      proofNeeded:[
-        { t:"gated action denied without key", ok:false },
-        { t:"gated action permitted with key", ok:false }
+      "next": "wire actual /dashboard route on blackroad.io"
+    },
+    {
+      "num": "05",
+      "id": "organizations",
+      "name": "Organizations",
+      "status": "done",
+      "meaning": "20-org ownership cabinet with repo/build/receipt/release stats.",
+      "currentlyExists": [
+        "list + status counts",
+        "catalog-owner expansion for Products + Agents orgs",
+        "stat grid"
       ],
-      next:"pick vault + write spec" },
-
-    { num:"13", id:"roadchain", name:"RoadChain Proof",
-      status:"planned",
-      meaning:"append-only chain that proves the receipts haven't been tampered with.",
-      currentlyExists:["roadchain.io domain entry","BlackRoad-OS-Archive org"],
-      needs:["chain format","hash linkage","verify function","export"],
-      blockers:["receipts table 09 must exist first"],
-      proofNeeded:[
-        { t:"chain validates end-to-end", ok:false },
-        { t:"tampered receipt detected", ok:false }
+      "needs": [
+        "real repo/build/release counts"
       ],
-      next:"spec chain format" },
-
-    { num:"14", id:"detour", name:"Detour / Recovery",
-      status:"planned",
-      meaning:"fallback paths when something fails.",
-      currentlyExists:["Detour product entry","BlackRoad-OS-Cloud org owns it"],
-      needs:["failure detection","fallback registry","auto-engage"],
-      blockers:["no failure source defined"],
-      proofNeeded:[
-        { t:"fallback engages on simulated failure", ok:false },
-        { t:"fallback clears when primary returns", ok:false }
+      "blockers": [],
+      "proofNeeded": [
+        {
+          "t": "opens from Home",
+          "ok": true
+        },
+        {
+          "t": "Primary, Products, Agents ACTIVE",
+          "ok": true
+        },
+        {
+          "t": "catalog owners expand to all 27",
+          "ok": true
+        }
       ],
-      next:"enumerate failure modes" },
-
-    { num:"15", id:"roadcode-next", name:"RoadCode Next",
-      status:"next",
-      meaning:"build the RoadCode MVP window — build / run / deploy room.",
-      currentlyExists:["Products page lists RoadCode as NEXT","BlackRoad-OS-Code org as NEXT"],
-      needs:["MVP window","repo inspect view","patch plan view","test run view"],
-      blockers:["MVP scope undefined"],
-      proofNeeded:[
-        { t:"RoadCode window opens", ok:false },
-        { t:"shows a repo", ok:false },
-        { t:"runs a test", ok:false }
+      "next": "wire real counts from sources"
+    },
+    {
+      "num": "06",
+      "id": "registry",
+      "name": "Registry",
+      "status": "done",
+      "meaning": "16 canon tables, master canon counts, locked rules.",
+      "currentlyExists": [
+        "16-table list",
+        "Master Canon counts",
+        "locked rules block",
+        "file-path list"
       ],
-      next:"scope RoadCode MVP and build the first view" },
-
-    { num:"16", id:"roadtrip-next", name:"RoadTrip Next",
-      status:"planned",
-      meaning:"parallel agent lanes for long tasks.",
-      currentlyExists:["RoadTrip product entry"],
-      needs:["lane state","handoff protocol","progress tracking"],
-      blockers:["scope"],
-      proofNeeded:[
-        { t:"two lanes run in parallel", ok:false },
-        { t:"lanes hand off cleanly", ok:false }
+      "needs": [
+        "actual JSON file generation"
       ],
-      next:"scope RoadTrip MVP" },
-
-    { num:"17", id:"highway-next", name:"HighWay Next",
-      status:"planned",
-      meaning:"high-throughput batch / bulk pipelines.",
-      currentlyExists:["HighWay product entry","BlackRoad-OS-Cloud org owns it"],
-      needs:["batch runner","throughput meter","pause/resume"],
-      blockers:["scope"],
-      proofNeeded:[
-        { t:"a batch of 100 ops runs", ok:false }
+      "blockers": [],
+      "proofNeeded": [
+        {
+          "t": "opens from Home",
+          "ok": true
+        },
+        {
+          "t": "Master Canon shows 1/27/27/20/20",
+          "ok": true
+        },
+        {
+          "t": "counts pull live from cabinet arrays",
+          "ok": true
+        }
       ],
-      next:"scope HighWay MVP" },
-
-    { num:"18", id:"public-demo", name:"Public Demo",
-      status:"planned",
-      meaning:"shareable demo of RoadOS — link, gif, or installable.",
-      currentlyExists:["local HTML file in /Users/alexa/"],
-      needs:["deploy target","PWA manifest","relative paths","screenshot or short video"],
-      blockers:["hosting choice (Cloudflare Pages / Vercel / Tauri)"],
-      proofNeeded:[
-        { t:"shareable URL", ok:false },
-        { t:"installable as PWA", ok:false },
-        { t:"opens offline", ok:false }
+      "next": "emit Registry/*.blackroad.json files"
+    },
+    {
+      "num": "07",
+      "id": "roados-shell",
+      "name": "RoadOS Shell",
+      "status": "fake_done",
+      "meaning": "black background, white bars, clock, start menu, mutually-exclusive windows.",
+      "currentlyExists": [
+        "black desktop",
+        "white top + bottom bars",
+        "clock",
+        "start menu",
+        "9 folders"
       ],
-      next:"pick deploy target" },
-
-    { num:"19", id:"blockers", name:"Blockers",
-      status:"planned",
-      meaning:"aggregate view of every blocker across lanes.",
-      currentlyExists:["per-lane blocker lists in this RoadMap page"],
-      needs:["aggregation","cross-lane view","resolution log"],
-      blockers:["Registry table 08 (Org Ownership) drives this"],
-      proofNeeded:[
-        { t:"aggregated blocker view", ok:false },
-        { t:"resolution emits receipt", ok:false }
+      "needs": [
+        "boot receipt",
+        "idle receipt",
+        "unhandled-error receipt"
       ],
-      next:"build cross-lane blocker view" },
-
-    { num:"20", id:"release-gate", name:"Release Gate",
-      status:"planned",
-      meaning:"gates that must pass before a public release ships.",
-      currentlyExists:["per-org releaseGate strings in Organizations page"],
-      needs:["gate definitions","gate-check runner","pass/fail receipt"],
-      blockers:["release scope undefined"],
-      proofNeeded:[
-        { t:"all gates pass before release", ok:false },
-        { t:"any failing gate blocks release", ok:false }
+      "blockers": [],
+      "proofNeeded": [
+        {
+          "t": "emits receipt on boot",
+          "ok": false
+        },
+        {
+          "t": "emits receipt on idle",
+          "ok": false
+        },
+        {
+          "t": "emits receipt on click",
+          "ok": false
+        }
       ],
-      next:"define the gates" }
+      "fakeNote": "Visible and working, but no receipt has ever been written. By the no-action-without-receipt rule, this is fake-done until receipts land.",
+      "next": "write boot receipt on load"
+    },
+    {
+      "num": "08",
+      "id": "command-routing",
+      "name": "Command Routing",
+      "status": "next",
+      "meaning": "RoadOS should understand clicks and commands, then route to the right page, product, agent, or next action.",
+      "currentlyExists": [
+        "Home folders",
+        "Agents page",
+        "Products page",
+        "Domains page",
+        "Organizations page",
+        "Registry page",
+        "RoadMap page"
+      ],
+      "needs": [
+        "folder click routing",
+        "Start menu routing",
+        "bottom action button routing",
+        "selected page state",
+        "current road label",
+        "receipt stub when action runs"
+      ],
+      "blockers": [],
+      "proofNeeded": [
+        {
+          "t": "click Home folder opens Home",
+          "ok": true
+        },
+        {
+          "t": "click Products folder opens Products",
+          "ok": true
+        },
+        {
+          "t": "click Agents folder opens Agents",
+          "ok": true
+        },
+        {
+          "t": "click Domains folder opens Domains",
+          "ok": true
+        },
+        {
+          "t": "click Organizations folder opens Organizations",
+          "ok": true
+        },
+        {
+          "t": "click Registry opens Registry",
+          "ok": true
+        },
+        {
+          "t": "click RoadMap opens RoadMap",
+          "ok": true
+        },
+        {
+          "t": "Start menu items route",
+          "ok": false
+        },
+        {
+          "t": "action button emits receipt",
+          "ok": false
+        }
+      ],
+      "next": "wire command routing"
+    },
+    {
+      "num": "09",
+      "id": "window-system",
+      "name": "Window System",
+      "status": "fake_done",
+      "meaning": "six mutually-exclusive windows + Esc-to-close.",
+      "currentlyExists": [
+        "Home / Agents / Products / Domains / Orgs / Registry / RoadMap windows",
+        "Esc closes current",
+        "openX closes others"
+      ],
+      "needs": [
+        "window state log",
+        "focus stack",
+        "minimize-to-taskbar"
+      ],
+      "blockers": [],
+      "proofNeeded": [
+        {
+          "t": "only one window open at a time",
+          "ok": true
+        },
+        {
+          "t": "emits receipt on open/close",
+          "ok": false
+        },
+        {
+          "t": "taskbar shows current window",
+          "ok": false
+        }
+      ],
+      "fakeNote": "Works in practice but writes no state log. A reload loses everything; no proof of what was opened or when.",
+      "next": "log window-open events to receipts"
+    },
+    {
+      "num": "10",
+      "id": "chat-rail",
+      "name": "Chat Rail",
+      "status": "fake_done",
+      "meaning": "right-side chat panel in every cabinet window.",
+      "currentlyExists": [
+        "seed messages",
+        "message bubbles",
+        "input + SEND button",
+        "local echo"
+      ],
+      "needs": [
+        "real delivery to agents",
+        "persistence across reload",
+        "cross-window thread"
+      ],
+      "blockers": [
+        "no backend chosen"
+      ],
+      "proofNeeded": [
+        {
+          "t": "messages render",
+          "ok": true
+        },
+        {
+          "t": "messages persist across reload",
+          "ok": false
+        },
+        {
+          "t": "messages reach an actual agent",
+          "ok": false
+        }
+      ],
+      "fakeNote": "The chat is theatre. Your message never leaves the page. Looks right; proves nothing.",
+      "next": "stub chat persistence (local first)"
+    },
+    {
+      "num": "11",
+      "id": "receipts",
+      "name": "Receipts",
+      "status": "next",
+      "meaning": "every action emits an append-only receipt.",
+      "currentlyExists": [
+        "chat shows receipt-shaped strings (theatre)"
+      ],
+      "needs": [
+        "actual receipt log",
+        "stable schema",
+        "write+read API",
+        "verify chain"
+      ],
+      "blockers": [],
+      "proofNeeded": [
+        {
+          "t": "receipts.log file exists",
+          "ok": false
+        },
+        {
+          "t": "one click → one receipt line",
+          "ok": false
+        },
+        {
+          "t": "reload preserves receipts",
+          "ok": false
+        }
+      ],
+      "next": "create receipts.log + write on every click"
+    },
+    {
+      "num": "12",
+      "id": "carkeys",
+      "name": "CarKeys Permissions",
+      "status": "planned",
+      "meaning": "keys, secrets, gates on actions.",
+      "currentlyExists": [
+        "status pills on products + domains saying things are gated"
+      ],
+      "needs": [
+        "vault choice",
+        "scoped tokens",
+        "gate-check on action"
+      ],
+      "blockers": [
+        "vault undecided"
+      ],
+      "proofNeeded": [
+        {
+          "t": "gated action denied without key",
+          "ok": false
+        },
+        {
+          "t": "gated action permitted with key",
+          "ok": false
+        }
+      ],
+      "next": "pick vault + write spec"
+    },
+    {
+      "num": "13",
+      "id": "roadchain",
+      "name": "RoadChain Proof",
+      "status": "planned",
+      "meaning": "append-only chain that proves the receipts haven't been tampered with.",
+      "currentlyExists": [
+        "roadchain.io domain entry",
+        "BlackRoad-OS-Archive org"
+      ],
+      "needs": [
+        "chain format",
+        "hash linkage",
+        "verify function",
+        "export"
+      ],
+      "blockers": [
+        "receipts table 09 must exist first"
+      ],
+      "proofNeeded": [
+        {
+          "t": "chain validates end-to-end",
+          "ok": false
+        },
+        {
+          "t": "tampered receipt detected",
+          "ok": false
+        }
+      ],
+      "next": "spec chain format"
+    },
+    {
+      "num": "14",
+      "id": "detour",
+      "name": "Detour / Recovery",
+      "status": "planned",
+      "meaning": "fallback paths when something fails.",
+      "currentlyExists": [
+        "Detour product entry",
+        "BlackRoad-OS-Cloud org owns it"
+      ],
+      "needs": [
+        "failure detection",
+        "fallback registry",
+        "auto-engage"
+      ],
+      "blockers": [
+        "no failure source defined"
+      ],
+      "proofNeeded": [
+        {
+          "t": "fallback engages on simulated failure",
+          "ok": false
+        },
+        {
+          "t": "fallback clears when primary returns",
+          "ok": false
+        }
+      ],
+      "next": "enumerate failure modes"
+    },
+    {
+      "num": "15",
+      "id": "roadcode-next",
+      "name": "RoadCode Next",
+      "status": "next",
+      "meaning": "build the RoadCode MVP window — build / run / deploy room.",
+      "currentlyExists": [
+        "Products page lists RoadCode as NEXT",
+        "BlackRoad-OS-Code org as NEXT"
+      ],
+      "needs": [
+        "MVP window",
+        "repo inspect view",
+        "patch plan view",
+        "test run view"
+      ],
+      "blockers": [
+        "MVP scope undefined"
+      ],
+      "proofNeeded": [
+        {
+          "t": "RoadCode window opens",
+          "ok": false
+        },
+        {
+          "t": "shows a repo",
+          "ok": false
+        },
+        {
+          "t": "runs a test",
+          "ok": false
+        }
+      ],
+      "next": "scope RoadCode MVP and build the first view"
+    },
+    {
+      "num": "16",
+      "id": "roadtrip-next",
+      "name": "RoadTrip Next",
+      "status": "planned",
+      "meaning": "parallel agent lanes for long tasks.",
+      "currentlyExists": [
+        "RoadTrip product entry"
+      ],
+      "needs": [
+        "lane state",
+        "handoff protocol",
+        "progress tracking"
+      ],
+      "blockers": [
+        "scope"
+      ],
+      "proofNeeded": [
+        {
+          "t": "two lanes run in parallel",
+          "ok": false
+        },
+        {
+          "t": "lanes hand off cleanly",
+          "ok": false
+        }
+      ],
+      "next": "scope RoadTrip MVP"
+    },
+    {
+      "num": "17",
+      "id": "highway-next",
+      "name": "HighWay Next",
+      "status": "planned",
+      "meaning": "high-throughput batch / bulk pipelines.",
+      "currentlyExists": [
+        "HighWay product entry",
+        "BlackRoad-OS-Cloud org owns it"
+      ],
+      "needs": [
+        "batch runner",
+        "throughput meter",
+        "pause/resume"
+      ],
+      "blockers": [
+        "scope"
+      ],
+      "proofNeeded": [
+        {
+          "t": "a batch of 100 ops runs",
+          "ok": false
+        }
+      ],
+      "next": "scope HighWay MVP"
+    },
+    {
+      "num": "18",
+      "id": "public-demo",
+      "name": "Public Demo",
+      "status": "planned",
+      "meaning": "shareable demo of RoadOS — link, gif, or installable.",
+      "currentlyExists": [
+        "local HTML file in /Users/alexa/"
+      ],
+      "needs": [
+        "deploy target",
+        "PWA manifest",
+        "relative paths",
+        "screenshot or short video"
+      ],
+      "blockers": [
+        "hosting choice (Cloudflare Pages / Vercel / Tauri)"
+      ],
+      "proofNeeded": [
+        {
+          "t": "shareable URL",
+          "ok": false
+        },
+        {
+          "t": "installable as PWA",
+          "ok": false
+        },
+        {
+          "t": "opens offline",
+          "ok": false
+        }
+      ],
+      "next": "pick deploy target"
+    },
+    {
+      "num": "19",
+      "id": "blockers",
+      "name": "Blockers",
+      "status": "planned",
+      "meaning": "aggregate view of every blocker across lanes.",
+      "currentlyExists": [
+        "per-lane blocker lists in this RoadMap page"
+      ],
+      "needs": [
+        "aggregation",
+        "cross-lane view",
+        "resolution log"
+      ],
+      "blockers": [
+        "Registry table 08 (Org Ownership) drives this"
+      ],
+      "proofNeeded": [
+        {
+          "t": "aggregated blocker view",
+          "ok": false
+        },
+        {
+          "t": "resolution emits receipt",
+          "ok": false
+        }
+      ],
+      "next": "build cross-lane blocker view"
+    },
+    {
+      "num": "20",
+      "id": "release-gate",
+      "name": "Release Gate",
+      "status": "planned",
+      "meaning": "gates that must pass before a public release ships.",
+      "currentlyExists": [
+        "per-org releaseGate strings in Organizations page"
+      ],
+      "needs": [
+        "gate definitions",
+        "gate-check runner",
+        "pass/fail receipt"
+      ],
+      "blockers": [
+        "release scope undefined"
+      ],
+      "proofNeeded": [
+        {
+          "t": "all gates pass before release",
+          "ok": false
+        },
+        {
+          "t": "any failing gate blocks release",
+          "ok": false
+        }
+      ],
+      "next": "define the gates"
+    }
   ];
+  /* AUTO-GENERATED:LANES:END */
 
   let selectedLaneId = LANES[0].id;
 
@@ -13734,37 +14898,81 @@
   // ===== CARKEYS WINDOW =====
   // 16 permission lanes. NO real keys, NO real auth — placeholder objects only.
   // Every refusal is honest: LOCKED, UNSAFE_BLOCKED, or "not implemented".
-  const CARKEYS_LANES = [
-    { num:"01", id:"operator-identity", name:"Operator Identity",
-      status:"ready", risk:"critical",
-      purpose:"identifies who can approve, revoke, and reset everything in RoadOS",
-      permissionTypes:["own","approve","revoke","delegate","reset"],
-      defaultRule:"only one operator at a time",
-      operatorRule:"Alexandria / Alexa is the operator",
-      riskRules:[
+  /* AUTO-GENERATED:CARKEYS_LANES:START — source of truth: Registry/carkeys.json · regenerate: node scripts/sync-collections.mjs · do not hand-edit */
+  const CARKEYS_LANES =
+  [
+    {
+      "num": "01",
+      "id": "operator-identity",
+      "name": "Operator Identity",
+      "status": "ready",
+      "risk": "critical",
+      "purpose": "identifies who can approve, revoke, and reset everything in RoadOS",
+      "permissionTypes": [
+        "own",
+        "approve",
+        "revoke",
+        "delegate",
+        "reset"
+      ],
+      "defaultRule": "only one operator at a time",
+      "operatorRule": "Alexandria / Alexa is the operator",
+      "riskRules": [
         "operator authority cannot be silently transferred",
         "handoff requires receipt + reauth",
         "operator reset requires hardware proof"
       ],
-      connected:["all lanes"],
-      receiptTypes:["OPERATOR_SET","OPERATOR_HANDOFF","OPERATOR_REAUTH","OPERATOR_RESET"],
-      grants:[{
-        id:"grant-operator-0001",
-        subject:"Alexandria / Alexa",
-        scope:["own","approve","revoke","delegate","reset"],
-        status:"approved",
-        grantedAt:"2026-06-10T00:00:00Z",
-        expiresAt:"never"
-      }],
-      next:"keep stable" },
-
-    { num:"02", id:"agent-permissions", name:"Agent Permissions",
-      status:"ready", risk:"high",
-      purpose:"controls what each agent may view, suggest, draft, execute, or escalate",
-      permissionTypes:["view","suggest","draft","route","review","test","write","execute","deploy","publish","delete","revoke"],
-      defaultRule:"agents can suggest before they can act",
-      operatorRule:"Alexandria / Alexa is the operator. Agents do not approve themselves. Irreversible actions require operator approval or an explicit permission grant.",
-      riskRules:[
+      "connected": [
+        "all lanes"
+      ],
+      "receiptTypes": [
+        "OPERATOR_SET",
+        "OPERATOR_HANDOFF",
+        "OPERATOR_REAUTH",
+        "OPERATOR_RESET"
+      ],
+      "grants": [
+        {
+          "id": "grant-operator-0001",
+          "subject": "Alexandria / Alexa",
+          "scope": [
+            "own",
+            "approve",
+            "revoke",
+            "delegate",
+            "reset"
+          ],
+          "status": "approved",
+          "grantedAt": "2026-06-10T00:00:00Z",
+          "expiresAt": "never"
+        }
+      ],
+      "next": "keep stable"
+    },
+    {
+      "num": "02",
+      "id": "agent-permissions",
+      "name": "Agent Permissions",
+      "status": "ready",
+      "risk": "high",
+      "purpose": "controls what each agent may view, suggest, draft, execute, or escalate",
+      "permissionTypes": [
+        "view",
+        "suggest",
+        "draft",
+        "route",
+        "review",
+        "test",
+        "write",
+        "execute",
+        "deploy",
+        "publish",
+        "delete",
+        "revoke"
+      ],
+      "defaultRule": "agents can suggest before they can act",
+      "operatorRule": "Alexandria / Alexa is the operator. Agents do not approve themselves. Irreversible actions require operator approval or an explicit permission grant.",
+      "riskRules": [
         "secrets are never shown raw",
         "API keys stay gated",
         "deploy actions require approval",
@@ -13772,210 +14980,468 @@
         "external provider actions require scoped grants",
         "public publishing requires review"
       ],
-      connected:["RoadOS","RoadCode","RoadTrip","OneWay","HighWay","RoadChain","RoadMap","Detour"],
-      receiptTypes:["CARKEYS_GRANT_REQUESTED","CARKEYS_GRANT_APPROVED","CARKEYS_GRANT_DENIED","CARKEYS_GRANT_REVOKED","CARKEYS_SCOPE_CHANGED","CARKEYS_UNSAFE_BLOCKED"],
-      grants:[],
-      seedAllAgents:true,
-      next:"keep default view/suggest grants; gate write/execute per agent" },
-
-    { num:"03", id:"product-permissions", name:"Product Permissions",
-      status:"next", risk:"medium",
-      purpose:"which products can be opened, configured, launched, suspended, or archived",
-      permissionTypes:["open","configure","wire","launch","suspend","archive"],
-      defaultRule:"opening is allowed; mutating actions are gated",
-      operatorRule:"only the operator can launch or archive a product",
-      riskRules:[
+      "connected": [
+        "RoadOS",
+        "RoadCode",
+        "RoadTrip",
+        "OneWay",
+        "HighWay",
+        "RoadChain",
+        "RoadMap",
+        "Detour"
+      ],
+      "receiptTypes": [
+        "CARKEYS_GRANT_REQUESTED",
+        "CARKEYS_GRANT_APPROVED",
+        "CARKEYS_GRANT_DENIED",
+        "CARKEYS_GRANT_REVOKED",
+        "CARKEYS_SCOPE_CHANGED",
+        "CARKEYS_UNSAFE_BLOCKED"
+      ],
+      "grants": [],
+      "seedAllAgents": true,
+      "next": "keep default view/suggest grants; gate write/execute per agent"
+    },
+    {
+      "num": "03",
+      "id": "product-permissions",
+      "name": "Product Permissions",
+      "status": "next",
+      "risk": "medium",
+      "purpose": "which products can be opened, configured, launched, suspended, or archived",
+      "permissionTypes": [
+        "open",
+        "configure",
+        "wire",
+        "launch",
+        "suspend",
+        "archive"
+      ],
+      "defaultRule": "opening is allowed; mutating actions are gated",
+      "operatorRule": "only the operator can launch or archive a product",
+      "riskRules": [
         "launch requires approval",
         "archive requires approval",
         "configure logs to ProductReceipts"
       ],
-      connected:["27 products"],
-      receiptTypes:["PRODUCT_OPENED","PRODUCT_CONFIGURED","PRODUCT_LAUNCHED","PRODUCT_SUSPENDED","PRODUCT_ARCHIVED"],
-      grants:[],
-      next:"scope product permission grants" },
-
-    { num:"04", id:"domain-permissions", name:"Domain Permissions",
-      status:"planned", risk:"high",
-      purpose:"which domains can be routed, redirected, or have boards opened",
-      permissionTypes:["route","redirect","open_board","set_owner"],
-      defaultRule:"routes reviewable; redirects require approval",
-      operatorRule:"only operator can change a domain owner",
-      riskRules:["redirect requires approval","owner change requires approval"],
-      connected:["20 domains"],
-      receiptTypes:["DOMAIN_ROUTE_OPENED","DOMAIN_REDIRECT_SET","DOMAIN_OWNER_CHANGED"],
-      grants:[],
-      next:"pair with Workflow Receipts" },
-
-    { num:"05", id:"org-permissions", name:"Organization Permissions",
-      status:"planned", risk:"medium",
-      purpose:"which orgs can manage products, domains, repos, agents",
-      permissionTypes:["manage_products","manage_domains","manage_repos","manage_agents"],
-      defaultRule:"each org manages its own",
-      operatorRule:"cross-org actions require operator approval",
-      riskRules:["cross-org actions require operator","new orgs require Atticus review"],
-      connected:["20 orgs"],
-      receiptTypes:["ORG_MANAGE_GRANTED","ORG_CROSS_BORDER"],
-      grants:[],
-      next:"scope org permission grants" },
-
-    { num:"06", id:"repo-access", name:"Repo Access",
-      status:"planned", risk:"high",
-      purpose:"which subjects can read, write, branch, merge, or delete repos",
-      permissionTypes:["read","write","create_branch","merge","delete"],
-      defaultRule:"read open within own org",
-      operatorRule:"write/merge gated for non-operators; delete requires operator",
-      riskRules:["delete requires operator approval","force-push prohibited without explicit grant"],
-      connected:["BlackRoad-OS-Code","BlackRoad-OS-Primary"],
-      receiptTypes:["REPO_READ","REPO_WRITTEN","REPO_BRANCHED","REPO_MERGED","REPO_DELETED"],
-      grants:[],
-      next:"identify repo source of truth" },
-
-    { num:"07", id:"file-access", name:"File Access",
-      status:"planned", risk:"high",
-      purpose:"which subjects can list, read, write, move, or delete files",
-      permissionTypes:["list","read","write","move","delete"],
-      defaultRule:"list open; write gated",
-      operatorRule:"delete requires operator approval",
-      riskRules:["delete requires operator","writes to canon files require approval"],
-      connected:["Alice","RoadBook"],
-      receiptTypes:["FILE_LIST","FILE_READ","FILE_WRITTEN","FILE_DELETED"],
-      grants:[],
-      next:"choose a file root" },
-
-    { num:"08", id:"terminal-access", name:"Terminal Access",
-      status:"planned", risk:"critical",
-      purpose:"which subjects can run shell commands",
-      permissionTypes:["read_only","read_write","dangerous"],
-      defaultRule:"terminal access denied by default",
-      operatorRule:"dangerous commands require operator approval each time",
-      riskRules:[
+      "connected": [
+        "27 products"
+      ],
+      "receiptTypes": [
+        "PRODUCT_OPENED",
+        "PRODUCT_CONFIGURED",
+        "PRODUCT_LAUNCHED",
+        "PRODUCT_SUSPENDED",
+        "PRODUCT_ARCHIVED"
+      ],
+      "grants": [],
+      "next": "scope product permission grants"
+    },
+    {
+      "num": "04",
+      "id": "domain-permissions",
+      "name": "Domain Permissions",
+      "status": "planned",
+      "risk": "high",
+      "purpose": "which domains can be routed, redirected, or have boards opened",
+      "permissionTypes": [
+        "route",
+        "redirect",
+        "open_board",
+        "set_owner"
+      ],
+      "defaultRule": "routes reviewable; redirects require approval",
+      "operatorRule": "only operator can change a domain owner",
+      "riskRules": [
+        "redirect requires approval",
+        "owner change requires approval"
+      ],
+      "connected": [
+        "20 domains"
+      ],
+      "receiptTypes": [
+        "DOMAIN_ROUTE_OPENED",
+        "DOMAIN_REDIRECT_SET",
+        "DOMAIN_OWNER_CHANGED"
+      ],
+      "grants": [],
+      "next": "pair with Workflow Receipts"
+    },
+    {
+      "num": "05",
+      "id": "org-permissions",
+      "name": "Organization Permissions",
+      "status": "planned",
+      "risk": "medium",
+      "purpose": "which orgs can manage products, domains, repos, agents",
+      "permissionTypes": [
+        "manage_products",
+        "manage_domains",
+        "manage_repos",
+        "manage_agents"
+      ],
+      "defaultRule": "each org manages its own",
+      "operatorRule": "cross-org actions require operator approval",
+      "riskRules": [
+        "cross-org actions require operator",
+        "new orgs require Atticus review"
+      ],
+      "connected": [
+        "20 orgs"
+      ],
+      "receiptTypes": [
+        "ORG_MANAGE_GRANTED",
+        "ORG_CROSS_BORDER"
+      ],
+      "grants": [],
+      "next": "scope org permission grants"
+    },
+    {
+      "num": "06",
+      "id": "repo-access",
+      "name": "Repo Access",
+      "status": "planned",
+      "risk": "high",
+      "purpose": "which subjects can read, write, branch, merge, or delete repos",
+      "permissionTypes": [
+        "read",
+        "write",
+        "create_branch",
+        "merge",
+        "delete"
+      ],
+      "defaultRule": "read open within own org",
+      "operatorRule": "write/merge gated for non-operators; delete requires operator",
+      "riskRules": [
+        "delete requires operator approval",
+        "force-push prohibited without explicit grant"
+      ],
+      "connected": [
+        "BlackRoad-OS-Code",
+        "BlackRoad-OS-Primary"
+      ],
+      "receiptTypes": [
+        "REPO_READ",
+        "REPO_WRITTEN",
+        "REPO_BRANCHED",
+        "REPO_MERGED",
+        "REPO_DELETED"
+      ],
+      "grants": [],
+      "next": "identify repo source of truth"
+    },
+    {
+      "num": "07",
+      "id": "file-access",
+      "name": "File Access",
+      "status": "planned",
+      "risk": "high",
+      "purpose": "which subjects can list, read, write, move, or delete files",
+      "permissionTypes": [
+        "list",
+        "read",
+        "write",
+        "move",
+        "delete"
+      ],
+      "defaultRule": "list open; write gated",
+      "operatorRule": "delete requires operator approval",
+      "riskRules": [
+        "delete requires operator",
+        "writes to canon files require approval"
+      ],
+      "connected": [
+        "Alice",
+        "RoadBook"
+      ],
+      "receiptTypes": [
+        "FILE_LIST",
+        "FILE_READ",
+        "FILE_WRITTEN",
+        "FILE_DELETED"
+      ],
+      "grants": [],
+      "next": "choose a file root"
+    },
+    {
+      "num": "08",
+      "id": "terminal-access",
+      "name": "Terminal Access",
+      "status": "planned",
+      "risk": "critical",
+      "purpose": "which subjects can run shell commands",
+      "permissionTypes": [
+        "read_only",
+        "read_write",
+        "dangerous"
+      ],
+      "defaultRule": "terminal access denied by default",
+      "operatorRule": "dangerous commands require operator approval each time",
+      "riskRules": [
         "sandbox required before any grant",
         "dangerous = operator per-command",
         "no rm -rf without operator + Seraphina"
       ],
-      connected:["Sebastian","Gaia"],
-      receiptTypes:["TERMINAL_OPEN","TERMINAL_COMMAND","TERMINAL_REFUSED"],
-      grants:[],
-      next:"terminal sandbox needed first" },
-
-    { num:"09", id:"deploy-access", name:"Deploy Access",
-      status:"planned", risk:"critical",
-      purpose:"who can ship code to a domain",
-      permissionTypes:["stage","preview","deploy","rollback"],
-      defaultRule:"only operator can deploy to ACTIVE domains",
-      operatorRule:"all deploys require receipts (DeploymentReceipts)",
-      riskRules:[
+      "connected": [
+        "Sebastian",
+        "Gaia"
+      ],
+      "receiptTypes": [
+        "TERMINAL_OPEN",
+        "TERMINAL_COMMAND",
+        "TERMINAL_REFUSED"
+      ],
+      "grants": [],
+      "next": "terminal sandbox needed first"
+    },
+    {
+      "num": "09",
+      "id": "deploy-access",
+      "name": "Deploy Access",
+      "status": "planned",
+      "risk": "critical",
+      "purpose": "who can ship code to a domain",
+      "permissionTypes": [
+        "stage",
+        "preview",
+        "deploy",
+        "rollback"
+      ],
+      "defaultRule": "only operator can deploy to ACTIVE domains",
+      "operatorRule": "all deploys require receipts (DeploymentReceipts)",
+      "riskRules": [
         "stage/preview are reversible",
         "deploy to ACTIVE requires operator + receipt",
         "rollback requires operator"
       ],
-      connected:["Silas","BlackRoad-OS-Cloud","blackroad.io"],
-      receiptTypes:["DEPLOY_STARTED","DEPLOY_PASSED","DEPLOY_FAILED","DEPLOY_ROLLED_BACK"],
-      grants:[],
-      next:"requires Deployment Receipts lane first" },
-
-    { num:"10", id:"api-keys", name:"API Keys",
-      status:"locked", risk:"critical",
-      purpose:"storage and gating of API keys",
-      permissionTypes:["store","retrieve","use","rotate","revoke"],
-      defaultRule:"no API keys stored in this UI",
-      operatorRule:"real key storage requires a vault implementation outside the browser",
-      riskRules:[
+      "connected": [
+        "Silas",
+        "BlackRoad-OS-Cloud",
+        "blackroad.io"
+      ],
+      "receiptTypes": [
+        "DEPLOY_STARTED",
+        "DEPLOY_PASSED",
+        "DEPLOY_FAILED",
+        "DEPLOY_ROLLED_BACK"
+      ],
+      "grants": [],
+      "next": "requires Deployment Receipts lane first"
+    },
+    {
+      "num": "10",
+      "id": "api-keys",
+      "name": "API Keys",
+      "status": "locked",
+      "risk": "critical",
+      "purpose": "storage and gating of API keys",
+      "permissionTypes": [
+        "store",
+        "retrieve",
+        "use",
+        "rotate",
+        "revoke"
+      ],
+      "defaultRule": "no API keys stored in this UI",
+      "operatorRule": "real key storage requires a vault implementation outside the browser",
+      "riskRules": [
         "raw key material never enters this page",
         "vault required before any grant",
         "even the existence of a key is gated"
       ],
-      connected:["external services (none active)"],
-      receiptTypes:["KEY_REQUESTED","KEY_GRANTED","KEY_REVOKED","KEY_ROTATED"],
-      grants:[],
-      lockedReason:"no vault. no real keys exist or can be created from this UI.",
-      next:"pick a vault (1Password / KMS / Bitwarden) and integrate" },
-
-    { num:"11", id:"provider-accounts", name:"Provider Accounts",
-      status:"locked", risk:"critical",
-      purpose:"which third-party providers are linked",
-      permissionTypes:["link","verify","use","unlink"],
-      defaultRule:"no providers connected",
-      operatorRule:"provider linking requires explicit operator OAuth outside this UI",
-      riskRules:[
+      "connected": [
+        "external services (none active)"
+      ],
+      "receiptTypes": [
+        "KEY_REQUESTED",
+        "KEY_GRANTED",
+        "KEY_REVOKED",
+        "KEY_ROTATED"
+      ],
+      "grants": [],
+      "lockedReason": "no vault. no real keys exist or can be created from this UI.",
+      "next": "pick a vault (1Password / KMS / Bitwarden) and integrate"
+    },
+    {
+      "num": "11",
+      "id": "provider-accounts",
+      "name": "Provider Accounts",
+      "status": "locked",
+      "risk": "critical",
+      "purpose": "which third-party providers are linked",
+      "permissionTypes": [
+        "link",
+        "verify",
+        "use",
+        "unlink"
+      ],
+      "defaultRule": "no providers connected",
+      "operatorRule": "provider linking requires explicit operator OAuth outside this UI",
+      "riskRules": [
         "no provider connects through this page",
         "OAuth never collected here",
         "scopes defined before any link"
       ],
-      connected:["external providers (none linked)"],
-      receiptTypes:["PROVIDER_LINKED","PROVIDER_USED","PROVIDER_UNLINKED"],
-      grants:[],
-      lockedReason:"no OAuth implemented. no providers can be linked from this UI.",
-      next:"design provider scoping before linking any" },
-
-    { num:"12", id:"local-node", name:"Local Node Access",
-      status:"planned", risk:"high",
-      purpose:"which local nodes (Pi 5, Mac) can be acted on",
-      permissionTypes:["view","control","restart","shutdown"],
-      defaultRule:"view open within operator network",
-      operatorRule:"shutdown requires operator approval",
-      riskRules:["shutdown requires operator","restart logs to HardwareReceipts"],
-      connected:["cecilia Pi 5","MacBook"],
-      receiptTypes:["NODE_VIEWED","NODE_CONTROLLED","NODE_RESTARTED","NODE_SHUTDOWN"],
-      grants:[],
-      next:"enumerate nodes" },
-
-    { num:"13", id:"browser-sessions", name:"Browser Sessions",
-      status:"planned", risk:"medium",
-      purpose:"which browser sessions are active for the operator",
-      permissionTypes:["open","close","freeze","log"],
-      defaultRule:"log only",
-      operatorRule:"close requires operator confirmation",
-      riskRules:["freeze logs to RoadChain","close-on-others requires operator"],
-      connected:["RoadOS shell"],
-      receiptTypes:["SESSION_OPEN","SESSION_CLOSED","SESSION_FROZEN"],
-      grants:[],
-      next:"spec session log" },
-
-    { num:"14", id:"oneway-grants", name:"OneWay Data Grants",
-      status:"planned", risk:"high",
-      purpose:"scoped outbound data grants (publish, broadcast, send)",
-      permissionTypes:["publish","broadcast","send_email","send_message"],
-      defaultRule:"publishing requires review",
-      operatorRule:"outbound payloads require Cordelia + Atticus sign-off",
-      riskRules:[
+      "connected": [
+        "external providers (none linked)"
+      ],
+      "receiptTypes": [
+        "PROVIDER_LINKED",
+        "PROVIDER_USED",
+        "PROVIDER_UNLINKED"
+      ],
+      "grants": [],
+      "lockedReason": "no OAuth implemented. no providers can be linked from this UI.",
+      "next": "design provider scoping before linking any"
+    },
+    {
+      "num": "12",
+      "id": "local-node",
+      "name": "Local Node Access",
+      "status": "planned",
+      "risk": "high",
+      "purpose": "which local nodes (Pi 5, Mac) can be acted on",
+      "permissionTypes": [
+        "view",
+        "control",
+        "restart",
+        "shutdown"
+      ],
+      "defaultRule": "view open within operator network",
+      "operatorRule": "shutdown requires operator approval",
+      "riskRules": [
+        "shutdown requires operator",
+        "restart logs to HardwareReceipts"
+      ],
+      "connected": [
+        "cecilia Pi 5",
+        "MacBook"
+      ],
+      "receiptTypes": [
+        "NODE_VIEWED",
+        "NODE_CONTROLLED",
+        "NODE_RESTARTED",
+        "NODE_SHUTDOWN"
+      ],
+      "grants": [],
+      "next": "enumerate nodes"
+    },
+    {
+      "num": "13",
+      "id": "browser-sessions",
+      "name": "Browser Sessions",
+      "status": "planned",
+      "risk": "medium",
+      "purpose": "which browser sessions are active for the operator",
+      "permissionTypes": [
+        "open",
+        "close",
+        "freeze",
+        "log"
+      ],
+      "defaultRule": "log only",
+      "operatorRule": "close requires operator confirmation",
+      "riskRules": [
+        "freeze logs to RoadChain",
+        "close-on-others requires operator"
+      ],
+      "connected": [
+        "RoadOS shell"
+      ],
+      "receiptTypes": [
+        "SESSION_OPEN",
+        "SESSION_CLOSED",
+        "SESSION_FROZEN"
+      ],
+      "grants": [],
+      "next": "spec session log"
+    },
+    {
+      "num": "14",
+      "id": "oneway-grants",
+      "name": "OneWay Data Grants",
+      "status": "planned",
+      "risk": "high",
+      "purpose": "scoped outbound data grants (publish, broadcast, send)",
+      "permissionTypes": [
+        "publish",
+        "broadcast",
+        "send_email",
+        "send_message"
+      ],
+      "defaultRule": "publishing requires review",
+      "operatorRule": "outbound payloads require Cordelia + Atticus sign-off",
+      "riskRules": [
         "outbound = explicit review",
         "Cordelia checks tone / harm",
         "Atticus checks legality"
       ],
-      connected:["OneWay","Calliope","Aria"],
-      receiptTypes:["ONEWAY_PUBLISHED","ONEWAY_BROADCASTED","ONEWAY_REJECTED"],
-      grants:[],
-      next:"scope outbound payload review" },
-
-    { num:"15", id:"revoked-expired", name:"Revoked / Expired Grants",
-      status:"planned", risk:"info",
-      purpose:"history of grants that no longer apply",
-      permissionTypes:["(read-only audit lane)"],
-      defaultRule:"history append-only",
-      operatorRule:"revocations cannot be silently un-revoked",
-      riskRules:["history is append-only","resurrection requires fresh grant"],
-      connected:["all grant-issuing lanes"],
-      receiptTypes:["aggregated from other lanes"],
-      grants:[],
-      next:"build aggregator view" },
-
-    { num:"16", id:"unsafe-blocked", name:"Unsafe / Blocked Requests",
-      status:"ready", risk:"info",
-      purpose:"intake for permission requests that were refused for safety reasons",
-      permissionTypes:["(intake-only — no grants ever issued from here)"],
-      defaultRule:"all entries are blocked",
-      operatorRule:"operator can review but cannot silently approve — requires explicit override receipt",
-      riskRules:[
+      "connected": [
+        "OneWay",
+        "Calliope",
+        "Aria"
+      ],
+      "receiptTypes": [
+        "ONEWAY_PUBLISHED",
+        "ONEWAY_BROADCASTED",
+        "ONEWAY_REJECTED"
+      ],
+      "grants": [],
+      "next": "scope outbound payload review"
+    },
+    {
+      "num": "15",
+      "id": "revoked-expired",
+      "name": "Revoked / Expired Grants",
+      "status": "planned",
+      "risk": "info",
+      "purpose": "history of grants that no longer apply",
+      "permissionTypes": [
+        "(read-only audit lane)"
+      ],
+      "defaultRule": "history append-only",
+      "operatorRule": "revocations cannot be silently un-revoked",
+      "riskRules": [
+        "history is append-only",
+        "resurrection requires fresh grant"
+      ],
+      "connected": [
+        "all grant-issuing lanes"
+      ],
+      "receiptTypes": [
+        "aggregated from other lanes"
+      ],
+      "grants": [],
+      "next": "build aggregator view"
+    },
+    {
+      "num": "16",
+      "id": "unsafe-blocked",
+      "name": "Unsafe / Blocked Requests",
+      "status": "ready",
+      "risk": "info",
+      "purpose": "intake for permission requests that were refused for safety reasons",
+      "permissionTypes": [
+        "(intake-only — no grants ever issued from here)"
+      ],
+      "defaultRule": "all entries are blocked",
+      "operatorRule": "operator can review but cannot silently approve — requires explicit override receipt",
+      "riskRules": [
         "intake-only, no outgoing grants",
         "every block written to RoadChain",
         "operator override leaves a paper trail"
       ],
-      connected:["all lanes"],
-      receiptTypes:["CARKEYS_UNSAFE_BLOCKED"],
-      grants:[],
-      next:"route any blocked stub here as a check" }
+      "connected": [
+        "all lanes"
+      ],
+      "receiptTypes": [
+        "CARKEYS_UNSAFE_BLOCKED"
+      ],
+      "grants": [],
+      "next": "route any blocked stub here as a check"
+    }
   ];
+  /* AUTO-GENERATED:CARKEYS_LANES:END */
 
   // Seed agent permissions lane with 27 default view+suggest grants.
   (function seedAgentGrants() {
@@ -14821,9 +16287,21 @@
     if (el) el.textContent = text;
   }
 
+  // Route extension points. Each window registers a pre-route guard (veto a
+  // command before dispatch) or a post-route hook (react after a successful
+  // route) instead of re-wrapping the global route() in an 18-deep decorator
+  // chain. Registration order is preserved as run order.
+  const ROUTE_GUARDS = [];
+  const ROUTE_HOOKS = [];
+  const registerRouteGuard = (fn) => ROUTE_GUARDS.push(fn);
+  const onRouted = (fn) => ROUTE_HOOKS.push(fn);
+
   function route(idOrCommand, source = "click") {
     const raw = String(idOrCommand || "").trim().toLowerCase();
     if (!raw) return false;
+    for (const guard of ROUTE_GUARDS) {
+      if (guard(raw, source, idOrCommand) === false) return false;
+    }
 
     let target = ROUTES.find(r => r.id === raw);
     if (!target) target = ROUTES.find(r => r.aliases.includes(raw));
@@ -14892,6 +16370,7 @@
     if (pusher) {
       pusher("theodosia", `receipt: ${target.writesReceiptStub} · source=${source}`);
     }
+    for (const hook of ROUTE_HOOKS) hook(raw, source);
     return true;
   }
 
@@ -15358,17 +16837,13 @@
   ALL_PALETTE.push({ cmd: "open code",       target: "roadcode", label: "RoadCode", kind: "open" });
 
   // Wrap route() so RoadCode-bound commands switch tabs after open.
-  const _baseRoute = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute(idOrCommand, source);
-    if (ok && ROADCODE_VERB_TABS[raw]) {
+  onRouted((raw) => {
+    if (ROADCODE_VERB_TABS[raw]) {
       RC_STATE.activeTab = ROADCODE_VERB_TABS[raw];
       renderRcTabs();
       renderRcTabContent();
     }
-    return ok;
-  };
+  });
 
   // ===== ROADTRIP MVP WINDOW =====
   // Solo operator + agents/models mission room. No autonomy claims, no fake
@@ -15948,19 +17423,15 @@
   ALL_PALETTE.push({ cmd: "open mission room", target: "roadtrip", label: "RoadTrip", kind: "open" });
 
   // Wrap route() again so RoadTrip verbs trigger the matching button after open.
-  const _baseRoute2 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute2(idOrCommand, source);
-    if (ok && ROADTRIP_VERB_BUTTONS[raw]) {
+  onRouted((raw) => {
+    if (ROADTRIP_VERB_BUTTONS[raw]) {
       const btnId = ROADTRIP_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADWIRE MVP WINDOW =====
   // Durable communication layer. Stores decisions, handoffs, summaries, notices,
@@ -16500,19 +17971,15 @@
   ALL_PALETTE.push({ cmd: "open durable messages",  target: "roadwire", label: "RoadWire", kind: "open" });
 
   // Wrap route() so RoadWire verbs trigger the matching button after open.
-  const _baseRoute3 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute3(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(ROADWIRE_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(ROADWIRE_VERB_BUTTONS, raw)) {
       const btnId = ROADWIRE_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADVIEW MVP WINDOW =====
   // Search with visible lanes, consent state, agent browse traces.
@@ -17199,27 +18666,21 @@
   ALL_PALETTE.push({ cmd: "open search",   target: "roadview", label: "RoadView", kind: "open" });
 
   // Wrap route() again — handles tab switching + button triggering for RoadView verbs.
-  const _baseRoute4 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute4(idOrCommand, source);
-    if (ok) {
-      const tabs = ROADVIEW_VERB_TABS[raw];
-      if (tabs) {
-        if (tabs.center) RV_STATE.activeTab = tabs.center;
-        if (tabs.side)   RV_STATE.activeSideTab = tabs.side;
-        renderRoadview();
-      }
-      if (Object.prototype.hasOwnProperty.call(ROADVIEW_VERB_BUTTONS, raw)) {
-        const btnId = ROADVIEW_VERB_BUTTONS[raw];
-        if (btnId) {
-          const b = document.getElementById(btnId);
-          if (b) setTimeout(() => b.click(), 30);
-        }
+  onRouted((raw) => {
+    const tabs = ROADVIEW_VERB_TABS[raw];
+    if (tabs) {
+      if (tabs.center) RV_STATE.activeTab = tabs.center;
+      if (tabs.side)   RV_STATE.activeSideTab = tabs.side;
+      renderRoadview();
+    }
+    if (Object.prototype.hasOwnProperty.call(ROADVIEW_VERB_BUTTONS, raw)) {
+      const btnId = ROADVIEW_VERB_BUTTONS[raw];
+      if (btnId) {
+        const b = document.getElementById(btnId);
+        if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADBOOK MVP WINDOW =====
   // Durable knowledge + publishing. No fake citations, no fake "published",
@@ -17995,27 +19456,21 @@
   ALL_PALETTE.push({ cmd: "open library",  target: "roadbook", label: "RoadBook", kind: "open" });
 
   // Wrap route() again — handle RoadBook tab switching + button triggering.
-  const _baseRoute5 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute5(idOrCommand, source);
-    if (ok) {
-      const tabs = ROADBOOK_VERB_TABS[raw];
-      if (tabs) {
-        if (tabs.center) RB_STATE.activeTab = tabs.center;
-        if (tabs.side)   RB_STATE.activeSideTab = tabs.side;
-        renderRoadbook();
-      }
-      if (Object.prototype.hasOwnProperty.call(ROADBOOK_VERB_BUTTONS, raw)) {
-        const btnId = ROADBOOK_VERB_BUTTONS[raw];
-        if (btnId) {
-          const b = document.getElementById(btnId);
-          if (b) setTimeout(() => b.click(), 30);
-        }
+  onRouted((raw) => {
+    const tabs = ROADBOOK_VERB_TABS[raw];
+    if (tabs) {
+      if (tabs.center) RB_STATE.activeTab = tabs.center;
+      if (tabs.side)   RB_STATE.activeSideTab = tabs.side;
+      renderRoadbook();
+    }
+    if (Object.prototype.hasOwnProperty.call(ROADBOOK_VERB_BUTTONS, raw)) {
+      const btnId = ROADBOOK_VERB_BUTTONS[raw];
+      if (btnId) {
+        const b = document.getElementById(btnId);
+        if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== BLACKBOARD MVP WINDOW =====
   // Visual creation studio. No real editor — wireframe + structured stubs.
@@ -18850,27 +20305,21 @@
   ALL_PALETTE.push({ cmd: "open visual studio",  target: "blackboard", label: "BlackBoard", kind: "open" });
 
   // Wrap route() — sixth wrapper, chains cleanly.
-  const _baseRoute6 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute6(idOrCommand, source);
-    if (ok) {
-      const tabs = BLACKBOARD_VERB_TABS[raw];
-      if (tabs) {
-        if (tabs.center) BB_STATE.activeTab = tabs.center;
-        if (tabs.side)   BB_STATE.activeSideTab = tabs.side;
-        renderBlackboard();
-      }
-      if (Object.prototype.hasOwnProperty.call(BLACKBOARD_VERB_BUTTONS, raw)) {
-        const btnId = BLACKBOARD_VERB_BUTTONS[raw];
-        if (btnId) {
-          const b = document.getElementById(btnId);
-          if (b) setTimeout(() => b.click(), 30);
-        }
+  onRouted((raw) => {
+    const tabs = BLACKBOARD_VERB_TABS[raw];
+    if (tabs) {
+      if (tabs.center) BB_STATE.activeTab = tabs.center;
+      if (tabs.side)   BB_STATE.activeSideTab = tabs.side;
+      renderBlackboard();
+    }
+    if (Object.prototype.hasOwnProperty.call(BLACKBOARD_VERB_BUTTONS, raw)) {
+      const btnId = BLACKBOARD_VERB_BUTTONS[raw];
+      if (btnId) {
+        const b = document.getElementById(btnId);
+        if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADSHOW MVP WINDOW =====
   // Programming/curation layer. No real publishing, no real broadcast.
@@ -19646,27 +21095,21 @@
   ALL_PALETTE.push({ cmd: "open show",     target: "roadshow", label: "RoadShow", kind: "open" });
 
   // Wrap route() — seventh wrapper.
-  const _baseRoute7 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute7(idOrCommand, source);
-    if (ok) {
-      const tabs = ROADSHOW_VERB_TABS[raw];
-      if (tabs) {
-        if (tabs.center) RS_STATE.activeTab = tabs.center;
-        if (tabs.side)   RS_STATE.activeSideTab = tabs.side;
-        renderRoadshow();
-      }
-      if (Object.prototype.hasOwnProperty.call(ROADSHOW_VERB_BUTTONS, raw)) {
-        const btnId = ROADSHOW_VERB_BUTTONS[raw];
-        if (btnId) {
-          const b = document.getElementById(btnId);
-          if (b) setTimeout(() => b.click(), 30);
-        }
+  onRouted((raw) => {
+    const tabs = ROADSHOW_VERB_TABS[raw];
+    if (tabs) {
+      if (tabs.center) RS_STATE.activeTab = tabs.center;
+      if (tabs.side)   RS_STATE.activeSideTab = tabs.side;
+      renderRoadshow();
+    }
+    if (Object.prototype.hasOwnProperty.call(ROADSHOW_VERB_BUTTONS, raw)) {
+      const btnId = ROADSHOW_VERB_BUTTONS[raw];
+      if (btnId) {
+        const b = document.getElementById(btnId);
+        if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== BACKROAD MVP WINDOW =====
   // Social / community draft layer. NO real posting. NO real follower counts.
@@ -20479,27 +21922,21 @@
   ALL_PALETTE.push({ cmd: "open community", target: "backroad", label: "BackRoad", kind: "open" });
 
   // Wrap route() — eighth wrapper.
-  const _baseRoute8 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute8(idOrCommand, source);
-    if (ok) {
-      const tabs = BACKROAD_VERB_TABS[raw];
-      if (tabs) {
-        if (tabs.center) BR_STATE.activeTab = tabs.center;
-        if (tabs.side)   BR_STATE.activeSideTab = tabs.side;
-        renderBackroad();
-      }
-      if (Object.prototype.hasOwnProperty.call(BACKROAD_VERB_BUTTONS, raw)) {
-        const btnId = BACKROAD_VERB_BUTTONS[raw];
-        if (btnId) {
-          const b = document.getElementById(btnId);
-          if (b) setTimeout(() => b.click(), 30);
-        }
+  onRouted((raw) => {
+    const tabs = BACKROAD_VERB_TABS[raw];
+    if (tabs) {
+      if (tabs.center) BR_STATE.activeTab = tabs.center;
+      if (tabs.side)   BR_STATE.activeSideTab = tabs.side;
+      renderBackroad();
+    }
+    if (Object.prototype.hasOwnProperty.call(BACKROAD_VERB_BUTTONS, raw)) {
+      const btnId = BACKROAD_VERB_BUTTONS[raw];
+      if (btnId) {
+        const b = document.getElementById(btnId);
+        if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADSTREAM MVP WINDOW =====
   // Media pipeline + continuity. NOT live. NOT uploaded. NOT streamed.
@@ -21408,27 +22845,21 @@
   ALL_PALETTE.push({ cmd: "open media pipeline", target: "roadstream", label: "RoadStream", kind: "open" });
 
   // Wrap route() — ninth wrapper.
-  const _baseRoute9 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute9(idOrCommand, source);
-    if (ok) {
-      const tabs = ROADSTREAM_VERB_TABS[raw];
-      if (tabs) {
-        if (tabs.center) RSM_STATE.activeTab = tabs.center;
-        if (tabs.side)   RSM_STATE.activeSideTab = tabs.side;
-        renderRoadstream();
-      }
-      if (Object.prototype.hasOwnProperty.call(ROADSTREAM_VERB_BUTTONS, raw)) {
-        const btnId = ROADSTREAM_VERB_BUTTONS[raw];
-        if (btnId) {
-          const b = document.getElementById(btnId);
-          if (b) setTimeout(() => b.click(), 30);
-        }
+  onRouted((raw) => {
+    const tabs = ROADSTREAM_VERB_TABS[raw];
+    if (tabs) {
+      if (tabs.center) RSM_STATE.activeTab = tabs.center;
+      if (tabs.side)   RSM_STATE.activeSideTab = tabs.side;
+      renderRoadstream();
+    }
+    if (Object.prototype.hasOwnProperty.call(ROADSTREAM_VERB_BUTTONS, raw)) {
+      const btnId = ROADSTREAM_VERB_BUTTONS[raw];
+      if (btnId) {
+        const b = document.getElementById(btnId);
+        if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADBAND MVP WINDOW =====
   // Music/audio planning layer. NO real audio generation. NO real stems.
@@ -22238,19 +23669,15 @@
   ALL_PALETTE.push({ cmd: "open audio studio", target: "roadband", label: "RoadBand", kind: "open" });
 
   // Wrap route() — tenth wrapper.
-  const _baseRoute10 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute10(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(ROADBAND_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(ROADBAND_VERB_BUTTONS, raw)) {
       const btnId = ROADBAND_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== PITSTOP MVP WINDOW =====
   // Learning portal. Teaches; does not dump answers.
@@ -23002,19 +24429,15 @@
   ALL_PALETTE.push({ cmd: "open learning", target: "pitstop", label: "PitStop", kind: "open" });
 
   // Wrap route() — eleventh wrapper.
-  const _baseRoute11 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute11(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(PITSTOP_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(PITSTOP_VERB_BUTTONS, raw)) {
       const btnId = PITSTOP_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADWORLD MVP WINDOW =====
   // Worlds, simulations, playable plans. No real game engine. No multiplayer.
@@ -23765,19 +25188,15 @@
   ALL_PALETTE.push({ cmd: "open world builder", target: "roadworld", label: "RoadWorld", kind: "open" });
 
   // Wrap route() — twelfth wrapper.
-  const _baseRoute12 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute12(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(ROADWORLD_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(ROADWORLD_VERB_BUTTONS, raw)) {
       const btnId = ROADWORLD_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== CARPOOL MVP WINDOW =====
   // Human + agent collaboration rooms.
@@ -24520,19 +25939,15 @@
   ALL_PALETTE.push({ cmd: "open collaboration room",  target: "carpool", label: "CarPool", kind: "open" });
 
   // Wrap route() — thirteenth wrapper.
-  const _baseRoute13 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute13(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(CARPOOL_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(CARPOOL_VERB_BUTTONS, raw)) {
       const btnId = CARPOOL_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADWORK MVP WINDOW =====
   // Business/ops layer. No legal/tax/financial advice as final authority.
@@ -25318,19 +26733,15 @@
   ALL_PALETTE.push({ cmd: "open business ops",target: "roadwork", label: "RoadWork", kind: "open" });
 
   // Wrap route() — fourteenth wrapper.
-  const _baseRoute14 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute14(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(ROADWORK_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(ROADWORK_VERB_BUTTONS, raw)) {
       const btnId = ROADWORK_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ROADSIDE MVP WINDOW =====
   // Help / support / routing desk. No fake human support. No fake tickets.
@@ -26090,19 +27501,15 @@
   ALL_PALETTE.push({ cmd: "open support",  target: "roadside", label: "RoadSide", kind: "open" });
 
   // Wrap route() — fifteenth wrapper.
-  const _baseRoute15 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute15(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(ROADSIDE_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(ROADSIDE_VERB_BUTTONS, raw)) {
       const btnId = ROADSIDE_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== ONEWAY MVP WINDOW =====
   // Controlled data flow. No fake real data movement.
@@ -26840,19 +28247,15 @@
   ALL_PALETTE.push({ cmd: "open data flow", target: "oneway", label: "OneWay", kind: "open" });
 
   // Wrap route() — sixteenth wrapper.
-  const _baseRoute16 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute16(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(ONEWAY_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(ONEWAY_VERB_BUTTONS, raw)) {
       const btnId = ONEWAY_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== HIGHWAY MVP WINDOW =====
   // Infrastructure / deploy readiness. No fake live claims. No fake hosting.
@@ -27723,19 +29126,15 @@
   ALL_PALETTE.push({ cmd: "open deploy readiness", target: "highway", label: "HighWay", kind: "open" });
 
   // Wrap route() — seventeenth wrapper.
-  const _baseRoute17 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
-    const ok = _baseRoute17(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(HIGHWAY_VERB_BUTTONS, raw)) {
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(HIGHWAY_VERB_BUTTONS, raw)) {
       const btnId = HIGHWAY_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===========================================================
   // ===== RoadSport MVP =====
@@ -28601,23 +30000,21 @@
   ALL_PALETTE.push({ cmd: "open training",  target: "roadsport", label: "RoadSport", kind: "open" });
 
   // Wrap route() — eighteenth wrapper.
-  const _baseRoute18 = route;
-  route = function (idOrCommand, source = "click") {
-    const raw = String(idOrCommand || "").trim().toLowerCase();
+  registerRouteGuard((raw) => {
     if (rspContainsAny(raw, BET_FLAGS)) {
       console.log("[roadsport] refused betting phrase");
       return false;
     }
-    const ok = _baseRoute18(idOrCommand, source);
-    if (ok && Object.prototype.hasOwnProperty.call(ROADSPORT_VERB_BUTTONS, raw)) {
+  });
+  onRouted((raw) => {
+    if (Object.prototype.hasOwnProperty.call(ROADSPORT_VERB_BUTTONS, raw)) {
       const btnId = ROADSPORT_VERB_BUTTONS[raw];
       if (btnId) {
         const b = document.getElementById(btnId);
         if (b) setTimeout(() => b.click(), 30);
       }
     }
-    return ok;
-  };
+  });
 
   // ===== WINDOW STACK MANAGER =====
   // All ~27 window root elements share CSS `z-index: 30`. That makes focus/raise

@@ -1,0 +1,28 @@
+{
+  "number": "20",
+  "id": "officeroad",
+  "slug": "officeroad",
+  "name": "OfficeRoad",
+  "role": "docs / sheets",
+  "status": "planned",
+  "meaning": "work office (docs, sheets)",
+  "does": [
+    "docs",
+    "sheets",
+    "slides"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "office.blackroad.io",
+  "agents": [
+    "Cicero",
+    "Cecilia",
+    "Alice"
+  ],
+  "receipts": [
+    "officeroad.doc.saved"
+  ],
+  "carkeys": [
+    "none"
+  ],
+  "next": "scope MVP"
+}

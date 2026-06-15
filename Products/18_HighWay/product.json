@@ -1,0 +1,27 @@
+{
+  "number": "18",
+  "id": "highway",
+  "slug": "highway",
+  "name": "HighWay",
+  "role": "high-throughput batch",
+  "status": "planned",
+  "meaning": "high-throughput fast lane",
+  "does": [
+    "batch ops",
+    "bulk pipelines"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "highway.blackroad.io",
+  "agents": [
+    "Gaia",
+    "Sebastian",
+    "Lucidia"
+  ],
+  "receipts": [
+    "highway.batch.started"
+  ],
+  "carkeys": [
+    "bulk action gated"
+  ],
+  "next": "scope MVP"
+}
