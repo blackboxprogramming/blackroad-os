@@ -73,6 +73,6 @@ To add/change a product: edit the JSON → `node scripts/sync-products.mjs` →
 | Validate the product registry | `node scripts/validate-registry.mjs` |
 | Validate the agent registry | `node scripts/validate-agents.mjs` |
 | Check agent roster matches `index.html` | `node scripts/validate-agents-roster.mjs` |
-| Regenerate `index.html` ORGS + DOMAINS | `node scripts/sync-collections.mjs` |
-| Fail if ORGS/DOMAINS drifted (CI mode) | `node scripts/sync-collections.mjs --check` |
-| Validate the org + domain registries | `node scripts/validate-collections.mjs` |
+| Regenerate `index.html` ORGS/DOMAINS/LANES/CARKEYS_LANES | `node scripts/sync-collections.mjs` |
+| Fail if any generated array drifted (CI mode) | `node scripts/sync-collections.mjs --check` |
+| Validate the org/domain/lane/carkeys registries | `node scripts/validate-collections.mjs` |

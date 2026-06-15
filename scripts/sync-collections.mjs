@@ -20,6 +20,8 @@ const HTML = join(root, "index.html");
 const TARGETS = [
   { name: "ORGS", file: "Registry/orgs.json", key: "organizations" },
   { name: "DOMAINS", file: "Registry/domains.json", key: "domains" },
+  { name: "LANES", file: "Registry/lanes.json", key: "lanes" },
+  { name: "CARKEYS_LANES", file: "Registry/carkeys.json", key: "lanes" },
 ];
 
 function buildBlock(t) {
@@ -44,14 +46,15 @@ const current = readFileSync(HTML, "utf8");
 let next = current;
 for (const t of TARGETS) next = renderOne(next, t);
 
+const names = TARGETS.map((t) => t.name).join(", ");
 if (current === next) {
-  console.log("✓ index.html ORGS + DOMAINS are in sync with their registries");
+  console.log(`✓ index.html generated arrays are in sync with their registries (${names})`);
   process.exit(0);
 }
 if (check) {
-  console.error("✗ index.html ORGS/DOMAINS are OUT OF SYNC with Registry/orgs.json|domains.json.");
+  console.error(`✗ index.html generated arrays are OUT OF SYNC with their registries (${names}).`);
   console.error("  Run: node scripts/sync-collections.mjs  then commit index.html");
   process.exit(1);
 }
 writeFileSync(HTML, next);
-console.log("✓ Regenerated ORGS + DOMAINS blocks in index.html from their registries");
+console.log(`✓ Regenerated generated arrays in index.html from their registries (${names})`);

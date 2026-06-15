@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BlackRoad CarKeys Permission Lane",
+  "description": "Canonical record for one of the 16 CarKeys permission lanes. Registry/carkeys.json is the single source of truth; the CARKEYS_LANES array in index.html is generated from it via scripts/sync-collections.mjs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["num", "id", "name", "status", "risk", "purpose"],
+  "properties": {
+    "num": { "type": "string", "pattern": "^[0-9]{2}$", "description": "Two-digit lane position, 01-16." },
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "name": { "type": "string" },
+    "status": { "enum": ["ready", "next", "planned", "locked"], "description": "Honest gate status. 'locked' = no real auth in this UI." },
+    "risk": { "type": "string", "description": "Risk tier for the lane (e.g. low/medium/high)." },
+    "purpose": { "type": "string" },
+    "permissionTypes": { "type": "array", "items": { "type": "string" } },
+    "defaultRule": { "type": "string" },
+    "operatorRule": { "type": "string" },
+    "riskRules": { "type": "array", "items": { "type": "string" } },
+    "connected": { "type": "array", "items": { "type": "string" } },
+    "receiptTypes": { "type": "array", "items": { "type": "string" } },
+    "grants": { "type": "array", "items": { "type": "object" }, "description": "Seed grants; the desktop mutates an in-memory copy at runtime." },
+    "next": { "type": "string" },
+    "seedAllAgents": { "type": "boolean" },
+    "lockedReason": { "type": "string" }
+  }
+}

@@ -20,9 +20,14 @@ const COLLECTIONS = [
     key: "organizations", total: "total_organizations", count: 20, label: "organizations" },
   { file: "Registry/domains.json", schema: "Registry/schemas/domain.schema.json",
     key: "domains", total: "total_domains", count: 20, label: "root domains" },
+  { file: "Registry/lanes.json", schema: "Registry/schemas/lane.schema.json",
+    key: "lanes", total: "total_lanes", count: 20, label: "roadmap lanes" },
+  { file: "Registry/carkeys.json", schema: "Registry/schemas/carkeys-lane.schema.json",
+    key: "lanes", total: "total_lanes", count: 16, label: "carkeys lanes" },
 ];
 
 const errors = [];
+const summary = [];
 const load = (p) => JSON.parse(readFileSync(join(root, p), "utf8"));
 
 for (const c of COLLECTIONS) {
@@ -32,6 +37,7 @@ for (const c of COLLECTIONS) {
   const rows = reg[c.key];
 
   if (!Array.isArray(rows)) { fail(`"${c.key}" must be an array`); continue; }
+  summary.push(`${c.label}:${rows.length}`);
   if (rows.length !== c.count) fail(`expected ${c.count} ${c.label}, found ${rows.length}`);
   if (reg[c.total] !== undefined && reg[c.total] !== rows.length) {
     fail(`${c.total} (${reg[c.total]}) != ${c.key}.length (${rows.length})`);
@@ -79,4 +85,4 @@ if (errors.length) {
   for (const e of errors) console.error("  - " + e);
   process.exit(1);
 }
-console.log("✓ Registry/orgs.json + domains.json valid — 20 + 20, schema + invariants OK");
+console.log(`✓ ${COLLECTIONS.length} registry collections valid — ${summary.join(", ")} — schema + invariants OK`);

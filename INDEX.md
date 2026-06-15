@@ -34,7 +34,10 @@ Each scaffold folder carries a `STATUS.md` with its honest current state and nex
 | `Registry/agents.json` | 27 | `schemas/agent.schema.json` | `scripts/validate-agents.mjs` |
 | `Registry/orgs.json` | 20 | `schemas/organization.schema.json` | `scripts/validate-collections.mjs` |
 | `Registry/domains.json` | 20 | `schemas/domain.schema.json` | `scripts/validate-collections.mjs` |
+| `Registry/lanes.json` | 20 | `schemas/lane.schema.json` | `scripts/validate-collections.mjs` |
+| `Registry/carkeys.json` | 16 | `schemas/carkeys-lane.schema.json` | `scripts/validate-collections.mjs` |
 
-Generated-from-registry (never hand-edit): the `PRODUCTS` / `ORGS` / `DOMAINS`
-blocks in `index.html`, and every `Products/NN_*/product.json`. CI
-(`.github/workflows/registry.yml`) fails on any drift.
+Generated-from-registry (never hand-edit): the `PRODUCTS` / `ORGS` / `DOMAINS` /
+`LANES` / `CARKEYS_LANES` blocks in `index.html`, and every
+`Products/NN_*/product.json`. CI (`.github/workflows/registry.yml`) fails on any
+drift.
