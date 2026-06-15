@@ -7,7 +7,7 @@
 ## What exists
 - `README.md` — purpose and boundary (infrastructure, compute, hybrid mesh backbone)
 - Canon record: product `18 / highway` in `Registry/products.json`
-- Note: HighWay is top-level infrastructure, so it has no `Products/18_*` folder by design
+- Product folder: `Products/18_HighWay/` (canon `product.json` generated from the registry); this top-level `HighWay/` folder holds the infrastructure docs
 
 ## Next
 - Draft the hybrid-mesh integration plan (Meshtastic LoRa + Headscale/WireGuard overlay, Git-native sync, RoadChain provenance) in `Docs/`.

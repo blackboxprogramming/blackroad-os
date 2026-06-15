@@ -11,8 +11,8 @@
  *   node scripts/sync-product-folders.mjs          # write every product.json
  *   node scripts/sync-product-folders.mjs --check   # exit 1 if any is missing/stale (CI)
  *
- * Note: registry product 18 (HighWay) has no Products/ folder by design — it is
- * top-level infrastructure (HighWay/). Folders are matched by their NN_ prefix.
+ * Every registry product has a Products/NN_Name/ folder (including HighWay/18).
+ * Folders are matched by their NN_ prefix.
  */
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -34,30 +34,14 @@ for (const name of readdirSync(PRODUCTS_DIR, { withFileTypes: true })) {
 
 const serialize = (record) => JSON.stringify(record, null, 2) + "\n";
 
-// Product numbers that legitimately have no Products/ folder. Only HighWay (18)
-// is top-level infrastructure; any other missing folder is drift and must fail.
-const NO_FOLDER_OK = new Set(["18"]);
-
 const check = process.argv.includes("--check");
 const stale = [];
 const written = [];
-const noFolder = [];
 const missing = [];
-const unexpected = [];
 
 for (const p of reg.products) {
   const folder = folderByNumber.get(p.number);
-  if (!folder) {
-    noFolder.push(`${p.number} ${p.name}`);
-    if (!NO_FOLDER_OK.has(p.number)) missing.push(`Products/${p.number}_* (for ${p.name})`);
-    continue;
-  }
-  // A product on the no-folder allowlist must NOT have a Products/ folder.
-  // If one appears (e.g. a stray/leftover dir), that is drift, not something to sync.
-  if (NO_FOLDER_OK.has(p.number)) {
-    unexpected.push(`Products/${folder} (product ${p.number}/${p.name} must have no Products/ folder)`);
-    continue;
-  }
+  if (!folder) { missing.push(`Products/${p.number}_* (for ${p.name})`); continue; }
   const file = join(PRODUCTS_DIR, folder, "product.json");
   const want = serialize(p);
   const have = existsSync(file) ? readFileSync(file, "utf8") : null;
@@ -68,7 +52,7 @@ for (const p of reg.products) {
 }
 
 if (check) {
-  if (stale.length || missing.length || unexpected.length) {
+  if (stale.length || missing.length) {
     if (stale.length) {
       console.error(`✗ ${stale.length} per-folder product.json out of sync with the registry:`);
       for (const s of stale) console.error("  - " + s);
@@ -77,22 +61,11 @@ if (check) {
       console.error(`✗ ${missing.length} registry product(s) with no Products/ folder (drift):`);
       for (const m of missing) console.error("  - " + m);
     }
-    if (unexpected.length) {
-      console.error(`✗ ${unexpected.length} unexpected Products/ folder(s) (drift):`);
-      for (const u of unexpected) console.error("  - " + u);
-    }
     console.error("  Run: node scripts/sync-product-folders.mjs  then commit Products/.");
     process.exit(1);
   }
-  console.log("✓ All per-folder product.json are in sync with Registry/products.json");
+  console.log(`✓ All per-folder product.json are in sync with Registry/products.json (${reg.products.length}/${reg.products.length})`);
 } else {
-  if (unexpected.length) {
-    console.warn(`  warning: ${unexpected.length} unexpected Products/ folder(s) left untouched:`);
-    for (const u of unexpected) console.warn("  - " + u);
-  }
   console.log(`✓ Wrote ${written.length} product.json from the registry` +
     (written.length ? " (" + written.length + " updated)" : " (all already current)"));
-}
-if (noFolder.length) {
-  console.log(`  note: no Products/ folder for: ${noFolder.join(", ")} (expected for top-level infra)`);
 }
