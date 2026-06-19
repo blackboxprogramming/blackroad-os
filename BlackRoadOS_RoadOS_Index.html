@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlackRoad OS — RoadOS Prototype</title>
+    <title>BlackRoad OS — RoadOS State Machine</title>
     <style>
         * {
             margin: 0;
@@ -68,16 +68,14 @@
             flex-direction: column;
         }
 
-        .chat-rail {
-            width: 250px;
-            border-left: 1px solid #ddd;
-            background: #f9f9f9;
+        .side-panel {
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            background: #f9f9f9;
+            border-left: 1px solid #ddd;
         }
 
-        .chat-title {
+        .panel-header {
             padding: 10px;
             background: #e0e0e0;
             font-weight: bold;
@@ -85,28 +83,11 @@
             font-size: 12px;
         }
 
-        .chat-log {
+        .panel-content {
             flex: 1;
             overflow-y: auto;
             padding: 10px;
             font-size: 11px;
-            line-height: 1.4;
-        }
-
-        .chat-entry {
-            margin-bottom: 8px;
-            padding: 5px;
-            background: #fff;
-            border-left: 2px solid #0066cc;
-        }
-
-        .chat-time {
-            color: #999;
-            font-size: 10px;
-        }
-
-        .chat-text {
-            color: #333;
         }
 
         .section-title {
@@ -238,33 +219,6 @@
             background: #0050a8;
         }
 
-        .receipts-section {
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 4px;
-            margin-top: 15px;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-
-        .receipt-item {
-            font-size: 11px;
-            margin-bottom: 5px;
-            padding: 5px;
-            background: #fff;
-            border-left: 2px solid #0066cc;
-        }
-
-        .receipt-time {
-            color: #999;
-        }
-
-        .receipt-type {
-            font-weight: bold;
-            color: #0066cc;
-        }
-
         .search-box {
             margin-bottom: 15px;
         }
@@ -314,154 +268,102 @@
         .operator-notice strong {
             color: #000;
         }
+
+        .status-bar {
+            background: #333;
+            color: #fff;
+            padding: 8px 15px;
+            font-size: 11px;
+            border-top: 1px solid #555;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            gap: 5px;
+        }
+
+        .status-label {
+            color: #aaa;
+        }
+
+        .status-value {
+            color: #0f0;
+            font-weight: bold;
+        }
+
+        .receipt-item {
+            font-size: 10px;
+            margin-bottom: 6px;
+            padding: 5px;
+            background: #fff;
+            border-left: 2px solid #0066cc;
+            line-height: 1.3;
+        }
+
+        .receipt-id {
+            color: #0066cc;
+            font-weight: bold;
+        }
+
+        .receipt-type {
+            color: #666;
+        }
+
+        .receipt-status {
+            color: #999;
+        }
+
+        .chat-entry {
+            margin-bottom: 6px;
+            padding: 5px;
+            background: #fff;
+            border-left: 2px solid #0066cc;
+            font-size: 10px;
+            line-height: 1.3;
+        }
+
+        .chat-time {
+            color: #999;
+            font-size: 9px;
+        }
+
+        .chat-text {
+            color: #333;
+        }
+
+        .status-warning {
+            background: #ffe0e0;
+            border: 1px solid #ff6666;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 11px;
+            color: #cc0000;
+        }
     </style>
 </head>
 <body>
-    <div class="desktop-nav">
-        <div class="nav-icon active" data-workspace="home">🏠 Home</div>
-        <div class="nav-icon" data-workspace="index">📋 Index</div>
-        <div class="nav-icon" data-workspace="agents">👥 Agents</div>
-        <div class="nav-icon" data-workspace="orgs">🏢 Orgs</div>
-        <div class="nav-icon" data-workspace="apps">📦 Apps</div>
-        <div class="nav-icon" data-workspace="products">🚀 Products</div>
-        <div class="nav-icon" data-workspace="domains">🌐 Domains</div>
-        <div class="nav-icon" data-workspace="files">📁 Files</div>
-    </div>
+    <div class="desktop-nav" id="desktop-nav"></div>
 
     <div class="main-container">
-        <div class="workspace active" id="home">
-            <div class="section-title">Home — Work Panels</div>
-            <div id="operator-info" class="operator-notice"></div>
-            <div class="home-panels">
-                <div class="panel">
-                    <div class="panel-title">lucidia-01</div>
-                    <div class="panel-status">Status: IDLE — 0 agents active</div>
-                </div>
-                <div class="panel">
-                    <div class="panel-title">roadbook-02</div>
-                    <div class="panel-status">Status: IDLE — 0 tasks pending</div>
-                </div>
-                <div class="panel">
-                    <div class="panel-title">br37-03</div>
-                    <div class="panel-status">Status: IDLE — 0 receipts pending</div>
-                </div>
-                <div class="panel">
-                    <div class="panel-title">roadtrip-04</div>
-                    <div class="panel-status">Status: IDLE — RoadTrip solo operator</div>
-                </div>
-            </div>
-            <div id="home-receipts" class="receipts-section"></div>
-        </div>
+        <div id="workspaces-container"></div>
 
-        <div class="workspace" id="agents">
-            <div class="section-title">Agents (27 total)</div>
-            <div class="search-box">
-                <input type="text" id="agents-search" placeholder="Filter agents...">
-            </div>
-            <div style="display: flex; gap: 15px; flex: 1; overflow: hidden;">
-                <div style="flex: 0 0 300px; overflow-y: auto;">
-                    <div class="grid-list" id="agents-grid"></div>
-                </div>
-                <div style="flex: 1; overflow-y: auto;">
-                    <div id="agent-detail" class="detail-panel" style="display: none;"></div>
-                </div>
-            </div>
-            <div id="agents-receipts" class="receipts-section"></div>
-        </div>
-
-        <div class="workspace" id="products">
-            <div class="section-title">Products (27 total)</div>
-            <div class="search-box">
-                <input type="text" id="products-search" placeholder="Filter products...">
-            </div>
-            <div style="display: flex; gap: 15px; flex: 1; overflow: hidden;">
-                <div style="flex: 0 0 300px; overflow-y: auto;">
-                    <div class="grid-list" id="products-grid"></div>
-                </div>
-                <div style="flex: 1; overflow-y: auto;">
-                    <div id="product-detail" class="detail-panel" style="display: none;"></div>
-                </div>
-            </div>
-            <div id="products-receipts" class="receipts-section"></div>
-        </div>
-
-        <div class="workspace" id="domains">
-            <div class="section-title">Root Domains (20 total)</div>
-            <div class="search-box">
-                <input type="text" id="domains-search" placeholder="Filter domains...">
-            </div>
-            <div style="display: flex; gap: 15px; flex: 1; overflow: hidden;">
-                <div style="flex: 0 0 250px; overflow-y: auto;">
-                    <div class="grid-list" id="domains-grid"></div>
-                </div>
-                <div style="flex: 1; overflow-y: auto;">
-                    <div id="domain-detail" class="detail-panel" style="display: none;"></div>
-                </div>
-            </div>
-            <div id="domains-receipts" class="receipts-section"></div>
-        </div>
-
-        <div class="workspace" id="orgs">
-            <div class="section-title">Organizations (20 total)</div>
-            <div class="search-box">
-                <input type="text" id="orgs-search" placeholder="Filter organizations...">
-            </div>
-            <div style="display: flex; gap: 15px; flex: 1; overflow: hidden;">
-                <div style="flex: 0 0 250px; overflow-y: auto;">
-                    <div class="grid-list" id="orgs-grid"></div>
-                </div>
-                <div style="flex: 1; overflow-y: auto;">
-                    <div id="org-detail" class="detail-panel" style="display: none;"></div>
-                </div>
-            </div>
-            <div id="orgs-receipts" class="receipts-section"></div>
-        </div>
-
-        <div class="workspace" id="index">
-            <div class="section-title">RoadOS Index</div>
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 20px;">
-                <div class="panel">
-                    <div class="panel-title">17 Core Commands</div>
-                    <div id="commands-summary" class="panel-status"></div>
-                </div>
-                <div class="panel">
-                    <div class="panel-title">172 Process Steps</div>
-                    <div class="panel-status">Each command has 5–20 procedural steps</div>
-                </div>
-                <div class="panel">
-                    <div class="panel-title">1,729 Capabilities</div>
-                    <div class="panel-status">Atomic skill library</div>
-                </div>
-                <div class="panel">
-                    <div class="panel-title">17,290 Index Lanes</div>
-                    <div class="panel-status">Cross-indexed access paths</div>
-                </div>
-            </div>
-            <div class="search-box">
-                <input type="text" id="index-search" placeholder="Search index...">
-            </div>
-            <div id="index-results" class="scrollable" style="border: 1px solid #ddd; padding: 10px; border-radius: 4px;"></div>
-        </div>
-
-        <div class="workspace" id="files">
-            <div class="section-title">BlackRoad Filesystem</div>
-            <ul class="file-tree" id="file-tree"></ul>
-        </div>
-
-        <div class="workspace" id="apps">
-            <div class="section-title">Product Launcher (27 apps)</div>
-            <div class="grid-list" id="apps-grid"></div>
-        </div>
-
-        <div class="chat-rail">
-            <div class="chat-title">Activity Log</div>
-            <div class="chat-log" id="chat-log"></div>
+        <div class="side-panel" style="width: 300px;">
+            <div class="panel-header">📋 Receipts (Recent 10)</div>
+            <div class="panel-content" id="receipt-drawer"></div>
+            <div class="panel-header" style="margin-top: auto;">💬 Chat Log</div>
+            <div class="panel-content" id="chat-panel"></div>
         </div>
     </div>
 
-    <script>
-        // ===== ROAD_OS_CANON: Single Source of Truth =====
+    <div class="status-bar" id="status-bar"></div>
 
+    <script>
+        // ===== ROAD_OS_CANON: Single source of truth =====
         const ROAD_OS_CANON = {
             operator: {
                 name: "Alexandria / Alexa",
@@ -501,56 +403,56 @@
             ],
 
             products: [
-                { number: '01', name: 'RoadOS', status: 'REAL', meaning: 'browser-native operating system / one-tab computer', does: ['Boot', 'Manage agents', 'Route commands'], wiring: 'Alexandria entry point', primaryOrg: 'BlackRoad-OS-Primary', primaryDomain: 'blackroad.io', primaryAgents: ['01', '02', '26'], carKeysState: 'public', nextAction: 'Expand to 27 agents' },
-                { number: '02', name: 'RoadCode', status: 'REAL', meaning: 'build, code, debug, test, deploy', does: ['Compile', 'Test', 'Deploy'], wiring: 'SE + testing', primaryOrg: 'BlackRoad-OS-Code', primaryDomain: 'blackroad.io', primaryAgents: ['05', '06', '07'], carKeysState: 'public', nextAction: 'Add testing layer' },
-                { number: '03', name: 'RoadTrip', status: 'REAL', meaning: 'solo operator plus agents workspace', does: ['Plan route', 'Execute mission', 'Log receipt'], wiring: 'Operator sync', primaryOrg: 'BlackRoad-OS-Primary', primaryDomain: 'blackroad.io', primaryAgents: ['02', '24', '26'], carKeysState: 'private', nextAction: 'Add multi-operator' },
-                { number: '04', name: 'PitStop', status: 'REAL', meaning: 'homework, tutoring, practice, learning', does: ['Teach', 'Track progress', 'Assign exercises'], wiring: 'Education layer', primaryOrg: 'BlackRoad-OS-Education', primaryDomain: 'blackroad.io', primaryAgents: ['17', '03', '24'], carKeysState: 'public', nextAction: 'Add curriculum' },
-                { number: '05', name: 'RoadWork', status: 'REAL', meaning: 'business operations, filings, workflows, obligations', does: ['File tasks', 'Track obligations', 'Report status'], wiring: 'Company ops', primaryOrg: 'BlackRoad-OS-Company', primaryDomain: 'blackroad.company', primaryAgents: ['12', '24', '09'], carKeysState: 'public', nextAction: 'Add workflow automation' },
-                { number: '06', name: 'BackRoad', status: 'REAL', meaning: 'social layer and creator/community feed', does: ['Post content', 'Follow creators', 'Feed ranking'], wiring: 'Social graph', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['06', '21', '23'], carKeysState: 'public', nextAction: 'Add community guidelines' },
-                { number: '07', name: 'CarKeys', status: 'REAL', meaning: 'identity, login, permissions, grants, keys', does: ['Grant access', 'Revoke permission', 'Audit access'], wiring: 'Auth layer', primaryOrg: 'BlackRoad-OS-Security', primaryDomain: 'blackroad.network', primaryAgents: ['10', '23', '07'], carKeysState: 'system', nextAction: 'Add role-based access' },
-                { number: '08', name: 'RoadBook', status: 'REAL', meaning: 'publishing, books, research, authorship, provenance', does: ['Publish', 'Version', 'Cite sources'], wiring: 'Publishing', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['09', '21', '25'], carKeysState: 'public', nextAction: 'Add auto-generation' },
-                { number: '09', name: 'RoadWorld', status: 'PLANNED', meaning: 'games, worlds, simulations, playable creation', does: ['Simulate', 'Model world', 'Run scenarios'], wiring: 'Game engine', primaryOrg: 'BlackRoad-OS-Interactive', primaryDomain: 'blackroad.io', primaryAgents: ['20', '13', '18'], carKeysState: 'private', nextAction: 'Build simulation' },
-                { number: '10', name: 'RoadView', status: 'PLANNED', meaning: 'search, discovery, visible agent browsing, source routing', does: ['Search', 'Discover', 'Route'], wiring: 'Search + discovery', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['11', '06', '16'], carKeysState: 'public', nextAction: 'Add real-time' },
-                { number: '11', name: 'RoadChain', status: 'REAL', meaning: 'receipts, proof, provenance, audit trail', does: ['Create receipt', 'Log action', 'Verify proof'], wiring: 'Proof layer', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'roadchain.io', primaryAgents: ['01', '23', '09'], carKeysState: 'system', nextAction: 'Add blockchain' },
-                { number: '12', name: 'RoadSide', status: 'PLANNED', meaning: 'help, support, concierge, embedded assistant', does: ['Help user', 'Provide guidance', 'Log support'], wiring: 'Support layer', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['02', '19', '04'], carKeysState: 'public', nextAction: 'Add live support' },
-                { number: '13', name: 'RoadCoin', status: 'PLANNED', meaning: 'internal usage credits and contribution accounting', does: ['Transact', 'Track balance', 'Verify payment'], wiring: 'Finance layer', primaryOrg: 'BlackRoad-OS-Cloud', primaryDomain: 'roadcoin.io', primaryAgents: ['15', '11', '20'], carKeysState: 'private', nextAction: 'Add blockchain' },
-                { number: '14', name: 'CarPool', status: 'REAL', meaning: 'multi-human plus AI collaboration', does: ['Coordinate team', 'Share context', 'Sync async'], wiring: 'Collab layer', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['12', '04', '10'], carKeysState: 'private', nextAction: 'Add real-time' },
-                { number: '15', name: 'BlackBoard', status: 'REAL', meaning: 'visual creation studio, diagrams, media, design', does: ['Draw', 'Design', 'Collaborate'], wiring: 'Visual studio', primaryOrg: 'BlackRoad-OS-Studio', primaryDomain: 'blackroad.io', primaryAgents: ['13', '06', '15'], carKeysState: 'public', nextAction: 'Add real-time sync' },
-                { number: '16', name: 'OneWay', status: 'PLANNED', meaning: 'data sovereignty, imports, exports, provider boundary', does: ['Import', 'Export', 'Boundary'], wiring: 'Data boundary', primaryOrg: 'BlackRoad-OS-Data', primaryDomain: 'blackroad.io', primaryAgents: ['10', '11', '05'], carKeysState: 'public', nextAction: 'Add encryption' },
-                { number: '17', name: 'RoadBand', status: 'PLANNED', meaning: 'music, audio, taste, production, listening', does: ['Play', 'Produce', 'Curate'], wiring: 'Audio layer', primaryOrg: 'BlackRoad-OS-Media', primaryDomain: 'blackroad.io', primaryAgents: ['14', '18', '21'], carKeysState: 'public', nextAction: 'Add mixing' },
-                { number: '18', name: 'HighWay', status: 'REAL', meaning: 'infrastructure, network, nodes, tunnels, DNS/TLS, routing', does: ['Route traffic', 'Bridge networks', 'Manage mesh'], wiring: 'Network layer', primaryOrg: 'BlackRoad-OS-Network', primaryDomain: 'blackroad.network', primaryAgents: ['05', '08', '24'], carKeysState: 'system', nextAction: 'Add Meshtastic' },
-                { number: '19', name: 'RoadSport', status: 'PLANNED', meaning: 'sports, movement, training, performance', does: ['Track', 'Train', 'Compete'], wiring: 'Sport tracking', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['08', '24', '13'], carKeysState: 'public', nextAction: 'Build leaderboard' },
-                { number: '20', name: 'OfficeRoad', status: 'REAL', meaning: 'visual office, rooms, desks, presence, coordination', does: ['Room mgmt', 'Presence', 'Coordinate'], wiring: 'Office sync', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.company', primaryAgents: ['12', '13', '14'], carKeysState: 'public', nextAction: 'Add templates' },
-                { number: '21', name: 'RoadStream', status: 'PLANNED', meaning: 'streaming wrapper, watch memory, subscriptions', does: ['Stream', 'Buffer', 'Subscribe'], wiring: 'Streaming layer', primaryOrg: 'BlackRoad-OS-Media', primaryDomain: 'blackroad.io', primaryAgents: ['14', '18', '21'], carKeysState: 'public', nextAction: 'Add compression' },
-                { number: '22', name: 'RoadShow', status: 'PLANNED', meaning: 'shows, channels, playlists, programming, curation', does: ['Program', 'Curate', 'Broadcast'], wiring: 'Curation layer', primaryOrg: 'BlackRoad-OS-Media', primaryDomain: 'blackroad.company', primaryAgents: ['14', '18', '25'], carKeysState: 'public', nextAction: 'Add multi-stream' },
-                { number: '23', name: 'RoundAbout', status: 'REAL', meaning: 'preparation around trips, routes, transitions, handoffs', does: ['Prepare', 'Plan', 'Brief'], wiring: 'Prep layer', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['01', '02', '24'], carKeysState: 'private', nextAction: 'Add contingencies' },
-                { number: '24', name: 'GloveBox', status: 'REAL', meaning: 'capability catalog, tools, utilities, references', does: ['Index capabilities', 'Track tools', 'Document API'], wiring: 'Catalog layer', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['11', '16', '06'], carKeysState: 'public', nextAction: 'Add auto-discovery' },
-                { number: '25', name: 'RoadMap', status: 'REAL', meaning: 'progress, blockers, milestones, status truth', does: ['Report status', 'Track milestones', 'Forecast'], wiring: 'Status layer', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['24', '22', '01'], carKeysState: 'public', nextAction: 'Add predictive' },
-                { number: '26', name: 'RoadWire', status: 'REAL', meaning: 'durable async messages, threads, records', does: ['Queue message', 'Retry delivery', 'Persist state'], wiring: 'Message layer', primaryOrg: 'BlackRoad-OS-Cloud', primaryDomain: 'blackroad.io', primaryAgents: ['04', '05', '14'], carKeysState: 'system', nextAction: 'Add guarantees' },
-                { number: '27', name: 'Detour', status: 'REAL', meaning: 'fallback, reroute, route execution, degraded mode', does: ['Route fallback', 'Execute alternate', 'Log detour'], wiring: 'Fallback layer', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['02', '22', '24'], carKeysState: 'private', nextAction: 'Add intelligent routing' }
+                { number: '01', name: 'RoadOS', status: 'REAL', meaning: 'browser-native operating system / one-tab computer', primaryOrg: 'BlackRoad-OS-Primary', primaryDomain: 'blackroad.io', primaryAgents: ['01', '02', '26'], carKeysState: 'public', nextAction: 'Expand to 27 agents' },
+                { number: '02', name: 'RoadCode', status: 'REAL', meaning: 'build, code, debug, test, deploy', primaryOrg: 'BlackRoad-OS-Code', primaryDomain: 'blackroad.io', primaryAgents: ['05', '06', '07'], carKeysState: 'public', nextAction: 'Add testing layer' },
+                { number: '03', name: 'RoadTrip', status: 'REAL', meaning: 'solo operator plus agents workspace', primaryOrg: 'BlackRoad-OS-Primary', primaryDomain: 'blackroad.io', primaryAgents: ['02', '24', '26'], carKeysState: 'private', nextAction: 'Add multi-operator' },
+                { number: '04', name: 'PitStop', status: 'REAL', meaning: 'homework, tutoring, practice, learning', primaryOrg: 'BlackRoad-OS-Education', primaryDomain: 'blackroad.io', primaryAgents: ['17', '03', '24'], carKeysState: 'public', nextAction: 'Add curriculum' },
+                { number: '05', name: 'RoadWork', status: 'REAL', meaning: 'business operations, filings, workflows, obligations', primaryOrg: 'BlackRoad-OS-Company', primaryDomain: 'blackroad.company', primaryAgents: ['12', '24', '09'], carKeysState: 'public', nextAction: 'Add workflow automation' },
+                { number: '06', name: 'BackRoad', status: 'REAL', meaning: 'social layer and creator/community feed', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['06', '21', '23'], carKeysState: 'public', nextAction: 'Add community guidelines' },
+                { number: '07', name: 'CarKeys', status: 'REAL', meaning: 'identity, login, permissions, grants, keys', primaryOrg: 'BlackRoad-OS-Security', primaryDomain: 'blackroad.network', primaryAgents: ['10', '23', '07'], carKeysState: 'system', nextAction: 'Add permissions: enable role-based access control' },
+                { number: '08', name: 'RoadBook', status: 'REAL', meaning: 'publishing, books, research, authorship, provenance', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['09', '21', '25'], carKeysState: 'public', nextAction: 'Add auto-generation' },
+                { number: '09', name: 'RoadWorld', status: 'PLANNED', meaning: 'games, worlds, simulations, playable creation', primaryOrg: 'BlackRoad-OS-Interactive', primaryDomain: 'blackroad.io', primaryAgents: ['20', '13', '18'], carKeysState: 'private', nextAction: 'Build simulation' },
+                { number: '10', name: 'RoadView', status: 'PLANNED', meaning: 'search, discovery, visible agent browsing, source routing', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['11', '06', '16'], carKeysState: 'public', nextAction: 'Add real-time' },
+                { number: '11', name: 'RoadChain', status: 'REAL', meaning: 'receipts, proof, provenance, audit trail', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'roadchain.io', primaryAgents: ['01', '23', '09'], carKeysState: 'system', nextAction: 'Add proof: integrate blockchain for receipt verification' },
+                { number: '12', name: 'RoadSide', status: 'PLANNED', meaning: 'help, support, concierge, embedded assistant', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['02', '19', '04'], carKeysState: 'public', nextAction: 'Add live support' },
+                { number: '13', name: 'RoadCoin', status: 'PLANNED', meaning: 'internal usage credits and contribution accounting', primaryOrg: 'BlackRoad-OS-Cloud', primaryDomain: 'roadcoin.io', primaryAgents: ['15', '11', '20'], carKeysState: 'private', nextAction: 'Add blockchain' },
+                { number: '14', name: 'CarPool', status: 'REAL', meaning: 'multi-human plus AI collaboration', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['12', '04', '10'], carKeysState: 'private', nextAction: 'Add real-time' },
+                { number: '15', name: 'BlackBoard', status: 'REAL', meaning: 'visual creation studio, diagrams, media, design', primaryOrg: 'BlackRoad-OS-Studio', primaryDomain: 'blackroad.io', primaryAgents: ['13', '06', '15'], carKeysState: 'public', nextAction: 'Add real-time sync' },
+                { number: '16', name: 'OneWay', status: 'PLANNED', meaning: 'data sovereignty, imports, exports, provider boundary', primaryOrg: 'BlackRoad-OS-Data', primaryDomain: 'blackroad.io', primaryAgents: ['10', '11', '05'], carKeysState: 'public', nextAction: 'Add encryption' },
+                { number: '17', name: 'RoadBand', status: 'PLANNED', meaning: 'music, audio, taste, production, listening', primaryOrg: 'BlackRoad-OS-Media', primaryDomain: 'blackroad.io', primaryAgents: ['14', '18', '21'], carKeysState: 'public', nextAction: 'Add mixing' },
+                { number: '18', name: 'HighWay', status: 'REAL', meaning: 'infrastructure, network, nodes, tunnels, DNS/TLS, routing', primaryOrg: 'BlackRoad-OS-Network', primaryDomain: 'blackroad.network', primaryAgents: ['05', '08', '24'], carKeysState: 'system', nextAction: 'Infrastructure: add Meshtastic mesh network integration' },
+                { number: '19', name: 'RoadSport', status: 'PLANNED', meaning: 'sports, movement, training, performance', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['08', '24', '13'], carKeysState: 'public', nextAction: 'Build leaderboard' },
+                { number: '20', name: 'OfficeRoad', status: 'REAL', meaning: 'visual office, rooms, desks, presence, coordination', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.company', primaryAgents: ['12', '13', '14'], carKeysState: 'public', nextAction: 'Add templates' },
+                { number: '21', name: 'RoadStream', status: 'PLANNED', meaning: 'streaming wrapper, watch memory, subscriptions', primaryOrg: 'BlackRoad-OS-Media', primaryDomain: 'blackroad.io', primaryAgents: ['14', '18', '21'], carKeysState: 'public', nextAction: 'Add compression' },
+                { number: '22', name: 'RoadShow', status: 'PLANNED', meaning: 'shows, channels, playlists, programming, curation', primaryOrg: 'BlackRoad-OS-Media', primaryDomain: 'blackroad.company', primaryAgents: ['14', '18', '25'], carKeysState: 'public', nextAction: 'Add multi-stream' },
+                { number: '23', name: 'RoundAbout', status: 'REAL', meaning: 'preparation around trips, routes, transitions, handoffs', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['01', '02', '24'], carKeysState: 'private', nextAction: 'Preparation: add detailed fallback route planning' },
+                { number: '24', name: 'GloveBox', status: 'REAL', meaning: 'capability catalog, tools, utilities, references', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['11', '16', '06'], carKeysState: 'public', nextAction: 'Add auto-discovery' },
+                { number: '25', name: 'RoadMap', status: 'REAL', meaning: 'progress, blockers, milestones, status truth', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['24', '22', '01'], carKeysState: 'public', nextAction: 'Status: report milestone completion and next blockers' },
+                { number: '26', name: 'RoadWire', status: 'REAL', meaning: 'durable async messages, threads, records', primaryOrg: 'BlackRoad-OS-Cloud', primaryDomain: 'blackroad.io', primaryAgents: ['04', '05', '14'], carKeysState: 'system', nextAction: 'Add guarantees' },
+                { number: '27', name: 'Detour', status: 'REAL', meaning: 'fallback, reroute, route execution, degraded mode', primaryOrg: 'BlackRoad-OS-Products', primaryDomain: 'blackroad.io', primaryAgents: ['02', '22', '24'], carKeysState: 'private', nextAction: 'Fallback/reroute: implement intelligent routing and degradation' }
             ],
 
             domains: [
-                { number: '01', domain: 'blackroad.io', board: 'Product / RoadOS public universe', owns: ['01', '02', '03', '04', '05', '06', '08', '10', '12', '14', '15', '16', '17', '19', '20', '23', '24', '25', '26', '27'], workflowStep: 'Ops Loop', nextRoads: 'Launch public beta', receiptState: 'REAL', status: 'ACTIVE' },
-                { number: '02', domain: 'blackroad.company', board: 'Company / business operations', owns: ['05', '20', '22'], workflowStep: 'Planning', nextRoads: 'Expand team', receiptState: 'REAL', status: 'ACTIVE' },
-                { number: '03', domain: 'blackroad.me', board: 'Identity / agents / users', owns: ['03', '07', '14'], workflowStep: 'Experimentation', nextRoads: 'Add notebook', receiptState: 'REAL', status: 'ACTIVE' },
-                { number: '04', domain: 'blackroad.network', board: 'Routes / permissions / gates', owns: ['07', '18'], workflowStep: 'Operations', nextRoads: 'Integrate Meshtastic', receiptState: 'REAL', status: 'ACTIVE' },
-                { number: '05', domain: 'blackroad.systems', board: 'Systems / organizations / infrastructure', owns: ['18'], workflowStep: 'Documentation', nextRoads: 'Add diagrams', receiptState: 'REAL', status: 'ACTIVE' },
-                { number: '06', domain: 'blackroadai.com', board: 'AI public story / AI intake', owns: ['02', '10', '24'], workflowStep: 'Research', nextRoads: 'Publish findings', receiptState: 'MOCK', status: 'PLANNED' },
-                { number: '07', domain: 'blackroadinc.us', board: 'US official / legal identity', owns: ['05', '09'], workflowStep: 'Legal', nextRoads: 'File incorporation', receiptState: 'PLANNED', status: 'PLANNED' },
-                { number: '08', domain: 'blackroadqi.com', board: 'QI / 1729 / 17290 intelligence', owns: ['08', '16', '24'], workflowStep: 'Development', nextRoads: 'Release alpha', receiptState: 'PLANNED', status: 'PLANNED' },
-                { number: '09', domain: 'blackroadquantum.com', board: 'Quantum brand / advanced research', owns: ['09', '13', '20'], workflowStep: 'Experimentation', nextRoads: 'Partner with institute', receiptState: 'MOCK', status: 'PLANNED' },
-                { number: '10', domain: 'blackroadquantum.info', board: 'Quantum information / explanation', owns: ['17', '21', '22'], workflowStep: 'Documentation', nextRoads: 'Add tutorial', receiptState: 'PARTIAL', status: 'PLANNED' },
-                { number: '11', domain: 'blackroadquantum.net', board: 'Quantum network / technical map', owns: ['18'], workflowStep: 'Operations', nextRoads: 'Scale to 10 nodes', receiptState: 'REAL', status: 'ACTIVE' },
-                { number: '12', domain: 'blackroadquantum.shop', board: 'Shop / merchandise experiments', owns: ['13', '15'], workflowStep: 'Development', nextRoads: 'Add payments', receiptState: 'PLANNED', status: 'PLANNED' },
-                { number: '13', domain: 'blackroadquantum.store', board: 'Store / purchasable digital assets', owns: ['13'], workflowStep: 'Maintenance', nextRoads: 'Migrate to shop', receiptState: 'PARTIAL', status: 'PLANNED' },
-                { number: '14', domain: 'blackboxprogramming.io', board: 'Developer / code identity', owns: ['02', '06', '07'], workflowStep: 'Teaching', nextRoads: 'Launch course', receiptState: 'REAL', status: 'ACTIVE' },
-                { number: '15', domain: 'aliceqi.com', board: 'Alice / education intelligence', owns: ['04', '10', '15'], workflowStep: 'Query ops', nextRoads: 'Index 1M pages', receiptState: 'REAL', status: 'ACTIVE' },
-                { number: '16', domain: 'lucidia.earth', board: 'Earth / care / constitution', owns: ['01', '23', '26'], workflowStep: 'Sensing', nextRoads: 'Add 10 sensors', receiptState: 'MOCK', status: 'PLANNED' },
-                { number: '17', domain: 'lucidia.studio', board: 'Studio / visual creation', owns: ['13', '15', '17'], workflowStep: 'Creation', nextRoads: 'Launch gallery', receiptState: 'PARTIAL', status: 'PLANNED' },
-                { number: '18', domain: 'lucidiaqi.com', board: 'Lucidia QI / canon intelligence', owns: ['01', '08', '24'], workflowStep: 'Development', nextRoads: 'Release beta', receiptState: 'PLANNED', status: 'PLANNED' },
-                { number: '19', domain: 'roadchain.io', board: 'Proof / receipts / provenance', owns: ['11', '26'], workflowStep: 'Proof ops', nextRoads: 'Add blockchain', receiptState: 'REAL', status: 'ACTIVE' },
-                { number: '20', domain: 'roadcoin.io', board: 'Usage / internal credits', owns: ['13'], workflowStep: 'Finance', nextRoads: 'Enable transactions', receiptState: 'PLANNED', status: 'PLANNED' }
+                { number: '01', domain: 'blackroad.io', board: 'Product / RoadOS public universe', owns: ['01', '02', '03', '04', '05', '06', '08', '10', '12', '14', '15', '16', '17', '19', '20', '23', '24', '25', '26', '27'], workflowStep: 'Operations', nextRoads: 'Launch public beta', receiptState: 'REAL' },
+                { number: '02', domain: 'blackroad.company', board: 'Company / business operations', owns: ['05', '20', '22'], workflowStep: 'Planning', nextRoads: 'Expand team', receiptState: 'REAL' },
+                { number: '03', domain: 'blackroad.me', board: 'Identity / agents / users', owns: ['03', '07', '14'], workflowStep: 'Experimentation', nextRoads: 'Add notebook', receiptState: 'REAL' },
+                { number: '04', domain: 'blackroad.network', board: 'Routes / permissions / gates', owns: ['07', '18'], workflowStep: 'Operations', nextRoads: 'Integrate Meshtastic', receiptState: 'REAL' },
+                { number: '05', domain: 'blackroad.systems', board: 'Systems / organizations / infrastructure', owns: ['18'], workflowStep: 'Documentation', nextRoads: 'Add diagrams', receiptState: 'REAL' },
+                { number: '06', domain: 'blackroadai.com', board: 'AI public story / AI intake', owns: ['02', '10', '24'], workflowStep: 'Research', nextRoads: 'Publish findings', receiptState: 'MOCK' },
+                { number: '07', domain: 'blackroadinc.us', board: 'US official / legal identity', owns: ['05', '09'], workflowStep: 'Legal', nextRoads: 'File incorporation', receiptState: 'PLANNED' },
+                { number: '08', domain: 'blackroadqi.com', board: 'QI / 1729 / 17290 intelligence', owns: ['08', '16', '24'], workflowStep: 'Development', nextRoads: 'Release alpha', receiptState: 'PLANNED' },
+                { number: '09', domain: 'blackroadquantum.com', board: 'Quantum brand / advanced research', owns: ['09', '13', '20'], workflowStep: 'Experimentation', nextRoads: 'Partner with institute', receiptState: 'MOCK' },
+                { number: '10', domain: 'blackroadquantum.info', board: 'Quantum information / explanation', owns: ['17', '21', '22'], workflowStep: 'Documentation', nextRoads: 'Add tutorial', receiptState: 'PARTIAL' },
+                { number: '11', domain: 'blackroadquantum.net', board: 'Quantum network / technical map', owns: ['18'], workflowStep: 'Operations', nextRoads: 'Scale to 10 nodes', receiptState: 'REAL' },
+                { number: '12', domain: 'blackroadquantum.shop', board: 'Shop / merchandise experiments', owns: ['13', '15'], workflowStep: 'Development', nextRoads: 'Add payments', receiptState: 'PLANNED' },
+                { number: '13', domain: 'blackroadquantum.store', board: 'Store / purchasable digital assets', owns: ['13'], workflowStep: 'Maintenance', nextRoads: 'Migrate to shop', receiptState: 'PARTIAL' },
+                { number: '14', domain: 'blackboxprogramming.io', board: 'Developer / code identity', owns: ['02', '06', '07'], workflowStep: 'Teaching', nextRoads: 'Launch course', receiptState: 'REAL' },
+                { number: '15', domain: 'aliceqi.com', board: 'Alice / education intelligence', owns: ['04', '10', '15'], workflowStep: 'Query ops', nextRoads: 'Index 1M pages', receiptState: 'REAL' },
+                { number: '16', domain: 'lucidia.earth', board: 'Earth / care / constitution', owns: ['01', '23', '26'], workflowStep: 'Sensing', nextRoads: 'Add 10 sensors', receiptState: 'MOCK' },
+                { number: '17', domain: 'lucidia.studio', board: 'Studio / visual creation', owns: ['13', '15', '17'], workflowStep: 'Creation', nextRoads: 'Launch gallery', receiptState: 'PARTIAL' },
+                { number: '18', domain: 'lucidiaqi.com', board: 'Lucidia QI / canon intelligence', owns: ['01', '08', '24'], workflowStep: 'Development', nextRoads: 'Release beta', receiptState: 'PLANNED' },
+                { number: '19', domain: 'roadchain.io', board: 'Proof / receipts / provenance', owns: ['11', '26'], workflowStep: 'Proof ops', nextRoads: 'Add blockchain', receiptState: 'REAL' },
+                { number: '20', domain: 'roadcoin.io', board: 'Usage / internal credits', owns: ['13'], workflowStep: 'Finance', nextRoads: 'Enable transactions', receiptState: 'PLANNED' }
             ],
 
             organizations: [
@@ -602,523 +504,529 @@
                 'Indices', 'Models', 'Operator', 'Organizations', 'Products',
                 'Prompts', 'Receipts', 'Registry', 'Repositories', 'Research',
                 'Sandbox', 'Scripts', 'Skills', 'Templates', 'Workflows'
-            ],
-
-            statuses: {
-                approved: [
-                    'PLANNED', 'MOCK', 'PARTIAL', 'REAL', 'BLOCKED',
-                    'NEEDS_PROOF', 'DONE_UNVERIFIED', 'DONE_VERIFIED',
-                    'ONLINE', 'IDLE', 'WORKING', 'WAITING', 'DONE', 'ACTIVE'
-                ]
-            }
+            ]
         };
 
-        // ===== RECEIPTS & LOGGING =====
+        // ===== ROAD_OS_STATE: Application state machine =====
+        const ROAD_OS_STATE = {
+            activeWorkspace: 'home',
+            selectedAgentId: null,
+            selectedProductId: null,
+            selectedDomainId: null,
+            selectedOrgId: null,
+            selectedFileSection: null,
+            selectedAppProductId: null,
+            searchQuery: '',
+            receipts: [],
+            chatLog: [],
+            lastAction: null,
+            operatorMode: true,
+            receiptCounter: 0
+        };
 
-        let receipts = [];
+        // ===== ACTION FUNCTIONS =====
 
-        function createReceipt(type, actor, target, workspace, status = 'DONE_UNVERIFIED') {
+        function openWorkspace(workspaceName) {
+            ROAD_OS_STATE.activeWorkspace = workspaceName;
+            ROAD_OS_STATE.lastAction = `Opened ${workspaceName}`;
+            addReceipt('WORKSPACE_OPENED', workspaceName, workspaceName, 'DONE_VERIFIED');
+            addChatLog(`Workspace opened: ${workspaceName}`, 'System');
+            render();
+        }
+
+        function selectAgent(agentId) {
+            const agent = ROAD_OS_CANON.agents.find(a => a.number === agentId);
+            if (!agent) return;
+            ROAD_OS_STATE.selectedAgentId = agentId;
+            ROAD_OS_STATE.lastAction = `Selected agent: ${agent.name}`;
+            addReceipt('AGENT_SELECTED', agent.name, 'agents', 'DONE_VERIFIED');
+            addChatLog(`Agent selected: ${agent.name} (${agentId})`, 'System');
+            render();
+        }
+
+        function assignAgentTask(agentId, taskText) {
+            const agent = ROAD_OS_CANON.agents.find(a => a.number === agentId);
+            if (!agent) return;
+            if (!taskText.trim()) {
+                addChatLog(`⚠ Task not assigned to ${agent.name}: empty description`, 'Warning');
+                return;
+            }
+            agent.status = 'WORKING';
+            agent.currentTask = taskText;
+            agent.lastReceipt = `R-${String(ROAD_OS_STATE.receiptCounter + 1).padStart(4, '0')}`;
+            ROAD_OS_STATE.lastAction = `Assigned task to ${agent.name}`;
+            addReceipt('AGENT_TASK_ASSIGNED', agent.name, 'agents', 'DONE_VERIFIED');
+            addChatLog(`Task assigned to ${agent.name}: "${taskText}"`, 'System');
+            render();
+        }
+
+        function selectProduct(productId) {
+            const product = ROAD_OS_CANON.products.find(p => p.number === productId);
+            if (!product) return;
+            ROAD_OS_STATE.selectedProductId = productId;
+            ROAD_OS_STATE.lastAction = `Selected product: ${product.name}`;
+            addReceipt('PRODUCT_SELECTED', product.name, 'products', 'DONE_VERIFIED');
+            addChatLog(`Product selected: ${product.name} (${productId})`, 'System');
+            render();
+        }
+
+        function runProductNextAction(productId) {
+            const product = ROAD_OS_CANON.products.find(p => p.number === productId);
+            if (!product) return;
+            ROAD_OS_STATE.lastAction = `Running next action: ${product.name}`;
+            addReceipt('PRODUCT_NEXT_ACTION', product.name, 'products', 'DONE_UNVERIFIED');
+            addChatLog(`Next action for ${product.name}: "${product.nextAction}"`, 'System');
+            render();
+        }
+
+        function selectDomain(domainId) {
+            const domain = ROAD_OS_CANON.domains.find(d => d.number === domainId);
+            if (!domain) return;
+            ROAD_OS_STATE.selectedDomainId = domainId;
+            ROAD_OS_STATE.lastAction = `Selected domain: ${domain.domain}`;
+            addReceipt('DOMAIN_SELECTED', domain.domain, 'domains', 'DONE_VERIFIED');
+            addChatLog(`Domain selected: ${domain.domain}`, 'System');
+            render();
+        }
+
+        function selectOrganization(orgId) {
+            const org = ROAD_OS_CANON.organizations.find(o => o.number === orgId);
+            if (!org) return;
+            ROAD_OS_STATE.selectedOrgId = orgId;
+            ROAD_OS_STATE.lastAction = `Selected organization: ${org.name}`;
+            addReceipt('ORG_SELECTED', org.name, 'orgs', 'DONE_VERIFIED');
+            addChatLog(`Organization selected: ${org.name}`, 'System');
+            render();
+        }
+
+        function launchApp(productId) {
+            openWorkspace('products');
+            selectProduct(productId);
+            ROAD_OS_STATE.lastAction = `Launched app: ${productId}`;
+            addReceipt('APP_LAUNCHED', productId, 'apps', 'DONE_VERIFIED');
+            addChatLog(`App launched: Product ${productId}`, 'System');
+        }
+
+        function openFileSection(sectionName) {
+            ROAD_OS_STATE.selectedFileSection = sectionName;
+            ROAD_OS_STATE.lastAction = `Opened file section: ${sectionName}`;
+            addReceipt('FILE_SECTION_OPENED', sectionName, 'files', 'DONE_VERIFIED');
+            addChatLog(`File section opened: ${sectionName}`, 'System');
+            render();
+        }
+
+        function updateIndexSearch(query) {
+            ROAD_OS_STATE.searchQuery = query;
+            if (query.length > 0) {
+                ROAD_OS_STATE.lastAction = `Index search: ${query}`;
+                addReceipt('INDEX_SEARCH', query, 'index', 'DONE_VERIFIED');
+            }
+            render();
+        }
+
+        function addReceipt(type, target, workspace, status) {
+            ROAD_OS_STATE.receiptCounter++;
             const receipt = {
-                id: 'RCP_' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                id: `R-${String(ROAD_OS_STATE.receiptCounter).padStart(4, '0')}`,
                 type,
-                actor,
                 target,
                 workspace,
                 status,
                 timestamp: new Date().toLocaleTimeString()
             };
-            receipts.push(receipt);
-            logChat(`[${receipt.type}] ${actor} → ${target} (${workspace})`);
-            updateReceiptsPanels();
-            return receipt;
+            ROAD_OS_STATE.receipts.push(receipt);
+            render();
         }
 
-        function logChat(message) {
-            const chatLog = document.getElementById('chat-log');
-            const entry = document.createElement('div');
-            entry.className = 'chat-entry';
-            entry.innerHTML = `
-                <div class="chat-time">${new Date().toLocaleTimeString()}</div>
-                <div class="chat-text">${message}</div>
+        function addChatLog(message, source) {
+            ROAD_OS_STATE.chatLog.push({
+                timestamp: new Date().toLocaleTimeString(),
+                source: source || 'System',
+                message
+            });
+            render();
+        }
+
+        // ===== RENDER FUNCTIONS =====
+
+        function renderDesktop() {
+            const nav = document.getElementById('desktop-nav');
+            nav.innerHTML = `
+                <div class="nav-icon ${ROAD_OS_STATE.activeWorkspace === 'home' ? 'active' : ''}" onclick="openWorkspace('home')">🏠 Home</div>
+                <div class="nav-icon ${ROAD_OS_STATE.activeWorkspace === 'index' ? 'active' : ''}" onclick="openWorkspace('index')">📋 Index</div>
+                <div class="nav-icon ${ROAD_OS_STATE.activeWorkspace === 'agents' ? 'active' : ''}" onclick="openWorkspace('agents')">👥 Agents</div>
+                <div class="nav-icon ${ROAD_OS_STATE.activeWorkspace === 'orgs' ? 'active' : ''}" onclick="openWorkspace('orgs')">🏢 Orgs</div>
+                <div class="nav-icon ${ROAD_OS_STATE.activeWorkspace === 'apps' ? 'active' : ''}" onclick="openWorkspace('apps')">📦 Apps</div>
+                <div class="nav-icon ${ROAD_OS_STATE.activeWorkspace === 'products' ? 'active' : ''}" onclick="openWorkspace('products')">🚀 Products</div>
+                <div class="nav-icon ${ROAD_OS_STATE.activeWorkspace === 'domains' ? 'active' : ''}" onclick="openWorkspace('domains')">🌐 Domains</div>
+                <div class="nav-icon ${ROAD_OS_STATE.activeWorkspace === 'files' ? 'active' : ''}" onclick="openWorkspace('files')">📁 Files</div>
             `;
-            chatLog.appendChild(entry);
-            chatLog.scrollTop = chatLog.scrollHeight;
         }
 
-        function updateReceiptsPanels() {
-            const workspaces = ['home', 'agents', 'products', 'domains', 'orgs'];
-            workspaces.forEach(ws => {
-                const panel = document.getElementById(`${ws}-receipts`);
-                if (panel) {
-                    panel.innerHTML = '';
-                    const recentReceipts = receipts.slice(-5).reverse();
-                    recentReceipts.forEach(receipt => {
-                        const item = document.createElement('div');
-                        item.className = 'receipt-item';
-                        item.innerHTML = `
-                            <span class="receipt-time">${receipt.timestamp}</span> —
-                            <span class="receipt-type">${receipt.type}</span>
-                            (${receipt.status})
-                        `;
-                        panel.appendChild(item);
-                    });
-                }
-            });
-        }
-
-        // ===== WORKSPACE SWITCHING =====
-
-        function switchWorkspace(workspaceName) {
-            document.querySelectorAll('.workspace').forEach(ws => ws.classList.remove('active'));
-            document.getElementById(workspaceName).classList.add('active');
-            document.querySelectorAll('.nav-icon').forEach(icon => icon.classList.remove('active'));
-            document.querySelector(`[data-workspace="${workspaceName}"]`).classList.add('active');
-            logChat(`Workspace opened: ${workspaceName}`);
-            createReceipt('WORKSPACE_OPENED', 'Alexandria', workspaceName, workspaceName, 'DONE_VERIFIED');
-        }
-
-        // ===== AGENTS WORKSPACE =====
-
-        function initAgents() {
-            const grid = document.getElementById('agents-grid');
-            grid.innerHTML = '';
-            ROAD_OS_CANON.agents.forEach(agent => {
-                const item = document.createElement('div');
-                item.className = 'grid-item';
-                item.textContent = `${agent.number} ${agent.name}`;
-                item.dataset.number = agent.number;
-                item.onclick = () => selectAgent(agent.number);
-                grid.appendChild(item);
-            });
-
-            document.getElementById('agents-search').addEventListener('input', e => {
-                const filter = e.target.value.toLowerCase();
-                document.querySelectorAll('#agents-grid .grid-item').forEach(item => {
-                    const text = item.textContent.toLowerCase();
-                    item.style.display = text.includes(filter) ? 'block' : 'none';
-                });
-            });
-        }
-
-        function selectAgent(number) {
-            const agent = ROAD_OS_CANON.agents.find(a => a.number === number);
-            if (!agent) return;
-
-            document.querySelectorAll('#agents-grid .grid-item').forEach(item => {
-                item.classList.toggle('selected', item.dataset.number === number);
-            });
-
-            const detail = document.getElementById('agent-detail');
-            detail.style.display = 'block';
-            detail.innerHTML = `
-                <div class="detail-row">
-                    <div class="detail-label">Number</div>
-                    <div class="detail-value">${agent.number}</div>
+        function renderHome() {
+            return `
+                <div class="section-title">Home — Work Panels</div>
+                <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 10px; border-radius: 4px; margin-bottom: 10px; font-size: 11px;">
+                    <strong>Operator:</strong> ${ROAD_OS_CANON.operator.name}<br>
+                    <strong>Boundary:</strong> ${ROAD_OS_CANON.operator.boundary}
                 </div>
-                <div class="detail-row">
-                    <div class="detail-label">Name</div>
-                    <div class="detail-value">${agent.name}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Role</div>
-                    <div class="detail-value">${agent.role}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Owns</div>
-                    <div class="detail-value">${agent.owns.join(', ')}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Supports Products</div>
-                    <div class="detail-value">${agent.supportsProducts.join(', ')}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Status</div>
-                    <div class="detail-value">${agent.status}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Current Task</div>
-                    <div class="detail-value">${agent.currentTask || 'None'}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Last Receipt</div>
-                    <div class="detail-value">${agent.lastReceipt || 'None'}</div>
-                </div>
-                <div class="task-assignment">
-                    <label>Assign Task</label>
-                    <select id="task-priority">
-                        <option value="normal">Normal</option>
-                        <option value="urgent">Urgent</option>
-                        <option value="background">Background</option>
-                    </select>
-                    <textarea id="task-description" placeholder="Describe the task..."></textarea>
-                    <button onclick="assignTaskToAgent('${agent.number}')">Send Task</button>
+                <div class="home-panels">
+                    <div class="panel">
+                        <div class="panel-title">lucidia-01</div>
+                        <div class="panel-status">Status: IDLE — Perception + Memory</div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-title">roadbook-02</div>
+                        <div class="panel-status">Status: IDLE — Operations + Guidance</div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-title">br37-03</div>
+                        <div class="panel-status">Status: IDLE — 1,729 capabilities indexed</div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-title">roadtrip-04</div>
+                        <div class="panel-status">Status: IDLE — RoadTrip solo operator ready</div>
+                    </div>
                 </div>
             `;
-
-            logChat(`Agent selected: ${agent.name} (${agent.number})`);
-            createReceipt('AGENT_SELECTED', 'Alexandria', agent.name, 'agents', 'DONE_VERIFIED');
         }
 
-        function assignTaskToAgent(number) {
-            const agent = ROAD_OS_CANON.agents.find(a => a.number === number);
-            const priority = document.getElementById('task-priority').value;
-            const description = document.getElementById('task-description').value;
+        function renderAgents() {
+            const selected = ROAD_OS_STATE.selectedAgentId ? ROAD_OS_CANON.agents.find(a => a.number === ROAD_OS_STATE.selectedAgentId) : null;
+            const grid = ROAD_OS_CANON.agents.map(agent => `
+                <div class="grid-item ${ROAD_OS_STATE.selectedAgentId === agent.number ? 'selected' : ''}" onclick="selectAgent('${agent.number}')" style="cursor: pointer;">
+                    ${agent.number} ${agent.name}
+                </div>
+            `).join('');
 
-            if (!description.trim()) {
-                alert('Task description required');
-                return;
+            let detail = '';
+            if (selected) {
+                detail = `
+                    <div class="detail-panel">
+                        <div class="detail-row"><div class="detail-label">Number</div><div class="detail-value">${selected.number}</div></div>
+                        <div class="detail-row"><div class="detail-label">Name</div><div class="detail-value">${selected.name}</div></div>
+                        <div class="detail-row"><div class="detail-label">Role</div><div class="detail-value">${selected.role}</div></div>
+                        <div class="detail-row"><div class="detail-label">Owns</div><div class="detail-value">${selected.owns.join(', ')}</div></div>
+                        <div class="detail-row"><div class="detail-label">Status</div><div class="detail-value">${selected.status}</div></div>
+                        <div class="detail-row"><div class="detail-label">Current Task</div><div class="detail-value">${selected.currentTask || 'None'}</div></div>
+                        <div class="detail-row"><div class="detail-label">Last Receipt</div><div class="detail-value">${selected.lastReceipt || 'None'}</div></div>
+                        <div class="task-assignment">
+                            <label>Assign Task</label>
+                            <textarea id="task-input" placeholder="Describe the task..."></textarea>
+                            <button onclick="assignAgentTask('${selected.number}', document.getElementById('task-input').value)">Send Task</button>
+                        </div>
+                    </div>
+                `;
             }
 
-            agent.status = 'WORKING';
-            agent.currentTask = description;
-            agent.lastReceipt = 'RCP_' + Math.random().toString(36).substr(2, 9).toUpperCase();
-
-            logChat(`Task assigned to ${agent.name}: "${description}" [${priority}]`);
-            createReceipt('AGENT_TASK_ASSIGNED', 'Alexandria', agent.name, 'agents', 'DONE_VERIFIED');
-
-            selectAgent(number);
-        }
-
-        // ===== PRODUCTS WORKSPACE =====
-
-        function initProducts() {
-            const grid = document.getElementById('products-grid');
-            grid.innerHTML = '';
-            ROAD_OS_CANON.products.forEach(product => {
-                const item = document.createElement('div');
-                item.className = 'grid-item';
-                item.textContent = `${product.number} ${product.name}`;
-                item.dataset.number = product.number;
-                item.onclick = () => selectProduct(product.number);
-                grid.appendChild(item);
-            });
-
-            document.getElementById('products-search').addEventListener('input', e => {
-                const filter = e.target.value.toLowerCase();
-                document.querySelectorAll('#products-grid .grid-item').forEach(item => {
-                    const text = item.textContent.toLowerCase();
-                    item.style.display = text.includes(filter) ? 'block' : 'none';
-                });
-            });
-        }
-
-        function selectProduct(number) {
-            const product = ROAD_OS_CANON.products.find(p => p.number === number);
-            if (!product) return;
-
-            document.querySelectorAll('#products-grid .grid-item').forEach(item => {
-                item.classList.toggle('selected', item.dataset.number === number);
-            });
-
-            const detail = document.getElementById('product-detail');
-            detail.style.display = 'block';
-            detail.innerHTML = `
-                <div class="detail-row">
-                    <div class="detail-label">Number</div>
-                    <div class="detail-value">${product.number}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Name</div>
-                    <div class="detail-value">${product.name}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Status</div>
-                    <div class="detail-value">${product.status}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Meaning</div>
-                    <div class="detail-value">${product.meaning}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Does</div>
-                    <div class="detail-value">${product.does.join(', ')}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Wiring</div>
-                    <div class="detail-value">${product.wiring}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Primary Org</div>
-                    <div class="detail-value">${product.primaryOrg}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Primary Domain</div>
-                    <div class="detail-value">${product.primaryDomain}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Primary Agents</div>
-                    <div class="detail-value">${product.primaryAgents.join(', ')}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">CarKeys</div>
-                    <div class="detail-value">${product.carKeysState}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Next Action</div>
-                    <div class="detail-value">${product.nextAction}</div>
-                </div>
-                <button onclick="runProductNextAction('${product.number}')" style="margin-top: 10px;">Run Next Action</button>
-            `;
-
-            logChat(`Product selected: ${product.name} (${product.number})`);
-            createReceipt('PRODUCT_SELECTED', 'Alexandria', product.name, 'products', 'DONE_VERIFIED');
-        }
-
-        function runProductNextAction(number) {
-            const product = ROAD_OS_CANON.products.find(p => p.number === number);
-            if (!product) return;
-
-            logChat(`Running next action for ${product.name}: "${product.nextAction}"`);
-            createReceipt('PRODUCT_NEXT_ACTION', 'Alexandria', product.name, 'products', 'DONE_UNVERIFIED');
-
-            alert(`Next action logged for ${product.name}`);
-        }
-
-        // ===== DOMAINS WORKSPACE =====
-
-        function initDomains() {
-            const grid = document.getElementById('domains-grid');
-            grid.innerHTML = '';
-            ROAD_OS_CANON.domains.forEach(domain => {
-                const item = document.createElement('div');
-                item.className = 'grid-item';
-                item.textContent = `${domain.number} ${domain.domain}`;
-                item.dataset.number = domain.number;
-                item.onclick = () => selectDomain(domain.number);
-                grid.appendChild(item);
-            });
-
-            document.getElementById('domains-search').addEventListener('input', e => {
-                const filter = e.target.value.toLowerCase();
-                document.querySelectorAll('#domains-grid .grid-item').forEach(item => {
-                    const text = item.textContent.toLowerCase();
-                    item.style.display = text.includes(filter) ? 'block' : 'none';
-                });
-            });
-        }
-
-        function selectDomain(number) {
-            const domain = ROAD_OS_CANON.domains.find(d => d.number === number);
-            if (!domain) return;
-
-            document.querySelectorAll('#domains-grid .grid-item').forEach(item => {
-                item.classList.toggle('selected', item.dataset.number === number);
-            });
-
-            const detail = document.getElementById('domain-detail');
-            detail.style.display = 'block';
-            detail.innerHTML = `
-                <div class="detail-row">
-                    <div class="detail-label">Number</div>
-                    <div class="detail-value">${domain.number}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Domain</div>
-                    <div class="detail-value">${domain.domain}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Board</div>
-                    <div class="detail-value">${domain.board}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Owns Products</div>
-                    <div class="detail-value">${domain.owns.join(', ')}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Workflow Step</div>
-                    <div class="detail-value">${domain.workflowStep}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Next Roads</div>
-                    <div class="detail-value">${domain.nextRoads}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Receipt State</div>
-                    <div class="detail-value">${domain.receiptState}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Status</div>
-                    <div class="detail-value">${domain.status}</div>
+            return `
+                <div class="section-title">Agents (27 total)</div>
+                <div style="display: flex; gap: 15px; flex: 1; overflow: hidden;">
+                    <div style="flex: 0 0 300px; overflow-y: auto;">
+                        <div class="grid-list">${grid}</div>
+                    </div>
+                    <div style="flex: 1; overflow-y: auto;">${detail}</div>
                 </div>
             `;
-
-            logChat(`Domain selected: ${domain.domain}`);
-            createReceipt('DOMAIN_SELECTED', 'Alexandria', domain.domain, 'domains', 'DONE_VERIFIED');
         }
 
-        // ===== ORGANIZATIONS WORKSPACE =====
-
-        function initOrgs() {
-            const grid = document.getElementById('orgs-grid');
-            grid.innerHTML = '';
-            ROAD_OS_CANON.organizations.forEach(org => {
-                const item = document.createElement('div');
-                item.className = 'grid-item';
-                item.textContent = `${org.number} ${org.name}`;
-                item.dataset.number = org.number;
-                item.onclick = () => selectOrg(org.number);
-                grid.appendChild(item);
-            });
-
-            document.getElementById('orgs-search').addEventListener('input', e => {
-                const filter = e.target.value.toLowerCase();
-                document.querySelectorAll('#orgs-grid .grid-item').forEach(item => {
-                    const text = item.textContent.toLowerCase();
-                    item.style.display = text.includes(filter) ? 'block' : 'none';
-                });
-            });
-        }
-
-        function selectOrg(number) {
-            const org = ROAD_OS_CANON.organizations.find(o => o.number === number);
-            if (!org) return;
-
-            document.querySelectorAll('#orgs-grid .grid-item').forEach(item => {
-                item.classList.toggle('selected', item.dataset.number === number);
-            });
-
-            const detail = document.getElementById('org-detail');
-            detail.style.display = 'block';
-            detail.innerHTML = `
-                <div class="detail-row">
-                    <div class="detail-label">Number</div>
-                    <div class="detail-value">${org.number}</div>
+        function renderProducts() {
+            const selected = ROAD_OS_STATE.selectedProductId ? ROAD_OS_CANON.products.find(p => p.number === ROAD_OS_STATE.selectedProductId) : null;
+            const grid = ROAD_OS_CANON.products.map(product => `
+                <div class="grid-item ${ROAD_OS_STATE.selectedProductId === product.number ? 'selected' : ''}" onclick="selectProduct('${product.number}')" style="cursor: pointer;">
+                    ${product.number} ${product.name}
                 </div>
-                <div class="detail-row">
-                    <div class="detail-label">Name</div>
-                    <div class="detail-value">${org.name}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Purpose</div>
-                    <div class="detail-value">${org.purpose}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Owned Lanes</div>
-                    <div class="detail-value">${org.lanes}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Status</div>
-                    <div class="detail-value">${org.status}</div>
-                </div>
-            `;
+            `).join('');
 
-            logChat(`Organization selected: ${org.name}`);
-            createReceipt('ORG_SELECTED', 'Alexandria', org.name, 'orgs', 'DONE_VERIFIED');
-        }
-
-        // ===== INDEX WORKSPACE =====
-
-        function initIndex() {
-            document.getElementById('commands-summary').textContent =
-                ROAD_OS_CANON.commands.map(c => c.name).join(' • ');
-
-            const searchInput = document.getElementById('index-search');
-            const resultsContainer = document.getElementById('index-results');
-
-            function displayResults(items) {
-                resultsContainer.innerHTML = '';
-                if (items.length === 0) {
-                    resultsContainer.innerHTML = '<p style="color: #999;">No results</p>';
-                    return;
-                }
-                items.forEach(item => {
-                    const div = document.createElement('div');
-                    div.style.cssText = 'padding: 8px; margin-bottom: 5px; background: #fff; border-left: 3px solid #0066cc; cursor: pointer;';
-                    div.innerHTML = `<strong>${item.name || item.domain}</strong><br><span style="font-size: 10px; color: #999;">${item.purpose || item.board || item.role}</span>`;
-                    div.onclick = () => {
-                        logChat(`Index result opened: ${item.name || item.domain}`);
-                        createReceipt('INDEX_RESULT_OPEN', 'Alexandria', item.name || item.domain, 'index', 'DONE_VERIFIED');
-                    };
-                    resultsContainer.appendChild(div);
-                });
+            let detail = '';
+            if (selected) {
+                detail = `
+                    <div class="detail-panel">
+                        <div class="detail-row"><div class="detail-label">Number</div><div class="detail-value">${selected.number}</div></div>
+                        <div class="detail-row"><div class="detail-label">Name</div><div class="detail-value">${selected.name}</div></div>
+                        <div class="detail-row"><div class="detail-label">Status</div><div class="detail-value">${selected.status}</div></div>
+                        <div class="detail-row"><div class="detail-label">Meaning</div><div class="detail-value">${selected.meaning}</div></div>
+                        <div class="detail-row"><div class="detail-label">Primary Org</div><div class="detail-value">${selected.primaryOrg}</div></div>
+                        <div class="detail-row"><div class="detail-label">Primary Domain</div><div class="detail-value">${selected.primaryDomain}</div></div>
+                        <div class="detail-row"><div class="detail-label">Primary Agents</div><div class="detail-value">${selected.primaryAgents.join(', ')}</div></div>
+                        <div class="detail-row"><div class="detail-label">CarKeys</div><div class="detail-value">${selected.carKeysState}</div></div>
+                        <div class="detail-row"><div class="detail-label">Next Action</div><div class="detail-value">${selected.nextAction}</div></div>
+                        <button onclick="runProductNextAction('${selected.number}')" style="margin-top: 10px;">Run Next Action</button>
+                    </div>
+                `;
             }
 
-            const allIndexItems = [
-                ...ROAD_OS_CANON.commands,
-                ...ROAD_OS_CANON.agents.slice(0, 5),
-                ...ROAD_OS_CANON.products.slice(0, 5),
-                ...ROAD_OS_CANON.domains.slice(0, 5)
-            ];
-
-            displayResults(allIndexItems);
-
-            searchInput.addEventListener('input', e => {
-                const filter = e.target.value.toLowerCase();
-                const filtered = allIndexItems.filter(item =>
-                    (item.name && item.name.toLowerCase().includes(filter)) ||
-                    (item.domain && item.domain.toLowerCase().includes(filter)) ||
-                    (item.purpose && item.purpose.toLowerCase().includes(filter)) ||
-                    (item.role && item.role.toLowerCase().includes(filter))
-                );
-                if (filter.length > 0) {
-                    logChat(`Index search: "${filter}" (${filtered.length} results)`);
-                    createReceipt('INDEX_SEARCH', 'Alexandria', filter, 'index', 'DONE_VERIFIED');
-                }
-                displayResults(filtered);
-            });
+            return `
+                <div class="section-title">Products (27 total)</div>
+                <div style="display: flex; gap: 15px; flex: 1; overflow: hidden;">
+                    <div style="flex: 0 0 300px; overflow-y: auto;">
+                        <div class="grid-list">${grid}</div>
+                    </div>
+                    <div style="flex: 1; overflow-y: auto;">${detail}</div>
+                </div>
+            `;
         }
 
-        // ===== FILES WORKSPACE =====
+        function renderDomains() {
+            const selected = ROAD_OS_STATE.selectedDomainId ? ROAD_OS_CANON.domains.find(d => d.number === ROAD_OS_STATE.selectedDomainId) : null;
+            const grid = ROAD_OS_CANON.domains.map(domain => `
+                <div class="grid-item ${ROAD_OS_STATE.selectedDomainId === domain.number ? 'selected' : ''}" onclick="selectDomain('${domain.number}')" style="cursor: pointer;">
+                    ${domain.number} ${domain.domain}
+                </div>
+            `).join('');
 
-        function initFiles() {
-            const fileTree = document.getElementById('file-tree');
-            fileTree.innerHTML = '';
-            ROAD_OS_CANON.filesystem.forEach(file => {
-                const li = document.createElement('li');
-                li.className = 'file-item';
-                li.textContent = file;
-                li.onclick = () => {
-                    logChat(`File section opened: ${file}`);
-                    createReceipt('FILE_SECTION_OPENED', 'Alexandria', file, 'files', 'DONE_VERIFIED');
-                };
-                fileTree.appendChild(li);
-            });
+            let detail = '';
+            if (selected) {
+                detail = `
+                    <div class="detail-panel">
+                        <div class="detail-row"><div class="detail-label">Domain</div><div class="detail-value">${selected.domain}</div></div>
+                        <div class="detail-row"><div class="detail-label">Board</div><div class="detail-value">${selected.board}</div></div>
+                        <div class="detail-row"><div class="detail-label">Owns Products</div><div class="detail-value">${selected.owns.join(', ')}</div></div>
+                        <div class="detail-row"><div class="detail-label">Workflow</div><div class="detail-value">${selected.workflowStep}</div></div>
+                        <div class="detail-row"><div class="detail-label">Next Road</div><div class="detail-value">${selected.nextRoads}</div></div>
+                        <div class="detail-row"><div class="detail-label">Receipt State</div><div class="detail-value">${selected.receiptState}</div></div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="section-title">Domains (20 total — Task Boards)</div>
+                <div style="display: flex; gap: 15px; flex: 1; overflow: hidden;">
+                    <div style="flex: 0 0 300px; overflow-y: auto;">
+                        <div class="grid-list">${grid}</div>
+                    </div>
+                    <div style="flex: 1; overflow-y: auto;">${detail}</div>
+                </div>
+            `;
         }
 
-        // ===== APPS WORKSPACE =====
+        function renderOrganizations() {
+            const selected = ROAD_OS_STATE.selectedOrgId ? ROAD_OS_CANON.organizations.find(o => o.number === ROAD_OS_STATE.selectedOrgId) : null;
+            const grid = ROAD_OS_CANON.organizations.map(org => `
+                <div class="grid-item ${ROAD_OS_STATE.selectedOrgId === org.number ? 'selected' : ''}" onclick="selectOrganization('${org.number}')" style="cursor: pointer;">
+                    ${org.number} ${org.name}
+                </div>
+            `).join('');
 
-        function initApps() {
-            const grid = document.getElementById('apps-grid');
-            grid.innerHTML = '';
-            ROAD_OS_CANON.products.forEach(product => {
-                const item = document.createElement('div');
-                item.className = 'grid-item';
-                item.style.cursor = 'pointer';
-                item.textContent = `${product.number} ${product.name}`;
-                item.onclick = () => {
-                    switchWorkspace('products');
-                    selectProduct(product.number);
+            let detail = '';
+            if (selected) {
+                detail = `
+                    <div class="detail-panel">
+                        <div class="detail-row"><div class="detail-label">Name</div><div class="detail-value">${selected.name}</div></div>
+                        <div class="detail-row"><div class="detail-label">Purpose</div><div class="detail-value">${selected.purpose}</div></div>
+                        <div class="detail-row"><div class="detail-label">Lanes</div><div class="detail-value">${selected.lanes}</div></div>
+                        <div class="detail-row"><div class="detail-label">Status</div><div class="detail-value">${selected.status}</div></div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="section-title">Organizations (20 total)</div>
+                <div style="display: flex; gap: 15px; flex: 1; overflow: hidden;">
+                    <div style="flex: 0 0 300px; overflow-y: auto;">
+                        <div class="grid-list">${grid}</div>
+                    </div>
+                    <div style="flex: 1; overflow-y: auto;">${detail}</div>
+                </div>
+            `;
+        }
+
+        function renderApps() {
+            const grid = ROAD_OS_CANON.products.map(product => `
+                <div class="grid-item" onclick="launchApp('${product.number}')" style="cursor: pointer;">
+                    ${product.number} ${product.name}
+                </div>
+            `).join('');
+
+            return `
+                <div class="section-title">Product Launcher (27 apps)</div>
+                <div class="grid-list">${grid}</div>
+            `;
+        }
+
+        function renderFiles() {
+            const items = ROAD_OS_CANON.filesystem.map(file => `
+                <li class="file-item" onclick="openFileSection('${file}')" style="cursor: pointer;">
+                    ${file}
+                </li>
+            `).join('');
+
+            let detail = '';
+            if (ROAD_OS_STATE.selectedFileSection) {
+                const section = ROAD_OS_STATE.selectedFileSection;
+                const descriptions = {
+                    'Agents': 'Agent definitions and roles',
+                    'Archive': 'Archived historical data',
+                    'Assets': 'Brand assets and media',
+                    'Canon': 'Living canon and rules',
+                    'Commands': 'Core command definitions',
+                    'Context': 'Contextual information',
+                    'Deployments': 'Deployment runbooks',
+                    'Docs': 'Documentation and specs',
+                    'Domains': 'Root domain registrations',
+                    'Dump': 'Temporary files',
+                    'Forks': 'Repository forks',
+                    'Home': 'Home directory',
+                    'Indices': 'Index structures',
+                    'Models': 'Data models',
+                    'Operator': 'Operator workspace',
+                    'Organizations': 'Organization structures',
+                    'Products': 'Product definitions',
+                    'Prompts': 'Prompt templates',
+                    'Receipts': 'Receipt records',
+                    'Registry': 'Canonical registries',
+                    'Repositories': 'Git repositories',
+                    'Research': 'Research documents',
+                    'Sandbox': 'Experimental sandbox',
+                    'Scripts': 'Automation scripts',
+                    'Skills': 'Skill definitions',
+                    'Templates': 'Document templates',
+                    'Workflows': 'Workflow definitions'
                 };
-                grid.appendChild(item);
-            });
+                detail = `
+                    <div class="detail-panel">
+                        <div class="detail-row"><div class="detail-label">Section</div><div class="detail-value">${section}</div></div>
+                        <div class="detail-row"><div class="detail-label">Purpose</div><div class="detail-value">${descriptions[section] || 'Filesystem section'}</div></div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="section-title">BlackRoad Filesystem (27 directories)</div>
+                <div style="display: flex; gap: 15px; flex: 1; overflow: hidden;">
+                    <div style="flex: 0 0 200px; overflow-y: auto;">
+                        <ul class="file-tree">${items}</ul>
+                    </div>
+                    <div style="flex: 1; overflow-y: auto;">${detail}</div>
+                </div>
+            `;
+        }
+
+        function renderIndex() {
+            const commands = ROAD_OS_CANON.commands.map(c => `<strong>${c.name}</strong>`).join(' • ');
+            let results = '';
+
+            if (ROAD_OS_STATE.searchQuery.length > 0) {
+                const q = ROAD_OS_STATE.searchQuery.toLowerCase();
+                const matches = [
+                    ...ROAD_OS_CANON.commands.filter(c => c.name.toLowerCase().includes(q) || c.purpose.toLowerCase().includes(q)),
+                    ...ROAD_OS_CANON.agents.filter(a => a.name.toLowerCase().includes(q) || a.role.toLowerCase().includes(q)).slice(0, 3),
+                    ...ROAD_OS_CANON.products.filter(p => p.name.toLowerCase().includes(q) || p.meaning.toLowerCase().includes(q)).slice(0, 3)
+                ];
+
+                results = matches.map(item => `
+                    <div style="padding: 8px; margin-bottom: 5px; background: #fff; border-left: 3px solid #0066cc;">
+                        <strong>${item.name || item.number}</strong><br>
+                        <span style="font-size: 10px; color: #999;">${item.purpose || item.role || item.meaning}</span>
+                    </div>
+                `).join('');
+            } else {
+                results = ROAD_OS_CANON.commands.slice(0, 8).map(cmd => `
+                    <div style="padding: 8px; margin-bottom: 5px; background: #fff; border-left: 3px solid #0066cc;">
+                        <strong>${cmd.name}</strong><br>
+                        <span style="font-size: 10px; color: #999;">${cmd.purpose}</span>
+                    </div>
+                `).join('');
+            }
+
+            return `
+                <div class="section-title">RoadOS Index</div>
+                <div style="background: #f5f5f5; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+                    <strong>17 Commands:</strong> ${commands}
+                </div>
+                <div class="search-box">
+                    <input type="text" placeholder="Search index..." value="${ROAD_OS_STATE.searchQuery}" onkeyup="updateIndexSearch(this.value)" style="width: 100%; padding: 8px; font-family: monospace; border: 1px solid #bbb; border-radius: 2px;">
+                </div>
+                <div class="scrollable" style="border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
+                    ${results}
+                </div>
+            `;
+        }
+
+        function renderChatLog() {
+            const entries = ROAD_OS_STATE.chatLog.slice(-15).map(entry => `
+                <div class="chat-entry">
+                    <div class="chat-time">${entry.timestamp}</div>
+                    <div class="chat-text"><strong>${entry.source}:</strong> ${entry.message}</div>
+                </div>
+            `).join('');
+            return entries;
+        }
+
+        function renderReceiptDrawer() {
+            const entries = ROAD_OS_STATE.receipts.slice(-10).reverse().map(receipt => `
+                <div class="receipt-item">
+                    <span class="receipt-id">${receipt.id}</span><br>
+                    <span class="receipt-type">${receipt.type}</span><br>
+                    <span class="receipt-status">${receipt.status} @ ${receipt.timestamp}</span>
+                </div>
+            `).join('');
+            return entries;
+        }
+
+        function renderStatusBar() {
+            const bar = document.getElementById('status-bar');
+            const agent = ROAD_OS_STATE.selectedAgentId ? ROAD_OS_CANON.agents.find(a => a.number === ROAD_OS_STATE.selectedAgentId) : null;
+            const product = ROAD_OS_STATE.selectedProductId ? ROAD_OS_CANON.products.find(p => p.number === ROAD_OS_STATE.selectedProductId) : null;
+            const domain = ROAD_OS_STATE.selectedDomainId ? ROAD_OS_CANON.domains.find(d => d.number === ROAD_OS_STATE.selectedDomainId) : null;
+
+            bar.innerHTML = `
+                <div class="status-item"><span class="status-label">Workspace:</span> <span class="status-value">${ROAD_OS_STATE.activeWorkspace}</span></div>
+                <div class="status-item"><span class="status-label">Agent:</span> <span class="status-value">${agent ? agent.name : '—'}</span></div>
+                <div class="status-item"><span class="status-label">Product:</span> <span class="status-value">${product ? product.name : '—'}</span></div>
+                <div class="status-item"><span class="status-label">Domain:</span> <span class="status-value">${domain ? domain.domain : '—'}</span></div>
+                <div class="status-item"><span class="status-label">Receipts:</span> <span class="status-value">${ROAD_OS_STATE.receipts.length}</span></div>
+                <div class="status-item"><span class="status-label">Operator:</span> <span class="status-value">${ROAD_OS_CANON.operator.name}</span></div>
+            `;
+        }
+
+        function render() {
+            renderDesktop();
+            renderStatusBar();
+
+            const container = document.getElementById('workspaces-container');
+            let content = '';
+
+            switch (ROAD_OS_STATE.activeWorkspace) {
+                case 'home':
+                    content = renderHome();
+                    break;
+                case 'agents':
+                    content = renderAgents();
+                    break;
+                case 'products':
+                    content = renderProducts();
+                    break;
+                case 'domains':
+                    content = renderDomains();
+                    break;
+                case 'orgs':
+                    content = renderOrganizations();
+                    break;
+                case 'apps':
+                    content = renderApps();
+                    break;
+                case 'files':
+                    content = renderFiles();
+                    break;
+                case 'index':
+                    content = renderIndex();
+                    break;
+                default:
+                    content = renderHome();
+            }
+
+            container.innerHTML = `<div class="workspace active">${content}</div>`;
+            document.getElementById('receipt-drawer').innerHTML = renderReceiptDrawer();
+            document.getElementById('chat-panel').innerHTML = renderChatLog();
         }
 
         // ===== INITIALIZATION =====
 
         document.addEventListener('DOMContentLoaded', () => {
-            logChat('BlackRoad OS started');
-            createReceipt('CANON_DATA_LOADED', 'System', 'ROAD_OS_CANON', 'home', 'DONE_VERIFIED');
-
-            document.getElementById('operator-info').innerHTML = `
-                <strong>Operator:</strong> ${ROAD_OS_CANON.operator.name}<br>
-                <strong>Boundary:</strong> ${ROAD_OS_CANON.operator.boundary}
-            `;
-
-            initAgents();
-            initProducts();
-            initDomains();
-            initOrgs();
-            initIndex();
-            initFiles();
-            initApps();
-
-            document.querySelectorAll('[data-workspace]').forEach(icon => {
-                icon.addEventListener('click', () => {
-                    switchWorkspace(icon.dataset.workspace);
-                });
-            });
-
-            updateReceiptsPanels();
+            addChatLog('BlackRoad OS initialized', 'System');
+            addReceipt('SYSTEM_BOOT', 'RoadOS', 'home', 'DONE_VERIFIED');
+            render();
         });
     </script>
 </body>
