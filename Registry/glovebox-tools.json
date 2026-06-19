@@ -1,0 +1,483 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-06-19",
+  "total_tools": 15,
+  "note": "Master capability registry for GloveBox (app 24). Tools are the actual capabilities BlackRoad can provide. Status: REAL (implemented), MOCK (simulated), PLANNED (future). Validated against Registry/schemas/glovebox-tools.schema.json.",
+  "tools": [
+    {
+      "id": "os.shell",
+      "name": "Shell / Terminal",
+      "version": "1.0",
+      "category": "OS",
+      "status": "MOCK",
+      "tier": 4,
+      "description": "Browser-based POSIX shell emulation for command execution",
+      "requires_carkeys": [
+        "carkeys.operator-deploy"
+      ],
+      "requires_agents": [
+        "Roadie",
+        "Sebastian",
+        "Silas"
+      ],
+      "used_by_products": [
+        "RoadOS",
+        "RoadCode"
+      ],
+      "sandbox_level": "container",
+      "risk_level": "critical",
+      "receipt_types": [
+        "SHELL_COMMAND_EXECUTED",
+        "SHELL_OUTPUT_CAPTURED"
+      ],
+      "dependencies": [
+        "exec.sandbox",
+        "storage.workspace"
+      ],
+      "config_schema": {
+        "max_output_lines": 10000,
+        "timeout_ms": 30000
+      }
+    },
+    {
+      "id": "os.file-nav",
+      "name": "File Navigation",
+      "version": "1.0",
+      "category": "OS",
+      "status": "REAL",
+      "tier": 1,
+      "description": "Browse, search, and navigate local file system in browser context",
+      "requires_carkeys": [],
+      "requires_agents": [],
+      "used_by_products": [
+        "RoadOS",
+        "RoadCode",
+        "RoadView"
+      ],
+      "sandbox_level": "none",
+      "risk_level": "low",
+      "receipt_types": [
+        "FILE_OPENED",
+        "DIRECTORY_BROWSED"
+      ],
+      "dependencies": [
+        "storage.indexeddb"
+      ],
+      "config_schema": {
+        "max_recursion_depth": 10,
+        "show_hidden": false
+      }
+    },
+    {
+      "id": "model.qwen",
+      "name": "Qwen Model (Local)",
+      "version": "2.0",
+      "category": "Model",
+      "status": "REAL",
+      "tier": 2,
+      "description": "Local Qwen LLM for code analysis, planning, and reasoning",
+      "requires_carkeys": [
+        "carkeys.model-execution"
+      ],
+      "requires_agents": [
+        "Sebastian",
+        "Elias",
+        "Roadie"
+      ],
+      "used_by_products": [
+        "RoadCode",
+        "RoadTrip",
+        "PitStop"
+      ],
+      "sandbox_level": "isolated-process",
+      "risk_level": "medium",
+      "receipt_types": [
+        "MODEL_INFERENCE_STARTED",
+        "MODEL_INFERENCE_COMPLETED"
+      ],
+      "dependencies": [
+        "storage.model-cache"
+      ],
+      "config_schema": {
+        "temperature": 0.7,
+        "max_tokens": 4096,
+        "timeout_ms": 120000
+      }
+    },
+    {
+      "id": "model.gemma",
+      "name": "Gemma Model (Local)",
+      "version": "2.0",
+      "category": "Model",
+      "status": "REAL",
+      "tier": 2,
+      "description": "Local Gemma LLM for lightweight inference and embeddings",
+      "requires_carkeys": [
+        "carkeys.model-execution"
+      ],
+      "requires_agents": [
+        "Roadie",
+        "Aria"
+      ],
+      "used_by_products": [
+        "RoadOS",
+        "RoadView"
+      ],
+      "sandbox_level": "isolated-process",
+      "risk_level": "medium",
+      "receipt_types": [
+        "MODEL_INFERENCE_STARTED",
+        "MODEL_INFERENCE_COMPLETED"
+      ],
+      "dependencies": [
+        "storage.model-cache"
+      ],
+      "config_schema": {
+        "temperature": 0.5,
+        "max_tokens": 2048,
+        "timeout_ms": 60000
+      }
+    },
+    {
+      "id": "api.http",
+      "name": "HTTP Client",
+      "version": "1.0",
+      "category": "API",
+      "status": "REAL",
+      "tier": 2,
+      "description": "Make authenticated HTTP requests to external APIs with credential proxying",
+      "requires_carkeys": [
+        "carkeys.external-api"
+      ],
+      "requires_agents": [
+        "Roadie",
+        "Ophelia"
+      ],
+      "used_by_products": [
+        "RoadCode",
+        "OneWay",
+        "RoadView"
+      ],
+      "sandbox_level": "container",
+      "risk_level": "high",
+      "receipt_types": [
+        "HTTP_REQUEST_SENT",
+        "HTTP_RESPONSE_RECEIVED"
+      ],
+      "dependencies": [
+        "auth.carkeys",
+        "crypto.signing"
+      ],
+      "config_schema": {
+        "timeout_ms": 30000,
+        "max_redirects": 5
+      }
+    },
+    {
+      "id": "api.github",
+      "name": "GitHub API Integration",
+      "version": "2.0",
+      "category": "API",
+      "status": "REAL",
+      "tier": 3,
+      "description": "Read/write to GitHub repositories, pull requests, issues, workflows",
+      "requires_carkeys": [
+        "carkeys.external-api",
+        "carkeys.vcs-deployment"
+      ],
+      "requires_agents": [
+        "Sebastian",
+        "Elias"
+      ],
+      "used_by_products": [
+        "RoadCode",
+        "RoadChain"
+      ],
+      "sandbox_level": "container",
+      "risk_level": "high",
+      "receipt_types": [
+        "GITHUB_COMMIT_PUSHED",
+        "GITHUB_PR_CREATED",
+        "GITHUB_WORKFLOW_TRIGGERED"
+      ],
+      "dependencies": [
+        "api.http",
+        "auth.oauth"
+      ],
+      "config_schema": {
+        "org_filter": null,
+        "repo_filter": null
+      }
+    },
+    {
+      "id": "storage.indexeddb",
+      "name": "IndexedDB Persistence",
+      "version": "1.0",
+      "category": "Storage",
+      "status": "REAL",
+      "tier": 0,
+      "description": "Browser-local persistent storage for files, configs, caches",
+      "requires_carkeys": [],
+      "requires_agents": [],
+      "used_by_products": [
+        "RoadOS",
+        "RoadTrip",
+        "OfficeRoad"
+      ],
+      "sandbox_level": "none",
+      "risk_level": "low",
+      "receipt_types": [
+        "STORAGE_WRITTEN",
+        "STORAGE_CLEARED"
+      ],
+      "dependencies": [],
+      "config_schema": {
+        "quota_mb": 1024
+      }
+    },
+    {
+      "id": "storage.workspace",
+      "name": "Workspace Cache",
+      "version": "1.0",
+      "category": "Storage",
+      "status": "REAL",
+      "tier": 1,
+      "description": "Working directory for build artifacts, logs, temp files",
+      "requires_carkeys": [],
+      "requires_agents": [],
+      "used_by_products": [
+        "RoadCode",
+        "RoadWork"
+      ],
+      "sandbox_level": "container",
+      "risk_level": "low",
+      "receipt_types": [
+        "WORKSPACE_CREATED",
+        "WORKSPACE_CLEARED"
+      ],
+      "dependencies": [
+        "os.shell"
+      ],
+      "config_schema": {
+        "quota_mb": 5120,
+        "auto_cleanup_hours": 24
+      }
+    },
+    {
+      "id": "exec.sandbox",
+      "name": "Code Execution Sandbox",
+      "version": "1.0",
+      "category": "Execution",
+      "status": "MOCK",
+      "tier": 4,
+      "description": "Isolated process/container for safe code execution with resource limits",
+      "requires_carkeys": [
+        "carkeys.operator-deploy"
+      ],
+      "requires_agents": [
+        "Silas",
+        "Sebastian",
+        "Seraphina"
+      ],
+      "used_by_products": [
+        "RoadCode",
+        "PitStop"
+      ],
+      "sandbox_level": "vm",
+      "risk_level": "critical",
+      "receipt_types": [
+        "SANDBOX_SPAWNED",
+        "SANDBOX_EXECUTION_COMPLETED"
+      ],
+      "dependencies": [
+        "os.shell"
+      ],
+      "config_schema": {
+        "cpu_cores": 2,
+        "memory_mb": 1024,
+        "timeout_ms": 60000
+      }
+    },
+    {
+      "id": "auth.carkeys",
+      "name": "CarKeys Authorization",
+      "version": "1.0",
+      "category": "Auth",
+      "status": "REAL",
+      "tier": 3,
+      "description": "Permission checking and grant verification against CarKeys lanes",
+      "requires_carkeys": [],
+      "requires_agents": [
+        "Seraphina"
+      ],
+      "used_by_products": [
+        "RoadOS",
+        "CarKeys",
+        "RoadChain"
+      ],
+      "sandbox_level": "none",
+      "risk_level": "critical",
+      "receipt_types": [
+        "CARKEYS_CHECKED",
+        "GRANT_VERIFIED"
+      ],
+      "dependencies": [
+        "crypto.signing"
+      ],
+      "config_schema": {}
+    },
+    {
+      "id": "auth.oauth",
+      "name": "OAuth 2.0 Flow",
+      "version": "1.0",
+      "category": "Auth",
+      "status": "REAL",
+      "tier": 2,
+      "description": "Standard OAuth 2.0 for third-party service authentication",
+      "requires_carkeys": [
+        "carkeys.external-api"
+      ],
+      "requires_agents": [
+        "Seraphina"
+      ],
+      "used_by_products": [
+        "CarKeys",
+        "OneWay"
+      ],
+      "sandbox_level": "none",
+      "risk_level": "high",
+      "receipt_types": [
+        "OAUTH_TOKEN_GRANTED"
+      ],
+      "dependencies": [
+        "crypto.signing"
+      ],
+      "config_schema": {
+        "provider": "github"
+      }
+    },
+    {
+      "id": "network.proxy",
+      "name": "Network Proxy",
+      "version": "1.0",
+      "category": "Network",
+      "status": "PLANNED",
+      "tier": 4,
+      "description": "Local proxy for request routing, credential stripping, identity masking",
+      "requires_carkeys": [
+        "carkeys.operator-deploy",
+        "carkeys.network-admin"
+      ],
+      "requires_agents": [
+        "Gaia",
+        "Seraphina"
+      ],
+      "used_by_products": [
+        "OneWay",
+        "HighWay"
+      ],
+      "sandbox_level": "container",
+      "risk_level": "critical",
+      "receipt_types": [
+        "PROXY_REQUEST_ROUTED"
+      ],
+      "dependencies": [
+        "api.http",
+        "auth.carkeys"
+      ],
+      "config_schema": {
+        "port": 3128,
+        "strict_mode": true
+      }
+    },
+    {
+      "id": "crypto.signing",
+      "name": "Cryptographic Signing",
+      "version": "1.0",
+      "category": "Crypto",
+      "status": "REAL",
+      "tier": 3,
+      "description": "Sign and verify messages, receipts, and audit trails with Ed25519",
+      "requires_carkeys": [
+        "carkeys.operator-identity"
+      ],
+      "requires_agents": [
+        "Seraphina"
+      ],
+      "used_by_products": [
+        "RoadChain",
+        "CarKeys"
+      ],
+      "sandbox_level": "none",
+      "risk_level": "critical",
+      "receipt_types": [
+        "SIGNATURE_CREATED",
+        "SIGNATURE_VERIFIED"
+      ],
+      "dependencies": [],
+      "config_schema": {}
+    },
+    {
+      "id": "media.canvas",
+      "name": "Canvas Rendering",
+      "version": "1.0",
+      "category": "Media",
+      "status": "REAL",
+      "tier": 0,
+      "description": "2D/3D canvas rendering using Three.js or similar",
+      "requires_carkeys": [],
+      "requires_agents": [
+        "Sapphira"
+      ],
+      "used_by_products": [
+        "BlackBoard",
+        "RoadWorld"
+      ],
+      "sandbox_level": "none",
+      "risk_level": "low",
+      "receipt_types": [
+        "CANVAS_RENDERED"
+      ],
+      "dependencies": [
+        "storage.indexeddb"
+      ],
+      "config_schema": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "id": "data.vector-search",
+      "name": "Vector Search / Embedding",
+      "version": "1.0",
+      "category": "Data",
+      "status": "PLANNED",
+      "tier": 2,
+      "description": "Semantic search using vector embeddings (Qdrant-compatible)",
+      "requires_carkeys": [
+        "carkeys.model-execution"
+      ],
+      "requires_agents": [
+        "Alice",
+        "Ophelia"
+      ],
+      "used_by_products": [
+        "RoadView",
+        "RoadChain"
+      ],
+      "sandbox_level": "container",
+      "risk_level": "medium",
+      "receipt_types": [
+        "VECTOR_INDEXED",
+        "VECTOR_SEARCH_EXECUTED"
+      ],
+      "dependencies": [
+        "model.gemma"
+      ],
+      "config_schema": {
+        "dimension": 384,
+        "top_k": 10
+      }
+    }
+  ]
+}

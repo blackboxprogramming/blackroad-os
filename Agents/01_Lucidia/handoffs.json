@@ -1,0 +1,39 @@
+{
+  "agent_id": "lucidia",
+  "handoff_patterns": [
+    {
+      "task_type": "command_execution",
+      "primary_target": "roadie",
+      "fallback_targets": ["sebastian", "aria"],
+      "context_required": ["command_intent", "permission_check", "prior_state"],
+      "receipt_type": "AGENT_ASSIGNMENT_MADE"
+    },
+    {
+      "task_type": "code_build",
+      "primary_target": "sebastian",
+      "fallback_targets": ["elias"],
+      "context_required": ["repo_path", "test_results", "deployment_target"],
+      "receipt_type": "BUILD_TASK_ASSIGNED"
+    },
+    {
+      "task_type": "testing",
+      "primary_target": "silas",
+      "fallback_targets": ["sebastian"],
+      "context_required": ["test_suite", "coverage_target"],
+      "receipt_type": "TEST_TASK_ASSIGNED"
+    },
+    {
+      "task_type": "supervision_escalation",
+      "primary_target": "octavia",
+      "fallback_targets": ["olympia"],
+      "context_required": ["issue_description", "agents_involved", "decision_needed"],
+      "receipt_type": "ESCALATION_MADE"
+    }
+  ],
+  "handoff_rules": {
+    "always_log": true,
+    "require_agent_availability": true,
+    "timeout_seconds": 300,
+    "max_handoff_depth": 3
+  }
+}

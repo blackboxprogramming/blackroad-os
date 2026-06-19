@@ -1,0 +1,53 @@
+{
+  "product_id": "carkeys",
+  "product_number": "07",
+  "product_name": "CarKeys",
+  "last_updated": "2026-06-19",
+  "tools_used": [
+    {
+      "tool_id": "auth.carkeys",
+      "access": "full",
+      "purpose": "Grant, revoke, verify permissions across all lanes"
+    },
+    {
+      "tool_id": "auth.oauth",
+      "access": "full",
+      "purpose": "Manage OAuth flows for external service auth"
+    },
+    {
+      "tool_id": "crypto.signing",
+      "access": "full",
+      "purpose": "Sign grants and verify permissions cryptographically"
+    },
+    {
+      "tool_id": "storage.indexeddb",
+      "access": "full",
+      "purpose": "Cache grants locally for fast permission checks"
+    }
+  ],
+  "tools_required": [
+    "auth.carkeys",
+    "crypto.signing"
+  ],
+  "tools_optional": [
+    "auth.oauth"
+  ],
+  "tools_planned": [],
+  "carkeys_lanes_required": [
+    "carkeys.operator-identity"
+  ],
+  "carkeys_lanes_gated": [
+    "carkeys.agent-permissions",
+    "carkeys.external-api",
+    "carkeys.model-execution",
+    "carkeys.vcs-deployment",
+    "carkeys.operator-deploy"
+  ],
+  "receipt_types_generated": [
+    "CARKEYS_CHECKED",
+    "GRANT_REQUESTED",
+    "GRANT_APPROVED",
+    "GRANT_REVOKED",
+    "GRANT_EXPIRED"
+  ]
+}

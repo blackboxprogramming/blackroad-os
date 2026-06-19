@@ -1,0 +1,52 @@
+{
+  "product_id": "roados",
+  "product_number": "01",
+  "product_name": "RoadOS",
+  "handoff_targets": [
+    {
+      "target_product": "RoadCode",
+      "target_number": "02",
+      "trigger": "user types 'build' or 'deploy' command",
+      "context_passed": ["repo_path", "current_command", "operator_intent"],
+      "agents_involved": ["Roadie", "Sebastian", "Elias"]
+    },
+    {
+      "target_product": "RoadTrip",
+      "target_number": "03",
+      "trigger": "user types 'run task' or initiates multi-step operation",
+      "context_passed": ["task_definition", "required_agents", "time_estimate"],
+      "agents_involved": ["Lucidia", "Octavia"]
+    },
+    {
+      "target_product": "RoadView",
+      "target_number": "10",
+      "trigger": "user types 'search' or 'find'",
+      "context_passed": ["search_query", "search_scope"],
+      "agents_involved": ["Alice", "Ophelia"]
+    },
+    {
+      "target_product": "CarKeys",
+      "target_number": "07",
+      "trigger": "command requires permission verification",
+      "context_passed": ["required_scope", "subject", "resource"],
+      "agents_involved": ["Seraphina"]
+    }
+  ],
+  "incoming_handoffs": [
+    {
+      "from_product": "RoadCode",
+      "from_number": "02",
+      "context": "deployment complete, back to shell"
+    },
+    {
+      "from_product": "RoadTrip",
+      "from_number": "03",
+      "context": "long task complete, back to shell"
+    }
+  ],
+  "handoff_rules": {
+    "always_preserve_context": true,
+    "always_log_to_roadchain": true,
+    "timeout_seconds": 30
+  }
+}

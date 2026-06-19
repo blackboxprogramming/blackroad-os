@@ -1,0 +1,39 @@
+{
+  "agent_id": "lucidia",
+  "agent_number": "01",
+  "carkeys_lanes": [
+    {
+      "lane_id": "carkeys.operator-identity",
+      "access": "view",
+      "purpose": "Monitor operator state changes"
+    },
+    {
+      "lane_id": "carkeys.agent-permissions",
+      "access": "assign",
+      "purpose": "Request other agents for tasks"
+    }
+  ],
+  "tool_access": [
+    {
+      "tool_id": "auth.carkeys",
+      "access": "query",
+      "purpose": "Check lane states before directing other agents"
+    },
+    {
+      "tool_id": "data.vector-search",
+      "access": "query",
+      "purpose": "Find similar past operations for context reuse"
+    },
+    {
+      "tool_id": "crypto.signing",
+      "access": "verify",
+      "purpose": "Validate receipt chain continuity"
+    }
+  ],
+  "constraints": {
+    "max_concurrent_tasks": 10,
+    "max_context_tokens": 8192,
+    "must_log_all_assignments": true,
+    "escalation_required_for": ["operator-override", "security-incident"]
+  }
+}
