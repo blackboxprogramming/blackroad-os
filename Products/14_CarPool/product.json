@@ -3,7 +3,7 @@
   "id": "carpool",
   "slug": "carpool",
   "name": "CarPool",
-  "role": "shared rooms",
+  "role": "human + AI group collaboration",
   "status": "planned",
   "meaning": "shared rooms / multi-user sessions",
   "does": [
@@ -25,5 +25,7 @@
   "carkeys": [
     "room access gated"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "CarPool is the human + AI group collaboration product. CarPool is where multiple humans work together with agents. RoadTrip is solo operator + AI. CarPool is groups, teams, projects, rooms, meetings, shared work, shared agents, and collaborative decisions. CarPool should support project rooms, human members, AI agent members, shared messages, shared tasks, shared files, group decisions, meetings, video/audio integration if needed, open-source Zoom/Teams/Jitsi-style alternatives where possible, project permissions, automatic notes into RoadWire, and RoadMap updates from group work.",
+  "core_promise": "Humans and agents can work together without losing the thread."
 }

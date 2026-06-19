@@ -3,7 +3,7 @@
   "id": "roadmap",
   "slug": "roadmap",
   "name": "RoadMap",
-  "role": "plan / horizon",
+  "role": "progress dashboard and reporting",
   "status": "planned",
   "meaning": "roadmap / planning",
   "does": [
@@ -24,5 +24,7 @@
   "carkeys": [
     "none"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "RoadMap is BlackRoad's overall progress, status, update, continuation, and reporting dashboard. RoadMap is the place to see everything being worked on and what needs attention. Think Salesforce reports and dashboards, but for the whole BlackRoad operating system: products, tasks, agents, blockers, milestones, receipts, deployments, projects, and follow-ups. RoadMap should answer: What are we working on? What changed? What is blocked? What needs attention? What is next? What has proof? What is stale? Which product owns this? Which agent is involved?",
+  "core_promise": "See what is happening, what is stuck, and what comes next."
 }

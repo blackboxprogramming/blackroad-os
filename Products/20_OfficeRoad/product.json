@@ -3,7 +3,7 @@
   "id": "officeroad",
   "slug": "officeroad",
   "name": "OfficeRoad",
-  "role": "docs / sheets",
+  "role": "visual meta office and AI workspace",
   "status": "planned",
   "meaning": "work office (docs, sheets)",
   "does": [
@@ -24,5 +24,7 @@
   "carkeys": [
     "none"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "OfficeRoad is BlackRoad's visual meta office. OfficeRoad is where humans and AI teammates work side-by-side in a visible office-like space. It is not just a dashboard. It is a spatial work environment where tasks, documents, agents, rooms, desks, statuses, and collaboration can be seen and arranged. OfficeRoad should feel like a meta office, a visible AI workplace, a room where agents have desks, and a work environment instead of a pile of tabs where the user can see who/what is working on what. OfficeRoad should support visual office rooms, desks/workstations, AI teammate presence, human teammate presence, task cards, document surfaces, agent status, project rooms, and meeting spaces.",
+  "core_promise": "See the office. See the work. See the agents."
 }

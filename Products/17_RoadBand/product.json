@@ -3,7 +3,7 @@
   "id": "roadband",
   "slug": "roadband",
   "name": "RoadBand",
-  "role": "audio / music",
+  "role": "music production and listening",
   "status": "planned",
   "meaning": "audio / music / radio",
   "does": [
@@ -25,5 +25,7 @@
   "carkeys": [
     "none"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "RoadBand is BlackRoad's music imagination, production, hosting, recommendation, and unified listening product. RoadBand is for people who know what sounds good even if they cannot operate a full professional music stack. The user might know the song needs to feel like Katy Perry plus Usher plus Heads Will Roll remix plus Sabrina Carpenter energy. RoadBand should help turn that instinct into actual sound, recommendations, playlists, stems, and production notes. RoadBand should support music taste profiling, sound comparison quizzes, 'ear doctor' style preference testing, AI-assisted music production, song/stem hosting, unified music library, and Spotify/Apple/YouTube/SoundCloud-like source unification.",
+  "core_promise": "If you can hear where it should go, RoadBand helps you get there."
 }

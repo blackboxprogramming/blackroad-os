@@ -3,7 +3,7 @@
   "id": "backroad",
   "slug": "backroad",
   "name": "BackRoad",
-  "role": "private / restricted path",
+  "role": "social and community layer",
   "status": "planned",
   "meaning": "operator-only restricted area",
   "does": [
@@ -24,5 +24,7 @@
   "carkeys": [
     "operator gated"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "BackRoad is BlackRoad's social layer. BackRoad has two views: 1) The all-social feed view: A unified feed that can bring together the user's social media from external platforms and BackRoad itself. 2) The native BackRoad social view: BlackRoad's own creator/community social app. BackRoad exists because modern social platforms became algorithmic, ad-heavy, manipulative, and creator-hostile. BackRoad should help users and creators regain ownership, context, and sanity. BackRoad should support social feed aggregation, native BackRoad posts, creator/community profiles, comments and replies, creator ownership, and social graph portability.",
+  "core_promise": "See the social world without being owned by it."
 }

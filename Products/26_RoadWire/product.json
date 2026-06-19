@@ -3,7 +3,7 @@
   "id": "roadwire",
   "slug": "roadwire",
   "name": "RoadWire",
-  "role": "comms / signals",
+  "role": "asynchronous messaging and records",
   "status": "planned",
   "meaning": "comms / signaling / pubsub",
   "does": [
@@ -25,5 +25,7 @@
   "carkeys": [
     "pubsub gated"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "RoadWire is BlackRoad's asynchronous messaging, email-like communication, outside messaging, and long-term record management product. RoadWire is for non-immediate messages and durable communication records. It is where things go when they need to be remembered, threaded, emailed, archived, or handled outside the live room. RoadTrip and CarPool should automatically note important things into RoadWire. RoadWire should support email-like messages, threads, project wires, community wires, work wires, external/outside communication, formal/non-urgent updates, long-term records, and message-to-task conversion.",
+  "core_promise": "If it is not immediate but still matters, wire it."
 }

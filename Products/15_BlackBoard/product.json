@@ -3,7 +3,7 @@
   "id": "blackboard",
   "slug": "blackboard",
   "name": "BlackBoard",
-  "role": "canvas / freeform",
+  "role": "visual creation and animation studio",
   "status": "planned",
   "meaning": "shared canvas / whiteboard",
   "does": [
@@ -26,5 +26,7 @@
   "carkeys": [
     "none"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "BlackBoard is the drag-and-drop visual creation studio. BlackBoard is where animation, videos, infographics, explainers, graphics, storyboards, presentations, canvases, layouts, and visual media get created. It is Dreamweaver, Adobe, Canva, animation class, infographic show, and BlackRoad creator studio brought into one BlackRoad-native surface. BlackBoard exists because visual creation tools are either too expensive, too complicated, too template-driven, or too disconnected from the rest of the work. A person should be able to turn an idea into a visual artifact without fighting software for three hours.",
+  "core_promise": "Drag the idea onto the board and make it visible."
 }

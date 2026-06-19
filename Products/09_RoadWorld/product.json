@@ -3,7 +3,7 @@
   "id": "roadworld",
   "slug": "roadworld",
   "name": "RoadWorld",
-  "role": "public / world-facing",
+  "role": "drag-and-drop games and worlds",
   "status": "planned",
   "meaning": "public landing / world view",
   "does": [
@@ -23,5 +23,7 @@
   "carkeys": [
     "none"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "RoadWorld is drag-and-drop game, simulation, worldbuilding, and interactive creation. RoadWorld should make it possible for people with game/world ideas to build them without getting blocked by engine complexity. If someone has a Roblox-style idea but cannot figure out how to make the car work, RoadWorld should help them create the car, the world, the rules, the economy, the characters, and the playable experience. RoadWorld includes game creation, world creation, simulations, historical timelines, survival games, Miniclip/Roblox-like accessible creation, and 'drop into any time period' historical simulation where users can enter any period, make decisions, experience constraints, and compare outcomes.",
+  "core_promise": "Describe the world. Build it. Play it. Share it. Own it."
 }

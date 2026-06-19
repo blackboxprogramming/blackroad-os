@@ -3,7 +3,7 @@
   "id": "glovebox",
   "slug": "glovebox",
   "name": "GloveBox",
-  "role": "personal / private kit",
+  "role": "capabilities, tools, and meta-info catalog",
   "status": "planned",
   "meaning": "personal kit / private items",
   "does": [
@@ -24,5 +24,7 @@
   "carkeys": [
     "personal gated"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "GloveBox is BlackRoad's capabilities, tools, meta-info, feature catalog, and utility layer. GloveBox answers: What can BlackRoad do? What tools exist? What features are available? What capability does this product/agent need? What can be unlocked with the right CarKeys grant? What references/utilities support this task? CarKeys is the key layer. GloveBox is the capability layer. GloveBox should store capabilities, tools, feature definitions, utility records, product abilities, agent abilities, 1,729 AI capability links, open-source alternatives, integration notes, and version/status metadata.",
+  "core_promise": "Know what the system can do, what it needs, and what is safe to unlock."
 }

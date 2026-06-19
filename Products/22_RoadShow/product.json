@@ -3,7 +3,7 @@
   "id": "roadshow",
   "slug": "roadshow",
   "name": "RoadShow",
-  "role": "demos / showcase",
+  "role": "TV Guide and YouTube curation",
   "status": "planned",
   "meaning": "showcase / demo runner",
   "does": [
@@ -23,5 +23,7 @@
   "carkeys": [
     "none"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "RoadShow is BlackRoad's TV Guide / YouTube-style curation and programming product. RoadShow is where users can make playlists, channels, public shows, programming blocks, curated media worlds, shared viewing guides, and creator broadcasts. It is the place where media becomes programmed and shown to others. RoadShow should support channels, shows, episodes, playlists, programming blocks, TV Guide-style schedules, YouTube-style curation, public/shared media presentation, and creator channels. RoadShow should make it possible to take YouTube videos and curate them into a meaningful show, make a public playlist/channel, publish BlackBoard-created videos, and group media by theme instead of algorithmic chaos.",
+  "core_promise": "Curate the chaos into a show."
 }

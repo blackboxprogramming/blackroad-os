@@ -3,7 +3,7 @@
   "id": "roundabout",
   "slug": "roundabout",
   "name": "RoundAbout",
-  "role": "discovery / explore",
+  "role": "preparation around routes and destinations",
   "status": "planned",
   "meaning": "discovery / explore",
   "does": [
@@ -24,5 +24,7 @@
   "carkeys": [
     "none"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "RoundAbout is BlackRoad's preparation-around-the-route product. RoundAbout handles everything that needs to be prepared around where someone is going, what they must do before they go, what they must bring, what must happen after, and what context matters around the trip or service route. RoundAbout is for travel prep, service calls, home maintenance routes, sales routes, errands with dependencies, appointments, field work, and 'I need to be there by X and do Y before/after.' RoundAbout should support before checklist, after checklist, materials list, people involved, location context, time constraints, appointment context, service notes, dependency planning, and readiness score.",
+  "core_promise": "Before you go, know what has to be ready."
 }

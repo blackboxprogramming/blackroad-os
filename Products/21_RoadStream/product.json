@@ -3,7 +3,7 @@
   "id": "roadstream",
   "slug": "roadstream",
   "name": "RoadStream",
-  "role": "live / streaming",
+  "role": "unified streaming services wrapper",
   "status": "planned",
   "meaning": "live streaming / video",
   "does": [
@@ -24,5 +24,7 @@
   "carkeys": [
     "stream key gated"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "RoadStream is BlackRoad's unified streaming-services wrapper. RoadStream is where the user can see, remember, search, and curate across the streaming services they already use: Netflix, Hulu, Peacock, Amazon Prime Video, Disney+, Discovery+, YouTube/TV-style sources where appropriate, and other streaming subscriptions. RoadStream exists because streaming became fragmented. Users forget what they have, where they were watching something, what service owns what, and what belongs together. RoadStream should make streaming feel like one organized viewing surface instead of twelve disconnected subscriptions.",
+  "core_promise": "Remember what you watch, where it lives, and what belongs together."
 }

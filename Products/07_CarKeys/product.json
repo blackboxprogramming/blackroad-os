@@ -3,7 +3,7 @@
   "id": "carkeys",
   "slug": "carkeys",
   "name": "CarKeys",
-  "role": "auth / secrets / gates",
+  "role": "identity, authorization, and permissions layer",
   "status": "planned",
   "meaning": "keys, secrets, permission gates",
   "does": [
@@ -25,5 +25,7 @@
   "carkeys": [
     "self-managed"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "CarKeys is the identity, authorization, permissions, grants, login, and key layer. CarKeys should make access feel as easy as logging into Google, but with BlackRoad-owned consent, scoped permissions, revocation, and receipts. If a user has to manually paste passwords, provider tokens, or API keys, the design failed. CarKeys should handle login, identity, sessions, scoped grants, API access, tool permissions, provider access gates, revocation, and audit logs. CarKeys is paired with GloveBox: CarKeys = who has the key / what access is allowed; GloveBox = what capabilities/tools/features exist to unlock.",
+  "core_promise": "Access without key chaos."
 }

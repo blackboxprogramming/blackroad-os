@@ -3,7 +3,7 @@
   "id": "highway",
   "slug": "highway",
   "name": "HighWay",
-  "role": "high-throughput batch",
+  "role": "infrastructure, compute, and routing",
   "status": "planned",
   "meaning": "high-throughput fast lane",
   "does": [
@@ -23,5 +23,7 @@
   "carkeys": [
     "bulk action gated"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "HighWay is BlackRoad's infrastructure, compute, routing, cloud, fleet, hosting, and observability product. HighWay is the road system under the road system. It handles the technical routes: servers, local nodes, cloud nodes, domains, tunnels, edge routes, GPUs, CPUs, Pi clusters, model servers, workers, queues, health checks, logs, and deployment surfaces. HighWay exists because modern infrastructure is overwhelming: Docker, Kubernetes, SSH keys, domains, SSL, cloud roles, environment variables, deployment scripts, queues, logs, model serving, GPUs, and local hardware. HighWay should make infrastructure understandable and routable.",
+  "core_promise": "See the roads your system runs on."
 }
