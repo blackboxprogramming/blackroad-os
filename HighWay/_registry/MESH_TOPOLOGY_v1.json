@@ -1,0 +1,204 @@
+{
+  "schema_version": "1.0",
+  "topology_version": "v1",
+  "description": "BlackRoad OS Hybrid Mesh Topology: Meshtastic LoRa + Headscale/WireGuard VPN",
+  "last_updated": "2026-06-19",
+
+  "design_rationale": {
+    "lora_layer": "Long-range, low-power wireless for offline-first edge nodes (LoRa 900MHz ISM band)",
+    "vpn_layer": "WireGuard overlay for secure, routable mesh network across internet and LAN",
+    "hybrid_approach": "LoRa for offline resilience; WireGuard for online throughput and encryption",
+    "data_plane": "Git append-only sync across mesh edges with RoadChain provenance tracking",
+    "offline_first": "All nodes operate offline; sync when edge connectivity available"
+  },
+
+  "nodes": {
+    "node_types": [
+      {
+        "id": "gateway",
+        "name": "Gateway Node",
+        "description": "Bridge between LoRa mesh and internet/LAN. Runs Headscale + relay. Always-on.",
+        "hardware": {
+          "meshtastic": "RAK4631 (2.4 GHz) or similar, USB power",
+          "compute": "Raspberry Pi 4 / Orange Pi / x86 mini-PC",
+          "network": "Ethernet LAN + WiFi or cellular WAN"
+        },
+        "software": {
+          "os": "Linux (Debian/Ubuntu preferred)",
+          "meshtastic_role": "Router (Rebroadcaster)",
+          "vpn": "Headscale server + WireGuard kernel module",
+          "git": "git daemon for sync coordination"
+        },
+        "count": "1-3 (primary + redundant)"
+      },
+      {
+        "id": "relay",
+        "name": "Relay Node",
+        "description": "Extend LoRa range. Rebroadcast messages. Can be always-on or solar-powered.",
+        "hardware": {
+          "meshtastic": "RAK4631 or T-Beam (battery + solar)",
+          "compute": "Optional Pi Zero or STM32 for local processing",
+          "network": "None (LoRa only) or WiFi for uplink to gateway"
+        },
+        "software": {
+          "os": "Meshtastic firmware only",
+          "meshtastic_role": "Router + Power-on-Boot",
+          "vpn": "None (LoRa only mesh member)",
+          "git": "Optional sync client if compute available"
+        },
+        "count": "3-10 (depending on coverage area)"
+      },
+      {
+        "id": "edge",
+        "name": "Edge Device",
+        "description": "User device (laptop, tablet, phone). Sparse connectivity. Joins mesh when power-on.",
+        "hardware": {
+          "meshtastic": "T-Beam Ultra, Seeed Studio S3, or LoRa hat on Raspberry Pi",
+          "compute": "Full-featured (laptop) or mobile (phone/tablet)",
+          "network": "WiFi (when available) or LoRa-only"
+        },
+        "software": {
+          "os": "Any (Windows, macOS, Linux, iOS, Android)",
+          "meshtastic_role": "Client",
+          "vpn": "WireGuard VPN client",
+          "git": "git client for sync"
+        },
+        "count": "Variable (1-100+ users)"
+      }
+    ]
+  },
+
+  "network_layout": {
+    "description": "Two-layer mesh: LoRa physical + WireGuard VPN logical",
+    "lora_layer": {
+      "frequency": "902-928 MHz (ISM band, North America) or 868 MHz (Europe)",
+      "channel_count": 1,
+      "mesh_channels": [
+        {
+          "number": 0,
+          "name": "Primary Mesh",
+          "bandwidth": "125 kHz",
+          "spreading_factor": 7,
+          "transmission_power": "17 dBm",
+          "range_estimate": "10-20 km (line-of-sight), 2-5 km (urban)"
+        }
+      ],
+      "node_layout": {
+        "description": "Typical distributed topology with gateway hub",
+        "primary_gateway": "Central location (office/home), always-on",
+        "relays": "Distributed around coverage area for range extension",
+        "edges": "User devices, mobile, sporadic connectivity"
+      }
+    },
+
+    "vpn_layer": {
+      "description": "WireGuard mesh: all nodes can route through Headscale",
+      "headscale_server": {
+        "location": "Gateway node or cloud relay",
+        "role": "VPN coordinator, subnet router",
+        "region": "Single region initially (US-East preferred)",
+        "redundancy": "Secondary Headscale in production"
+      },
+      "wireguard_peers": {
+        "per_node": "Each node gets WireGuard private key + peer config",
+        "address_range": "10.100.0.0/16 (Headscale subnet)",
+        "gateway_address": "10.100.1.1",
+        "route_all_traffic": false,
+        "mtu": 1420
+      },
+      "connectivity_modes": {
+        "online_lora": "Both LoRa + WireGuard active (redundant paths)",
+        "offline_lora": "LoRa only (no WireGuard tunnel)",
+        "online_wireguard": "WireGuard only (WiFi/cellular, no LoRa)",
+        "offline_none": "No connectivity (node stores state locally)"
+      }
+    }
+  },
+
+  "data_sync": {
+    "protocol": "Git append-only over hybrid mesh",
+    "behavior": {
+      "offline": "Nodes maintain local git repo, work offline",
+      "connection": "When edge available, git push/pull to nearest sync peer",
+      "conflict": "Last-write-wins on single LoRa channel (consensus not needed)",
+      "provenance": "Every commit signed + RoadChain receipt created"
+    },
+    "sync_topology": {
+      "primary": "All nodes push to gateway node (central authority)",
+      "fallback": "Nodes sync with any reachable relay if gateway offline",
+      "convergence": "Eventual consistency (typically minutes, up to hours)"
+    }
+  },
+
+  "roadchain_integration": {
+    "description": "Append-only proof trails across mesh",
+    "timestamp_authority": "Gateway node (authoritative clock)",
+    "edge_clocks": "All edges may be out-of-sync (RoadChain tolerates this)",
+    "ordering": "Local ordering on each node; RoadChain reconciles at gateway",
+    "receipts": "Placed in _receipts/ with sync metadata (node ID, timestamp)"
+  },
+
+  "security_model": {
+    "authentication": {
+      "lora_mesh": "Shared channel key (LoRa device provisioning)",
+      "wireguard": "Private/public key pairs (each device pre-shared)",
+      "git": "SSH key-based commit signing",
+      "carkeys": "Permission gating at app level (not network level)"
+    },
+    "encryption": {
+      "lora": "AES-128 (device-level)",
+      "wireguard": "WireGuard built-in (Curve25519)",
+      "git": "HTTPS or SSH (in transit over WireGuard/LoRa)"
+    },
+    "threat_model": {
+      "node_compromise": "Compromised node can read local data; WireGuard keys allow network access",
+      "replay": "LoRa packets not replay-protected; RoadChain detects duplicate entries",
+      "eavesdropping": "WireGuard prevents eavesdropping on internet paths; LoRa radio can be observed",
+      "mitigation": "Sensitive data encrypted at app level; RoadChain receipts signed"
+    }
+  },
+
+  "deployment_phases": {
+    "phase_1_prototype": {
+      "timeline": "Weeks 1-4",
+      "nodes": "1 gateway, 2 relays, 3 edge devices",
+      "scope": "Single LoRa channel, single Headscale region, manual sync testing",
+      "validation": "Range testing, git sync correctness, RoadChain receipt creation"
+    },
+    "phase_2_alpha": {
+      "timeline": "Weeks 5-12",
+      "nodes": "1 gateway, 5 relays, 10+ edge devices",
+      "scope": "Multi-region Headscale, automatic sync, product integration testing",
+      "validation": "Real-world coverage, conflict resolution, agent handoff flows"
+    },
+    "phase_3_beta": {
+      "timeline": "Weeks 13-20",
+      "nodes": "3 gateways (redundancy), 20+ relays, 50+ edge devices",
+      "scope": "Failover testing, long-term sync stability, full product suite",
+      "validation": "Load testing, incident response, performance under degradation"
+    },
+    "phase_4_production": {
+      "timeline": "Week 21+",
+      "nodes": "Unlimited scaling",
+      "scope": "Full HighWay product launch",
+      "validation": "Monitoring, alerting, runbook deployment"
+    }
+  },
+
+  "open_questions": [
+    "Which Meshtastic device variants to use? (RAK4631 vs T-Beam vs others)",
+    "Single or multi-channel LoRa setup? (Single simpler, multi allows parallel traffic)",
+    "Headscale region strategy? (Geo-distributed or centralized?)",
+    "Git conflict resolution strategy for out-of-order merges?",
+    "RoadChain clock skew tolerance? (How stale can edge clocks be?)",
+    "Hardware redundancy for gateway? (Active-passive vs active-active?)"
+  ],
+
+  "dependencies": [
+    "Meshtastic: Open-source mesh project (docs: meshtastic.org)",
+    "Headscale: WireGuard coordination (docs: headscale.net)",
+    "WireGuard: Kernel VPN (docs: wireguard.com)",
+    "Git: Append-only sync backbone (docs: git-scm.com)",
+    "RoadChain: Provenance mechanism (Product 11)"
+  ]
+}
