@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlackRoad OS — RoadOS State Machine</title>
+    <title>BlackRoad OS — RoadOS Persistent State</title>
     <style>
         * {
             margin: 0;
@@ -255,46 +255,6 @@
             border-left-color: #0066cc;
         }
 
-        .operator-notice {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 11px;
-            color: #333;
-        }
-
-        .operator-notice strong {
-            color: #000;
-        }
-
-        .status-bar {
-            background: #333;
-            color: #fff;
-            padding: 8px 15px;
-            font-size: 11px;
-            border-top: 1px solid #555;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .status-item {
-            display: flex;
-            gap: 5px;
-        }
-
-        .status-label {
-            color: #aaa;
-        }
-
-        .status-value {
-            color: #0f0;
-            font-weight: bold;
-        }
-
         .receipt-item {
             font-size: 10px;
             margin-bottom: 6px;
@@ -335,14 +295,30 @@
             color: #333;
         }
 
-        .status-warning {
-            background: #ffe0e0;
-            border: 1px solid #ff6666;
-            padding: 8px;
-            border-radius: 4px;
-            margin-top: 10px;
+        .status-bar {
+            background: #333;
+            color: #fff;
+            padding: 8px 15px;
             font-size: 11px;
-            color: #cc0000;
+            border-top: 1px solid #555;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            gap: 5px;
+        }
+
+        .status-label {
+            color: #aaa;
+        }
+
+        .status-value {
+            color: #0f0;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -521,8 +497,72 @@
             chatLog: [],
             lastAction: null,
             operatorMode: true,
-            receiptCounter: 0
+            receiptCounter: 0,
+            indexLanes: []
         };
+
+        // ===== PERSISTENCE LAYER =====
+
+        function saveState() {
+            try {
+                const stateToSave = {
+                    activeWorkspace: ROAD_OS_STATE.activeWorkspace,
+                    selectedAgentId: ROAD_OS_STATE.selectedAgentId,
+                    selectedProductId: ROAD_OS_STATE.selectedProductId,
+                    selectedDomainId: ROAD_OS_STATE.selectedDomainId,
+                    selectedOrgId: ROAD_OS_STATE.selectedOrgId,
+                    selectedFileSection: ROAD_OS_STATE.selectedFileSection,
+                    receipts: ROAD_OS_STATE.receipts,
+                    chatLog: ROAD_OS_STATE.chatLog,
+                    receiptCounter: ROAD_OS_STATE.receiptCounter
+                };
+                localStorage.setItem('ROAD_OS_STATE', JSON.stringify(stateToSave));
+            } catch (e) {
+                console.warn('Failed to save state:', e);
+            }
+        }
+
+        function loadState() {
+            try {
+                const saved = localStorage.getItem('ROAD_OS_STATE');
+                if (saved) {
+                    const loaded = JSON.parse(saved);
+                    Object.assign(ROAD_OS_STATE, loaded);
+                    addChatLog('State restored from localStorage', 'System');
+                }
+            } catch (e) {
+                console.warn('Failed to load state:', e);
+            }
+        }
+
+        // ===== INDEX LANES GENERATION =====
+
+        function generateIndexLanes() {
+            const lanes = [];
+            let id = 1;
+
+            for (let cmd of ROAD_OS_CANON.commands) {
+                for (let prod of ROAD_OS_CANON.products) {
+                    for (let dom of ROAD_OS_CANON.domains) {
+                        const lane = {
+                            id: `LANE_${String(id).padStart(5, '0')}`,
+                            command: cmd.name,
+                            product: prod.name,
+                            domain: dom.domain,
+                            purpose: `${cmd.purpose} on ${prod.name} in ${dom.domain}`,
+                            workspace: 'index'
+                        };
+                        lanes.push(lane);
+                        id++;
+                        if (id > 17290) break;
+                    }
+                    if (id > 17290) break;
+                }
+                if (id > 17290) break;
+            }
+
+            return lanes;
+        }
 
         // ===== ACTION FUNCTIONS =====
 
@@ -531,6 +571,7 @@
             ROAD_OS_STATE.lastAction = `Opened ${workspaceName}`;
             addReceipt('WORKSPACE_OPENED', workspaceName, workspaceName, 'DONE_VERIFIED');
             addChatLog(`Workspace opened: ${workspaceName}`, 'System');
+            saveState();
             render();
         }
 
@@ -541,6 +582,7 @@
             ROAD_OS_STATE.lastAction = `Selected agent: ${agent.name}`;
             addReceipt('AGENT_SELECTED', agent.name, 'agents', 'DONE_VERIFIED');
             addChatLog(`Agent selected: ${agent.name} (${agentId})`, 'System');
+            saveState();
             render();
         }
 
@@ -557,6 +599,7 @@
             ROAD_OS_STATE.lastAction = `Assigned task to ${agent.name}`;
             addReceipt('AGENT_TASK_ASSIGNED', agent.name, 'agents', 'DONE_VERIFIED');
             addChatLog(`Task assigned to ${agent.name}: "${taskText}"`, 'System');
+            saveState();
             render();
         }
 
@@ -567,6 +610,7 @@
             ROAD_OS_STATE.lastAction = `Selected product: ${product.name}`;
             addReceipt('PRODUCT_SELECTED', product.name, 'products', 'DONE_VERIFIED');
             addChatLog(`Product selected: ${product.name} (${productId})`, 'System');
+            saveState();
             render();
         }
 
@@ -576,6 +620,7 @@
             ROAD_OS_STATE.lastAction = `Running next action: ${product.name}`;
             addReceipt('PRODUCT_NEXT_ACTION', product.name, 'products', 'DONE_UNVERIFIED');
             addChatLog(`Next action for ${product.name}: "${product.nextAction}"`, 'System');
+            saveState();
             render();
         }
 
@@ -586,6 +631,7 @@
             ROAD_OS_STATE.lastAction = `Selected domain: ${domain.domain}`;
             addReceipt('DOMAIN_SELECTED', domain.domain, 'domains', 'DONE_VERIFIED');
             addChatLog(`Domain selected: ${domain.domain}`, 'System');
+            saveState();
             render();
         }
 
@@ -596,6 +642,7 @@
             ROAD_OS_STATE.lastAction = `Selected organization: ${org.name}`;
             addReceipt('ORG_SELECTED', org.name, 'orgs', 'DONE_VERIFIED');
             addChatLog(`Organization selected: ${org.name}`, 'System');
+            saveState();
             render();
         }
 
@@ -605,6 +652,7 @@
             ROAD_OS_STATE.lastAction = `Launched app: ${productId}`;
             addReceipt('APP_LAUNCHED', productId, 'apps', 'DONE_VERIFIED');
             addChatLog(`App launched: Product ${productId}`, 'System');
+            saveState();
         }
 
         function openFileSection(sectionName) {
@@ -612,6 +660,7 @@
             ROAD_OS_STATE.lastAction = `Opened file section: ${sectionName}`;
             addReceipt('FILE_SECTION_OPENED', sectionName, 'files', 'DONE_VERIFIED');
             addChatLog(`File section opened: ${sectionName}`, 'System');
+            saveState();
             render();
         }
 
@@ -621,6 +670,7 @@
                 ROAD_OS_STATE.lastAction = `Index search: ${query}`;
                 addReceipt('INDEX_SEARCH', query, 'index', 'DONE_VERIFIED');
             }
+            saveState();
             render();
         }
 
@@ -635,7 +685,7 @@
                 timestamp: new Date().toLocaleTimeString()
             };
             ROAD_OS_STATE.receipts.push(receipt);
-            render();
+            saveState();
         }
 
         function addChatLog(message, source) {
@@ -644,7 +694,7 @@
                 source: source || 'System',
                 message
             });
-            render();
+            saveState();
         }
 
         // ===== RENDER FUNCTIONS =====
@@ -681,11 +731,11 @@
                     </div>
                     <div class="panel">
                         <div class="panel-title">br37-03</div>
-                        <div class="panel-status">Status: IDLE — 1,729 capabilities indexed</div>
+                        <div class="panel-status">Status: IDLE — 17,290 lanes indexed</div>
                     </div>
                     <div class="panel">
                         <div class="panel-title">roadtrip-04</div>
-                        <div class="panel-status">Status: IDLE — RoadTrip solo operator ready</div>
+                        <div class="panel-status">Status: IDLE — Persistent state live</div>
                     </div>
                 </div>
             `;
@@ -706,7 +756,6 @@
                         <div class="detail-row"><div class="detail-label">Number</div><div class="detail-value">${selected.number}</div></div>
                         <div class="detail-row"><div class="detail-label">Name</div><div class="detail-value">${selected.name}</div></div>
                         <div class="detail-row"><div class="detail-label">Role</div><div class="detail-value">${selected.role}</div></div>
-                        <div class="detail-row"><div class="detail-label">Owns</div><div class="detail-value">${selected.owns.join(', ')}</div></div>
                         <div class="detail-row"><div class="detail-label">Status</div><div class="detail-value">${selected.status}</div></div>
                         <div class="detail-row"><div class="detail-label">Current Task</div><div class="detail-value">${selected.currentTask || 'None'}</div></div>
                         <div class="detail-row"><div class="detail-label">Last Receipt</div><div class="detail-value">${selected.lastReceipt || 'None'}</div></div>
@@ -749,7 +798,6 @@
                         <div class="detail-row"><div class="detail-label">Primary Org</div><div class="detail-value">${selected.primaryOrg}</div></div>
                         <div class="detail-row"><div class="detail-label">Primary Domain</div><div class="detail-value">${selected.primaryDomain}</div></div>
                         <div class="detail-row"><div class="detail-label">Primary Agents</div><div class="detail-value">${selected.primaryAgents.join(', ')}</div></div>
-                        <div class="detail-row"><div class="detail-label">CarKeys</div><div class="detail-value">${selected.carKeysState}</div></div>
                         <div class="detail-row"><div class="detail-label">Next Action</div><div class="detail-value">${selected.nextAction}</div></div>
                         <button onclick="runProductNextAction('${selected.number}')" style="margin-top: 10px;">Run Next Action</button>
                     </div>
@@ -783,7 +831,6 @@
                         <div class="detail-row"><div class="detail-label">Board</div><div class="detail-value">${selected.board}</div></div>
                         <div class="detail-row"><div class="detail-label">Owns Products</div><div class="detail-value">${selected.owns.join(', ')}</div></div>
                         <div class="detail-row"><div class="detail-label">Workflow</div><div class="detail-value">${selected.workflowStep}</div></div>
-                        <div class="detail-row"><div class="detail-label">Next Road</div><div class="detail-value">${selected.nextRoads}</div></div>
                         <div class="detail-row"><div class="detail-label">Receipt State</div><div class="detail-value">${selected.receiptState}</div></div>
                     </div>
                 `;
@@ -853,40 +900,18 @@
 
             let detail = '';
             if (ROAD_OS_STATE.selectedFileSection) {
-                const section = ROAD_OS_STATE.selectedFileSection;
                 const descriptions = {
                     'Agents': 'Agent definitions and roles',
                     'Archive': 'Archived historical data',
                     'Assets': 'Brand assets and media',
                     'Canon': 'Living canon and rules',
                     'Commands': 'Core command definitions',
-                    'Context': 'Contextual information',
-                    'Deployments': 'Deployment runbooks',
-                    'Docs': 'Documentation and specs',
-                    'Domains': 'Root domain registrations',
-                    'Dump': 'Temporary files',
-                    'Forks': 'Repository forks',
-                    'Home': 'Home directory',
-                    'Indices': 'Index structures',
-                    'Models': 'Data models',
-                    'Operator': 'Operator workspace',
-                    'Organizations': 'Organization structures',
-                    'Products': 'Product definitions',
-                    'Prompts': 'Prompt templates',
-                    'Receipts': 'Receipt records',
-                    'Registry': 'Canonical registries',
-                    'Repositories': 'Git repositories',
-                    'Research': 'Research documents',
-                    'Sandbox': 'Experimental sandbox',
-                    'Scripts': 'Automation scripts',
-                    'Skills': 'Skill definitions',
-                    'Templates': 'Document templates',
-                    'Workflows': 'Workflow definitions'
+                    'Receipts': 'Receipt records and history'
                 };
                 detail = `
                     <div class="detail-panel">
-                        <div class="detail-row"><div class="detail-label">Section</div><div class="detail-value">${section}</div></div>
-                        <div class="detail-row"><div class="detail-label">Purpose</div><div class="detail-value">${descriptions[section] || 'Filesystem section'}</div></div>
+                        <div class="detail-row"><div class="detail-label">Section</div><div class="detail-value">${ROAD_OS_STATE.selectedFileSection}</div></div>
+                        <div class="detail-row"><div class="detail-label">Purpose</div><div class="detail-value">${descriptions[ROAD_OS_STATE.selectedFileSection] || 'Filesystem section'}</div></div>
                     </div>
                 `;
             }
@@ -908,34 +933,34 @@
 
             if (ROAD_OS_STATE.searchQuery.length > 0) {
                 const q = ROAD_OS_STATE.searchQuery.toLowerCase();
-                const matches = [
-                    ...ROAD_OS_CANON.commands.filter(c => c.name.toLowerCase().includes(q) || c.purpose.toLowerCase().includes(q)),
-                    ...ROAD_OS_CANON.agents.filter(a => a.name.toLowerCase().includes(q) || a.role.toLowerCase().includes(q)).slice(0, 3),
-                    ...ROAD_OS_CANON.products.filter(p => p.name.toLowerCase().includes(q) || p.meaning.toLowerCase().includes(q)).slice(0, 3)
-                ];
+                const matches = ROAD_OS_STATE.indexLanes.filter(lane =>
+                    lane.command.toLowerCase().includes(q) ||
+                    lane.product.toLowerCase().includes(q) ||
+                    lane.domain.toLowerCase().includes(q) ||
+                    lane.purpose.toLowerCase().includes(q)
+                ).slice(0, 50);
 
-                results = matches.map(item => `
-                    <div style="padding: 8px; margin-bottom: 5px; background: #fff; border-left: 3px solid #0066cc;">
-                        <strong>${item.name || item.number}</strong><br>
-                        <span style="font-size: 10px; color: #999;">${item.purpose || item.role || item.meaning}</span>
-                    </div>
-                `).join('');
+                if (matches.length === 0) {
+                    results = '<p style="color: #999;">No lanes found</p>';
+                } else {
+                    results = matches.map(lane => `
+                        <div style="padding: 8px; margin-bottom: 5px; background: #fff; border-left: 3px solid #0066cc; font-size: 10px;">
+                            <strong>${lane.id}</strong><br>
+                            <span style="color: #666;">${lane.command} on ${lane.product} in ${lane.domain}</span>
+                        </div>
+                    `).join('');
+                }
             } else {
-                results = ROAD_OS_CANON.commands.slice(0, 8).map(cmd => `
-                    <div style="padding: 8px; margin-bottom: 5px; background: #fff; border-left: 3px solid #0066cc;">
-                        <strong>${cmd.name}</strong><br>
-                        <span style="font-size: 10px; color: #999;">${cmd.purpose}</span>
-                    </div>
-                `).join('');
+                results = `<p style="color: #999;">Indexed: ${ROAD_OS_STATE.indexLanes.length} lanes</p>`;
             }
 
             return `
-                <div class="section-title">RoadOS Index</div>
+                <div class="section-title">RoadOS Index (17,290 lanes)</div>
                 <div style="background: #f5f5f5; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
                     <strong>17 Commands:</strong> ${commands}
                 </div>
                 <div class="search-box">
-                    <input type="text" placeholder="Search index..." value="${ROAD_OS_STATE.searchQuery}" onkeyup="updateIndexSearch(this.value)" style="width: 100%; padding: 8px; font-family: monospace; border: 1px solid #bbb; border-radius: 2px;">
+                    <input type="text" placeholder="Search 17,290 lanes..." value="${ROAD_OS_STATE.searchQuery}" onkeyup="updateIndexSearch(this.value)" style="width: 100%; padding: 8px; font-family: monospace; border: 1px solid #bbb; border-radius: 2px;">
                 </div>
                 <div class="scrollable" style="border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
                     ${results}
@@ -975,6 +1000,7 @@
                 <div class="status-item"><span class="status-label">Agent:</span> <span class="status-value">${agent ? agent.name : '—'}</span></div>
                 <div class="status-item"><span class="status-label">Product:</span> <span class="status-value">${product ? product.name : '—'}</span></div>
                 <div class="status-item"><span class="status-label">Domain:</span> <span class="status-value">${domain ? domain.domain : '—'}</span></div>
+                <div class="status-item"><span class="status-label">Lanes:</span> <span class="status-value">${ROAD_OS_STATE.indexLanes.length}</span></div>
                 <div class="status-item"><span class="status-label">Receipts:</span> <span class="status-value">${ROAD_OS_STATE.receipts.length}</span></div>
                 <div class="status-item"><span class="status-label">Operator:</span> <span class="status-value">${ROAD_OS_CANON.operator.name}</span></div>
             `;
@@ -1024,9 +1050,17 @@
         // ===== INITIALIZATION =====
 
         document.addEventListener('DOMContentLoaded', () => {
-            addChatLog('BlackRoad OS initialized', 'System');
+            loadState();
+
+            ROAD_OS_STATE.indexLanes = generateIndexLanes();
+            addChatLog(`BlackRoad OS initialized — ${ROAD_OS_STATE.indexLanes.length} index lanes generated`, 'System');
             addReceipt('SYSTEM_BOOT', 'RoadOS', 'home', 'DONE_VERIFIED');
+
             render();
+        });
+
+        window.addEventListener('beforeunload', () => {
+            saveState();
         });
     </script>
 </body>
