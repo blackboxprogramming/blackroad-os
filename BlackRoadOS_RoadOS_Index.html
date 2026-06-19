@@ -432,7 +432,7 @@
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 20px;">
                 <div class="panel">
                     <div class="panel-title">17 Core Commands</div>
-                    <div class="panel-status">Initialize • Patrol • Lookup • Link • Learn • Create • Attend • Observe • Report • Record • Recall • Receive • Route • Resolve • Retire • Receive • Run</div>
+                    <div class="panel-status">Initialize • Patrol • Lookup • Link • Learn • Create • Attend • Observe • Report • Record • Recall • Receive • Route • Resolve • Retire • Respond • Run</div>
                 </div>
                 <div class="panel">
                     <div class="panel-title">172 Process Steps</div>
@@ -977,7 +977,10 @@
                     const item = document.createElement('div');
                     item.style.cssText = 'padding: 8px; margin-bottom: 5px; background: #fff; border-left: 3px solid #0066cc; cursor: pointer;';
                     item.innerHTML = `<strong>${lane.name}</strong><br><span style="font-size: 10px; color: #999;">${lane.path}</span>`;
-                    item.onclick = () => logChat(`Index lane opened: ${lane.name}`);
+                    item.onclick = () => {
+                        logChat(`Index lane opened: ${lane.name}`);
+                        createReceipt('INDEX_LANE_OPEN', 'Alexandria', lane.name, 'index', 'DONE_VERIFIED');
+                    };
                     resultsContainer.appendChild(item);
                 });
             }
@@ -990,6 +993,10 @@
                     lane.name.toLowerCase().includes(filter) ||
                     lane.path.toLowerCase().includes(filter)
                 );
+                if (filter.length > 0) {
+                    logChat(`Index search: "${filter}" (${filtered.length} results)`);
+                    createReceipt('INDEX_SEARCH', 'Alexandria', filter, 'index', 'DONE_VERIFIED');
+                }
                 displayResults(filtered);
             });
         }
@@ -1003,7 +1010,10 @@
                 const li = document.createElement('li');
                 li.className = 'file-item';
                 li.textContent = file;
-                li.onclick = () => logChat(`File section opened: ${file}`);
+                li.onclick = () => {
+                    logChat(`File section opened: ${file}`);
+                    createReceipt('FILESEC_OPEN', 'Alexandria', file, 'files', 'DONE_VERIFIED');
+                };
                 fileTree.appendChild(li);
             });
         }
