@@ -3,7 +3,7 @@
   "id": "roadsport",
   "slug": "roadsport",
   "name": "RoadSport",
-  "role": "movement / training / sports",
+  "role": "sports, movement, and physics simulation",
   "status": "mvp-stub",
   "meaning": "movement, training, sports planning (no medical, no betting)",
   "does": [
@@ -29,5 +29,7 @@
   "carkeys": [
     "health/wearable/biometric/location → CarKeys gated"
   ],
-  "next": "open RoadSport MVP"
+  "next": "open RoadSport MVP",
+  "definition": "RoadSport is BlackRoad's sports, movement, practice, choreography, physics, and simulation product. RoadSport is Monte Carlo simulations meets marching band precision meets football. It should replace overpriced, limited sports-video tools with something more useful: route precision, build sheets, player movement, physical constraints, collision logic, practice feedback, and scenario simulation. RoadSport should support player/performer profiles, speed/weight/build attributes, field maps, route/dot books, movement paths, practice feedback, video annotation, formation/choreography, collision simulation, Monte Carlo scenario testing, and football play analysis.",
+  "core_promise": "Movement should be planned, simulated, practiced, and proven."
 }

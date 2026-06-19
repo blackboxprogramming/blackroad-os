@@ -3,7 +3,7 @@
   "id": "detour",
   "slug": "detour",
   "name": "Detour",
-  "role": "fallback / fail-safe",
+  "role": "route execution and navigation",
   "status": "planned",
   "meaning": "fallback / alternate route",
   "does": [
@@ -24,5 +24,7 @@
   "carkeys": [
     "failover gated"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "Detour is BlackRoad's actual route, destination, timing, fallback, reroute, and alternate-execution product. Detour handles going there and when. RoundAbout prepares around a destination or route. Detour handles the actual movement: destination, timing, ETA, route, alternate path, fallback plan, and what happens when the plan changes. Detour is for navigation, route timing, ETA, alternate routes, trip execution, 'leave by' logic, 'what if this path fails?', fallback planning, real-time route changes, service route execution, and travel/sales/home-maintenance route movement.",
+  "core_promise": "Know where you are going, when to go, and what to do when the road changes."
 }

@@ -3,7 +3,7 @@
   "id": "pitstop",
   "slug": "pitstop",
   "name": "PitStop",
-  "role": "pause / debug / repair",
+  "role": "homework and learning portal",
   "status": "planned",
   "meaning": "stop the system, inspect, repair",
   "does": [
@@ -27,5 +27,7 @@
   "carkeys": [
     "process control gated"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "PitStop is the homework portal. PitStop is tutoring, homework help, quizzes, lessons, practice, explanations, rubrics, learning paths, and teacher/student support. It is the place where a confused learner can stop, refuel, understand the next step, and keep going. PitStop is not Roadie. Roadie is an agent. PitStop is the learning product. PitStop exists because learning tools became paywalls, shame machines, PDF portals, LMS nightmares, and fragmented tutoring apps. PitStop should be forgiving, visual, structured, and calm.",
+  "core_promise": "Pull over, understand it, keep going."
 }

@@ -3,7 +3,7 @@
   "id": "oneway",
   "slug": "oneway",
   "name": "OneWay",
-  "role": "broadcast / publish",
+  "role": "data flow and sovereignty pipeline",
   "status": "planned",
   "meaning": "outbound broadcasts / publish",
   "does": [
@@ -24,5 +24,7 @@
   "carkeys": [
     "publish gated"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "OneWay is BlackRoad's controlled data-flow and sovereignty pipeline. OneWay means data goes one way into BlackRoad, gets mapped to BlackRoad identity/state/memory, then returns outward in the format the outside provider or client needs. The point is not 'export' in a boring sense. The point is to prevent external providers from becoming the durable owner of the user's data. If a ChatGPT API call or external provider request hits BlackRoad, OneWay can receive the request, rotate/map the identity, store the durable relationship inside BlackRoad, transform/encode the response path, and send back only what the external system needs.",
+  "core_promise": "Your data can move through providers without becoming theirs."
 }

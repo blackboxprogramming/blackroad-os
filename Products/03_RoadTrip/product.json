@@ -3,7 +3,7 @@
   "id": "roadtrip",
   "slug": "roadtrip",
   "name": "RoadTrip",
-  "role": "parallel agent lanes",
+  "role": "solo operator + AI workspace",
   "status": "planned",
   "meaning": "parallel agent lanes for long tasks",
   "does": [
@@ -26,5 +26,7 @@
   "carkeys": [
     "agent dispatch gated"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "RoadTrip is the solo operator + AI/model/agent workspace. RoadTrip is where one human works with many intelligences. The user can bring in ChatGPT, Claude, Codex, local MLX, Ollama, custom agents, provider models, and BlackRoad's native agents into one visible mission space. RoadTrip is not CarPool. RoadTrip is solo. CarPool is where other humans join. RoadTrip should feel like a mission room, a convoy room, a multi-agent workspace, and a visible AI workbench where Alexa can work alone with any model or agent.",
+  "core_promise": "One human, many agents, one road."
 }

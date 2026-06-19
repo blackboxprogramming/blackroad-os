@@ -3,7 +3,7 @@
   "id": "roadbook",
   "slug": "roadbook",
   "name": "RoadBook",
-  "role": "knowledge / notes",
+  "role": "digital-native publishing and knowledge",
   "status": "planned",
   "meaning": "knowledge base, indexed notes",
   "does": [
@@ -27,5 +27,7 @@
   "carkeys": [
     "none"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "RoadBook is BlackRoad's digital-native publishing and knowledge product. RoadBook is for books, audiobooks, research, essays, notes, articles, peer review, commentary, provenance, authorship, narration, reader/author collaboration, royalties, and source-backed knowledge. RoadBook exists because writing, narration, publishing, and research are trapped in bad marketplaces, bad economics, physical-book assumptions, and gatekeeping. It should make it easier for people to write, publish, narrate, review, sell, cite, and preserve text/audio knowledge without becoming just a PDF dump or trapping authors in bad royalty systems.",
+  "core_promise": "Publish knowledge without losing ownership, proof, or voice."
 }

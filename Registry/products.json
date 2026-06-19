@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "last_updated": "2026-06-14",
+  "last_updated": "2026-06-19",
   "note": "Single source of truth for the 27 products. The PRODUCTS array in index.html is generated from this file by scripts/sync-products.mjs. Do not hand-edit the generated block in index.html.",
   "products": [
     {
@@ -13,15 +13,16 @@
       "receipts": ["roados.boot", "roados.window.opened", "roados.app.routed"],
       "carkeys": ["none"], "next": "wire command routing",
       "category": "Operating Spine",
-      "definition": "Browser-native BlackRoad computer. One-tab operating environment.",
+      "definition": "RoadOS is the browser-native BlackRoad computer. It is not just a website and not just a decorative Windows 95 skin. It is the one-tab operating environment where the user's files, terminal, agents, memory, APIs, dashboards, command palette, routes, receipts, and active work all stay together. RoadOS exists because normal computers punish people for not knowing exact commands, folders, paths, install steps, terminal syntax, or app boundaries. A normal shell says 'command not found.' RoadOS should instead infer intent, explain what happened, offer safe next actions, and remember what the user was trying to do.",
       "boundary": "RoadOS is the workspace/computer shell. RoadCode builds inside it.",
       "mvp": "Route a command/intent to the right product/file/action and give a safe next step.",
       "implementation_status": "planned", "risk_level": "medium",
-      "primary_handoff": "RoadCode, RoadTrip, RoadView"
+      "primary_handoff": "RoadCode, RoadTrip, RoadView",
+      "core_promise": "Open one tab. Your road is still there."
     },
     {
       "number": "02", "id": "roadcode", "slug": "roadcode", "name": "RoadCode",
-      "role": "build / run / deploy room", "status": "next",
+      "role": "end-to-end build system", "status": "next",
       "meaning": "build / run / deploy room",
       "does": ["repo inspect", "patch plan", "test run", "logs", "deploy readiness", "domain route"],
       "org": "BlackRoad-OS-Primary", "domain": "code.blackroad.io",
@@ -29,261 +30,312 @@
       "receipts": ["roadcode.repo.inspected", "roadcode.patch.planned", "roadcode.test.checked"],
       "carkeys": ["secrets gated", "deploy gated", "SSH gated"], "next": "Open RoadCode MVP window",
       "category": "Operating Spine",
-      "definition": "End-to-end coding, building, debugging, hosting, deployment system.",
+      "definition": "RoadCode is the end-to-end coding, building, debugging, hosting, deployment, and technical guidance product. It is not just a code editor. It is the product that answers: 'Okay, the code exists — now what?' It should help the user understand what a project needs next: domain, database, backend, frontend, environment variables, Cloudflare, Vercel, Railway, local server, Pi, SSH, Git, tests, logs, deployment, rollback, and ongoing maintenance. RoadCode should fix the GitHub traffic-jam problem by routing work through the 172-step process, the 17,290 master index, the 1,729 capability layer, and the 27 agents.",
       "boundary": "From idea to running system without the 'now what?' cliff.",
       "mvp": "Inspect repo, plan patch, route to correct agent, explain deployment.",
       "implementation_status": "planned", "risk_level": "medium",
-      "primary_handoff": "RoadOS, HighWay, RoadChain"
+      "primary_handoff": "RoadOS, HighWay, RoadChain",
+      "core_promise": "From idea to running system, without the 'now what?' cliff."
     },
     {
       "number": "03", "id": "roadtrip", "slug": "roadtrip", "name": "RoadTrip",
-      "role": "parallel agent lanes", "status": "planned",
+      "role": "solo operator + AI workspace", "status": "planned",
       "meaning": "parallel agent lanes for long tasks",
       "does": ["lane orchestration", "agent handoffs", "progress tracking"],
       "org": "BlackRoad-Agents", "domain": "trip.blackroad.io",
       "agents": ["Lucidia", "Octavia", "Sebastian", "Roadie"],
       "receipts": ["roadtrip.lane.started", "roadtrip.handoff"],
-      "carkeys": ["agent dispatch gated"], "next": "scope MVP"
+      "carkeys": ["agent dispatch gated"], "next": "scope MVP",
+      "definition": "RoadTrip is the solo operator + AI/model/agent workspace. RoadTrip is where one human works with many intelligences. The user can bring in ChatGPT, Claude, Codex, local MLX, Ollama, custom agents, provider models, and BlackRoad's native agents into one visible mission space. RoadTrip is not CarPool. RoadTrip is solo. CarPool is where other humans join. RoadTrip should feel like a mission room, a convoy room, a multi-agent workspace, and a visible AI workbench where Alexa can work alone with any model or agent.",
+      "core_promise": "One human, many agents, one road."
     },
     {
       "number": "04", "id": "pitstop", "slug": "pitstop", "name": "PitStop",
-      "role": "pause / debug / repair", "status": "planned",
+      "role": "homework and learning portal", "status": "planned",
       "meaning": "stop the system, inspect, repair",
       "does": ["freeze state", "snapshot", "diagnose", "repair"],
       "org": "BlackRoad-OS-Primary", "domain": "pitstop.blackroad.io",
       "agents": ["Gaia", "Silas", "Seraphina", "Octavia"],
       "receipts": ["pitstop.freeze", "pitstop.repair"],
-      "carkeys": ["process control gated"], "next": "scope MVP"
+      "carkeys": ["process control gated"], "next": "scope MVP",
+      "definition": "PitStop is the homework portal. PitStop is tutoring, homework help, quizzes, lessons, practice, explanations, rubrics, learning paths, and teacher/student support. It is the place where a confused learner can stop, refuel, understand the next step, and keep going. PitStop is not Roadie. Roadie is an agent. PitStop is the learning product. PitStop exists because learning tools became paywalls, shame machines, PDF portals, LMS nightmares, and fragmented tutoring apps. PitStop should be forgiving, visual, structured, and calm.",
+      "core_promise": "Pull over, understand it, keep going."
     },
     {
       "number": "05", "id": "roadwork", "slug": "roadwork", "name": "RoadWork",
-      "role": "work-in-progress board", "status": "planned",
+      "role": "business and operations execution", "status": "planned",
       "meaning": "in-progress projects board",
       "does": ["WIP board", "blockers", "ETAs"],
       "org": "BlackRoad-OS-Primary", "domain": "roadwork.blackroad.io",
       "agents": ["Celeste", "Octavia", "Roadie"],
       "receipts": ["roadwork.task.added", "roadwork.blocker.flagged"],
-      "carkeys": ["none"], "next": "scope MVP"
+      "carkeys": ["none"], "next": "scope MVP",
+      "definition": "RoadWork is the 'anything involving work' product. RoadWork is where business, employment, operations, compliance, filings, taxes, registrations, trademarks, Stripe/Atlas, state registrations, backend business setup, internal procedures, task execution, and company workflows live. RoadWork is not only for corporations. It is for anyone trying to do work, start work, organize work, operate a business, run a team, complete required steps, or understand what the next obligation is. RoadWork should answer: What do I need to do? What order do I do it in? What portal or document is involved? What proof do I need?",
+      "core_promise": "This is the work. These are the steps. Here is the proof."
     },
     {
       "number": "06", "id": "backroad", "slug": "backroad", "name": "BackRoad",
-      "role": "private / restricted path", "status": "planned",
+      "role": "social and community layer", "status": "planned",
       "meaning": "operator-only restricted area",
       "does": ["restricted ops", "operator tools"],
       "org": "BlackRoad-Private", "domain": "backroad.blackroad.io",
       "agents": ["Seraphina", "Atticus", "Lucidia"],
       "receipts": ["backroad.access", "backroad.denied"],
-      "carkeys": ["operator gated"], "next": "scope MVP"
+      "carkeys": ["operator gated"], "next": "scope MVP",
+      "definition": "BackRoad is BlackRoad's social layer. BackRoad has two views: 1) The all-social feed view: A unified feed that can bring together the user's social media from external platforms and BackRoad itself. 2) The native BackRoad social view: BlackRoad's own creator/community social app. BackRoad exists because modern social platforms became algorithmic, ad-heavy, manipulative, and creator-hostile. BackRoad should help users and creators regain ownership, context, and sanity. BackRoad should support social feed aggregation, native BackRoad posts, creator/community profiles, comments and replies, creator ownership, and social graph portability.",
+      "core_promise": "See the social world without being owned by it."
     },
     {
       "number": "07", "id": "carkeys", "slug": "carkeys", "name": "CarKeys",
-      "role": "auth / secrets / gates", "status": "planned",
+      "role": "identity, authorization, and permissions layer", "status": "planned",
       "meaning": "keys, secrets, permission gates",
       "does": ["vault", "scope tokens", "gate actions"],
       "org": "BlackRoad-OS-Primary", "domain": "carkeys.blackroad.io",
       "agents": ["Seraphina", "Atticus", "Theodosia"],
       "receipts": ["carkeys.granted", "carkeys.revoked"],
-      "carkeys": ["self-managed"], "next": "scope MVP"
+      "carkeys": ["self-managed"], "next": "scope MVP",
+      "definition": "CarKeys is the identity, authorization, permissions, grants, login, and key layer. CarKeys should make access feel as easy as logging into Google, but with BlackRoad-owned consent, scoped permissions, revocation, and receipts. If a user has to manually paste passwords, provider tokens, or API keys, the design failed. CarKeys should handle login, identity, sessions, scoped grants, API access, tool permissions, provider access gates, revocation, and audit logs. CarKeys is paired with GloveBox: CarKeys = who has the key / what access is allowed; GloveBox = what capabilities/tools/features exist to unlock.",
+      "core_promise": "Access without key chaos."
     },
     {
       "number": "08", "id": "roadbook", "slug": "roadbook", "name": "RoadBook",
-      "role": "knowledge / notes", "status": "planned",
+      "role": "digital-native publishing and knowledge", "status": "planned",
       "meaning": "knowledge base, indexed notes",
       "does": ["note capture", "indexing", "search", "linking"],
       "org": "BlackRoad-Knowledge", "domain": "roadbook.blackroad.io",
       "agents": ["Alice", "Anastasia", "Ophelia", "Cicero"],
       "receipts": ["roadbook.note.saved", "roadbook.indexed"],
-      "carkeys": ["none"], "next": "scope MVP"
+      "carkeys": ["none"], "next": "scope MVP",
+      "definition": "RoadBook is BlackRoad's digital-native publishing and knowledge product. RoadBook is for books, audiobooks, research, essays, notes, articles, peer review, commentary, provenance, authorship, narration, reader/author collaboration, royalties, and source-backed knowledge. RoadBook exists because writing, narration, publishing, and research are trapped in bad marketplaces, bad economics, physical-book assumptions, and gatekeeping. It should make it easier for people to write, publish, narrate, review, sell, cite, and preserve text/audio knowledge without becoming just a PDF dump or trapping authors in bad royalty systems.",
+      "core_promise": "Publish knowledge without losing ownership, proof, or voice."
     },
     {
       "number": "09", "id": "roadworld", "slug": "roadworld", "name": "RoadWorld",
-      "role": "public / world-facing", "status": "planned",
+      "role": "drag-and-drop games and worlds", "status": "planned",
       "meaning": "public landing / world view",
       "does": ["public site", "marketing surface"],
       "org": "BlackRoad-OS-Primary", "domain": "blackroad.io",
       "agents": ["Calliope", "Cicero", "Sapphira"],
       "receipts": ["roadworld.page.published"],
-      "carkeys": ["none"], "next": "scope MVP"
+      "carkeys": ["none"], "next": "scope MVP",
+      "definition": "RoadWorld is drag-and-drop game, simulation, worldbuilding, and interactive creation. RoadWorld should make it possible for people with game/world ideas to build them without getting blocked by engine complexity. If someone has a Roblox-style idea but cannot figure out how to make the car work, RoadWorld should help them create the car, the world, the rules, the economy, the characters, and the playable experience. RoadWorld includes game creation, world creation, simulations, historical timelines, survival games, Miniclip/Roblox-like accessible creation, and 'drop into any time period' historical simulation where users can enter any period, make decisions, experience constraints, and compare outcomes.",
+      "core_promise": "Describe the world. Build it. Play it. Share it. Own it."
     },
     {
       "number": "10", "id": "roadview", "slug": "roadview", "name": "RoadView",
-      "role": "dashboards / monitors", "status": "planned",
+      "role": "search, discovery, and visible agent browsing", "status": "planned",
       "meaning": "dashboards / live observation",
       "does": ["live metrics", "charts", "alerts"],
       "org": "BlackRoad-OS-Primary", "domain": "roadview.blackroad.io",
       "agents": ["Gaia", "Theodosia", "Sapphira"],
       "receipts": ["roadview.metric", "roadview.alert"],
-      "carkeys": ["telemetry read gated"], "next": "scope MVP"
+      "carkeys": ["telemetry read gated"], "next": "scope MVP",
+      "definition": "RoadView is BlackRoad search, discovery, source routing, and visible Agent browsing. RoadView is where the 17,290 master index becomes useful. A query should not disappear into an opaque search box. It should route into the right lane, gather sources, show provenance, and hand the user to the right product, agent, or capability. RoadView has two important modes: 1) Human RoadView: The user searches, explores, compares, cites, saves, and routes results. 2) Agent RoadView: The user can see what agents are viewing, browsing, comparing, typing, and gathering. It should feel like watching agent work happen on-screen, not like blind hidden automation.",
+      "core_promise": "Search with lanes, sources, consent, and visible intelligence."
     },
     {
       "number": "11", "id": "roadchain", "slug": "roadchain", "name": "RoadChain",
-      "role": "ledger / receipts", "status": "planned",
+      "role": "proof, receipt, and provenance layer", "status": "planned",
       "meaning": "receipts, ledger, chain-of-custody",
       "does": ["append-only log", "chain verify", "export"],
       "org": "BlackRoad-OS-Primary", "domain": "roadchain.blackroad.io",
       "agents": ["Theodosia", "Anastasia", "Seraphina"],
       "receipts": ["roadchain.entry", "roadchain.verified"],
-      "carkeys": ["write gated", "read open"], "next": "scope MVP"
+      "carkeys": ["write gated", "read open"], "next": "scope MVP",
+      "definition": "RoadChain is the proof, receipt, provenance, audit, rollback, and memory-ledger layer. RoadChain exists because BlackRoad should run on receipts, not vibes. If something important changes, moves, deploys, gets approved, gets remembered, gets routed, or gets corrected, RoadChain should be able to show a durable record of what happened. RoadChain should support receipts, hashes, parent/child event chains, audit logs, provenance, rollback references, memory mutation proof, agent action proof, deployment proof, permission/grant proof, source-backed claims, and correction history. It can say 'receipt-backed' and 'auditable' but should not overclaim 'legal proof' unless implementation and legal review support it.",
+      "core_promise": "If it mattered, there is a receipt."
     },
     {
       "number": "12", "id": "roadside", "slug": "roadside", "name": "RoadSide",
-      "role": "assistance / quick help", "status": "planned",
+      "role": "front-door help and concierge", "status": "planned",
       "meaning": "help / support / quick fixes",
       "does": ["help drawer", "fix-it bots", "FAQ"],
       "org": "BlackRoad-OS-Primary", "domain": "roadside.blackroad.io",
       "agents": ["Thalia", "Cordelia", "Roadie"],
       "receipts": ["roadside.ticket.opened"],
-      "carkeys": ["none"], "next": "scope MVP"
+      "carkeys": ["none"], "next": "scope MVP",
+      "definition": "RoadSide is the simple front-door help, concierge, support, and embedded assistant product. RoadSide is the thing a company can put on its website when users need help, routing, onboarding, support, or answers. It should work for BlackRoad itself and eventually for other companies as an embeddable help chatbot. RoadSide should support help chat, website embed, product routing, onboarding, support triage, knowledge-base answers, escalation to humans and agents, company-specific instructions, and handoff to RoadWire for longer threads or RoadWork for operational tasks.",
+      "core_promise": "Ask here. Get routed correctly."
     },
     {
       "number": "13", "id": "roadcoin", "slug": "roadcoin", "name": "RoadCoin",
-      "role": "payments / billing", "status": "planned",
+      "role": "internal utility credit and usage layer", "status": "planned",
       "meaning": "payments, credits, billing",
       "does": ["credits ledger", "pricing", "invoices"],
       "org": "BlackRoad-OS-Primary", "domain": "roadcoin.blackroad.io",
       "agents": ["Valeria", "Theodosia", "Atticus"],
       "receipts": ["roadcoin.charged", "roadcoin.refunded"],
-      "carkeys": ["payment gated"], "next": "scope MVP"
+      "carkeys": ["payment gated"], "next": "scope MVP",
+      "definition": "RoadCoin is BlackRoad's internal utility credit, usage, compute, and contribution accounting layer. RoadCoin is not a speculative cryptocurrency. It is not a security. It is not a bank. It is not investment language. It is a product for tracking usage, access, compute, contribution, credits, and possibly internal rewards inside BlackRoad. RoadCoin should support usage credits, compute credits, contribution credits, access units, reward accounting, creator payout logic only after compliance review, internal balances, transparent usage history, and RoadChain-backed credit events. RoadCoin can help answer: Who used compute? Who contributed compute? What did a task cost? What credits were granted?",
+      "core_promise": "Usage, compute, and contribution should be countable without becoming casino money."
     },
     {
       "number": "14", "id": "carpool", "slug": "carpool", "name": "CarPool",
-      "role": "shared rooms", "status": "planned",
+      "role": "human + AI group collaboration", "status": "planned",
       "meaning": "shared rooms / multi-user sessions",
       "does": ["rooms", "presence", "shared state"],
       "org": "BlackRoad-OS-Primary", "domain": "carpool.blackroad.io",
       "agents": ["Aria", "Cecilia", "Lucidia"],
       "receipts": ["carpool.joined", "carpool.left"],
-      "carkeys": ["room access gated"], "next": "scope MVP"
+      "carkeys": ["room access gated"], "next": "scope MVP",
+      "definition": "CarPool is the human + AI group collaboration product. CarPool is where multiple humans work together with agents. RoadTrip is solo operator + AI. CarPool is groups, teams, projects, rooms, meetings, shared work, shared agents, and collaborative decisions. CarPool should support project rooms, human members, AI agent members, shared messages, shared tasks, shared files, group decisions, meetings, video/audio integration if needed, open-source Zoom/Teams/Jitsi-style alternatives where possible, project permissions, automatic notes into RoadWire, and RoadMap updates from group work.",
+      "core_promise": "Humans and agents can work together without losing the thread."
     },
     {
       "number": "15", "id": "blackboard", "slug": "blackboard", "name": "BlackBoard",
-      "role": "canvas / freeform", "status": "planned",
+      "role": "visual creation and animation studio", "status": "planned",
       "meaning": "shared canvas / whiteboard",
       "does": ["draw", "place tiles", "link", "export"],
       "org": "BlackRoad-Knowledge", "domain": "blackboard.blackroad.io",
       "agents": ["Sapphira", "Calliope", "Thalia"],
       "receipts": ["blackboard.stroke", "blackboard.saved"],
-      "carkeys": ["none"], "next": "scope MVP"
+      "carkeys": ["none"], "next": "scope MVP",
+      "definition": "BlackBoard is the drag-and-drop visual creation studio. BlackBoard is where animation, videos, infographics, explainers, graphics, storyboards, presentations, canvases, layouts, and visual media get created. It is Dreamweaver, Adobe, Canva, animation class, infographic show, and BlackRoad creator studio brought into one BlackRoad-native surface. BlackBoard exists because visual creation tools are either too expensive, too complicated, too template-driven, or too disconnected from the rest of the work. A person should be able to turn an idea into a visual artifact without fighting software for three hours.",
+      "core_promise": "Drag the idea onto the board and make it visible."
     },
     {
       "number": "16", "id": "oneway", "slug": "oneway", "name": "OneWay",
-      "role": "broadcast / publish", "status": "planned",
+      "role": "data flow and sovereignty pipeline", "status": "planned",
       "meaning": "outbound broadcasts / publish",
       "does": ["publish posts", "push notifications"],
       "org": "BlackRoad-OS-Primary", "domain": "oneway.blackroad.io",
       "agents": ["Calliope", "Cicero", "Aria"],
       "receipts": ["oneway.published", "oneway.delivered"],
-      "carkeys": ["publish gated"], "next": "scope MVP"
+      "carkeys": ["publish gated"], "next": "scope MVP",
+      "definition": "OneWay is BlackRoad's controlled data-flow and sovereignty pipeline. OneWay means data goes one way into BlackRoad, gets mapped to BlackRoad identity/state/memory, then returns outward in the format the outside provider or client needs. The point is not 'export' in a boring sense. The point is to prevent external providers from becoming the durable owner of the user's data. If a ChatGPT API call or external provider request hits BlackRoad, OneWay can receive the request, rotate/map the identity, store the durable relationship inside BlackRoad, transform/encode the response path, and send back only what the external system needs.",
+      "core_promise": "Your data can move through providers without becoming theirs."
     },
     {
       "number": "17", "id": "roadband", "slug": "roadband", "name": "RoadBand",
-      "role": "audio / music", "status": "planned",
+      "role": "music production and listening", "status": "planned",
       "meaning": "audio / music / radio",
       "does": ["play", "stream", "score"],
       "org": "BlackRoad-OS-Primary", "domain": "roadband.blackroad.io",
       "agents": ["Lyra", "Aria", "Sapphira"],
       "receipts": ["roadband.played", "roadband.streamed"],
-      "carkeys": ["none"], "next": "scope MVP"
+      "carkeys": ["none"], "next": "scope MVP",
+      "definition": "RoadBand is BlackRoad's music imagination, production, hosting, recommendation, and unified listening product. RoadBand is for people who know what sounds good even if they cannot operate a full professional music stack. The user might know the song needs to feel like Katy Perry plus Usher plus Heads Will Roll remix plus Sabrina Carpenter energy. RoadBand should help turn that instinct into actual sound, recommendations, playlists, stems, and production notes. RoadBand should support music taste profiling, sound comparison quizzes, 'ear doctor' style preference testing, AI-assisted music production, song/stem hosting, unified music library, and Spotify/Apple/YouTube/SoundCloud-like source unification.",
+      "core_promise": "If you can hear where it should go, RoadBand helps you get there."
     },
     {
       "number": "18", "id": "highway", "slug": "highway", "name": "HighWay",
-      "role": "high-throughput batch", "status": "planned",
+      "role": "infrastructure, compute, and routing", "status": "planned",
       "meaning": "high-throughput fast lane",
       "does": ["batch ops", "bulk pipelines"],
       "org": "BlackRoad-OS-Primary", "domain": "highway.blackroad.io",
       "agents": ["Gaia", "Sebastian", "Lucidia"],
       "receipts": ["highway.batch.started"],
-      "carkeys": ["bulk action gated"], "next": "scope MVP"
+      "carkeys": ["bulk action gated"], "next": "scope MVP",
+      "definition": "HighWay is BlackRoad's infrastructure, compute, routing, cloud, fleet, hosting, and observability product. HighWay is the road system under the road system. It handles the technical routes: servers, local nodes, cloud nodes, domains, tunnels, edge routes, GPUs, CPUs, Pi clusters, model servers, workers, queues, health checks, logs, and deployment surfaces. HighWay exists because modern infrastructure is overwhelming: Docker, Kubernetes, SSH keys, domains, SSL, cloud roles, environment variables, deployment scripts, queues, logs, model serving, GPUs, and local hardware. HighWay should make infrastructure understandable and routable.",
+      "core_promise": "See the roads your system runs on."
     },
     {
       "number": "19", "id": "roadsport", "slug": "roadsport", "name": "RoadSport",
-      "role": "movement / training / sports", "status": "mvp-stub",
+      "role": "sports, movement, and physics simulation", "status": "mvp-stub",
       "meaning": "movement, training, sports planning (no medical, no betting)",
       "does": ["movement plan", "training", "practice", "workout", "progress", "recovery"],
       "org": "BlackRoad-OS-Primary", "domain": "roadsport.blackroad.io",
       "agents": ["Lyra", "Sapphira", "Aria"],
       "receipts": ["roadsport.plan.created", "roadsport.handoff.created", "roadsport.safety_review_needed"],
-      "carkeys": ["health/wearable/biometric/location → CarKeys gated"], "next": "open RoadSport MVP"
+      "carkeys": ["health/wearable/biometric/location → CarKeys gated"], "next": "open RoadSport MVP",
+      "definition": "RoadSport is BlackRoad's sports, movement, practice, choreography, physics, and simulation product. RoadSport is Monte Carlo simulations meets marching band precision meets football. It should replace overpriced, limited sports-video tools with something more useful: route precision, build sheets, player movement, physical constraints, collision logic, practice feedback, and scenario simulation. RoadSport should support player/performer profiles, speed/weight/build attributes, field maps, route/dot books, movement paths, practice feedback, video annotation, formation/choreography, collision simulation, Monte Carlo scenario testing, and football play analysis.",
+      "core_promise": "Movement should be planned, simulated, practiced, and proven."
     },
     {
       "number": "20", "id": "officeroad", "slug": "officeroad", "name": "OfficeRoad",
-      "role": "docs / sheets", "status": "planned",
+      "role": "visual meta office and AI workspace", "status": "planned",
       "meaning": "work office (docs, sheets)",
       "does": ["docs", "sheets", "slides"],
       "org": "BlackRoad-OS-Primary", "domain": "office.blackroad.io",
       "agents": ["Cicero", "Cecilia", "Alice"],
       "receipts": ["officeroad.doc.saved"],
-      "carkeys": ["none"], "next": "scope MVP"
+      "carkeys": ["none"], "next": "scope MVP",
+      "definition": "OfficeRoad is BlackRoad's visual meta office. OfficeRoad is where humans and AI teammates work side-by-side in a visible office-like space. It is not just a dashboard. It is a spatial work environment where tasks, documents, agents, rooms, desks, statuses, and collaboration can be seen and arranged. OfficeRoad should feel like a meta office, a visible AI workplace, a room where agents have desks, and a work environment instead of a pile of tabs where the user can see who/what is working on what. OfficeRoad should support visual office rooms, desks/workstations, AI teammate presence, human teammate presence, task cards, document surfaces, agent status, project rooms, and meeting spaces.",
+      "core_promise": "See the office. See the work. See the agents."
     },
     {
       "number": "21", "id": "roadstream", "slug": "roadstream", "name": "RoadStream",
-      "role": "live / streaming", "status": "planned",
+      "role": "unified streaming services wrapper", "status": "planned",
       "meaning": "live streaming / video",
       "does": ["live feed", "recording"],
       "org": "BlackRoad-OS-Primary", "domain": "stream.blackroad.io",
       "agents": ["Aria", "Lyra", "Sapphira"],
       "receipts": ["roadstream.live", "roadstream.recorded"],
-      "carkeys": ["stream key gated"], "next": "scope MVP"
+      "carkeys": ["stream key gated"], "next": "scope MVP",
+      "definition": "RoadStream is BlackRoad's unified streaming-services wrapper. RoadStream is where the user can see, remember, search, and curate across the streaming services they already use: Netflix, Hulu, Peacock, Amazon Prime Video, Disney+, Discovery+, YouTube/TV-style sources where appropriate, and other streaming subscriptions. RoadStream exists because streaming became fragmented. Users forget what they have, where they were watching something, what service owns what, and what belongs together. RoadStream should make streaming feel like one organized viewing surface instead of twelve disconnected subscriptions.",
+      "core_promise": "Remember what you watch, where it lives, and what belongs together."
     },
     {
       "number": "22", "id": "roadshow", "slug": "roadshow", "name": "RoadShow",
-      "role": "demos / showcase", "status": "planned",
+      "role": "TV Guide and YouTube curation", "status": "planned",
       "meaning": "showcase / demo runner",
       "does": ["present slides", "run demos"],
       "org": "BlackRoad-OS-Primary", "domain": "roadshow.blackroad.io",
       "agents": ["Calliope", "Sapphira", "Aria"],
       "receipts": ["roadshow.demo.run"],
-      "carkeys": ["none"], "next": "scope MVP"
+      "carkeys": ["none"], "next": "scope MVP",
+      "definition": "RoadShow is BlackRoad's TV Guide / YouTube-style curation and programming product. RoadShow is where users can make playlists, channels, public shows, programming blocks, curated media worlds, shared viewing guides, and creator broadcasts. It is the place where media becomes programmed and shown to others. RoadShow should support channels, shows, episodes, playlists, programming blocks, TV Guide-style schedules, YouTube-style curation, public/shared media presentation, and creator channels. RoadShow should make it possible to take YouTube videos and curate them into a meaningful show, make a public playlist/channel, publish BlackBoard-created videos, and group media by theme instead of algorithmic chaos.",
+      "core_promise": "Curate the chaos into a show."
     },
     {
       "number": "23", "id": "roundabout", "slug": "roundabout", "name": "RoundAbout",
-      "role": "discovery / explore", "status": "planned",
+      "role": "preparation around routes and destinations", "status": "planned",
       "meaning": "discovery / explore",
       "does": ["recommend", "explore", "loop"],
       "org": "BlackRoad-OS-Primary", "domain": "roundabout.blackroad.io",
       "agents": ["Ophelia", "Alice", "Sophia"],
       "receipts": ["roundabout.explored"],
-      "carkeys": ["none"], "next": "scope MVP"
+      "carkeys": ["none"], "next": "scope MVP",
+      "definition": "RoundAbout is BlackRoad's preparation-around-the-route product. RoundAbout handles everything that needs to be prepared around where someone is going, what they must do before they go, what they must bring, what must happen after, and what context matters around the trip or service route. RoundAbout is for travel prep, service calls, home maintenance routes, sales routes, errands with dependencies, appointments, field work, and 'I need to be there by X and do Y before/after.' RoundAbout should support before checklist, after checklist, materials list, people involved, location context, time constraints, appointment context, service notes, dependency planning, and readiness score.",
+      "core_promise": "Before you go, know what has to be ready."
     },
     {
       "number": "24", "id": "glovebox", "slug": "glovebox", "name": "GloveBox",
-      "role": "personal / private kit", "status": "planned",
+      "role": "capabilities, tools, and meta-info catalog", "status": "planned",
       "meaning": "personal kit / private items",
       "does": ["personal store", "quick stash"],
       "org": "BlackRoad-Private", "domain": "glovebox.blackroad.io",
       "agents": ["Anastasia", "Alice", "Seraphina"],
       "receipts": ["glovebox.stored", "glovebox.opened"],
-      "carkeys": ["personal gated"], "next": "scope MVP"
+      "carkeys": ["personal gated"], "next": "scope MVP",
+      "definition": "GloveBox is BlackRoad's capabilities, tools, meta-info, feature catalog, and utility layer. GloveBox answers: What can BlackRoad do? What tools exist? What features are available? What capability does this product/agent need? What can be unlocked with the right CarKeys grant? What references/utilities support this task? CarKeys is the key layer. GloveBox is the capability layer. GloveBox should store capabilities, tools, feature definitions, utility records, product abilities, agent abilities, 1,729 AI capability links, open-source alternatives, integration notes, and version/status metadata.",
+      "core_promise": "Know what the system can do, what it needs, and what is safe to unlock."
     },
     {
       "number": "25", "id": "roadmap", "slug": "roadmap", "name": "RoadMap",
-      "role": "plan / horizon", "status": "planned",
+      "role": "progress dashboard and reporting", "status": "planned",
       "meaning": "roadmap / planning",
       "does": ["goals", "milestones", "status"],
       "org": "BlackRoad-OS-Primary", "domain": "roadmap.blackroad.io",
       "agents": ["Celeste", "Octavia", "Lucidia"],
       "receipts": ["roadmap.milestone.set"],
-      "carkeys": ["none"], "next": "scope MVP"
+      "carkeys": ["none"], "next": "scope MVP",
+      "definition": "RoadMap is BlackRoad's overall progress, status, update, continuation, and reporting dashboard. RoadMap is the place to see everything being worked on and what needs attention. Think Salesforce reports and dashboards, but for the whole BlackRoad operating system: products, tasks, agents, blockers, milestones, receipts, deployments, projects, and follow-ups. RoadMap should answer: What are we working on? What changed? What is blocked? What needs attention? What is next? What has proof? What is stale? Which product owns this? Which agent is involved?",
+      "core_promise": "See what is happening, what is stuck, and what comes next."
     },
     {
       "number": "26", "id": "roadwire", "slug": "roadwire", "name": "RoadWire",
-      "role": "comms / signals", "status": "planned",
+      "role": "asynchronous messaging and records", "status": "planned",
       "meaning": "comms / signaling / pubsub",
       "does": ["pubsub", "signals", "events"],
       "org": "BlackRoad-OS-Primary", "domain": "wire.blackroad.io",
       "agents": ["Aria", "Gaia", "Seraphina"],
       "receipts": ["roadwire.signal", "roadwire.subscribed"],
-      "carkeys": ["pubsub gated"], "next": "scope MVP"
+      "carkeys": ["pubsub gated"], "next": "scope MVP",
+      "definition": "RoadWire is BlackRoad's asynchronous messaging, email-like communication, outside messaging, and long-term record management product. RoadWire is for non-immediate messages and durable communication records. It is where things go when they need to be remembered, threaded, emailed, archived, or handled outside the live room. RoadTrip and CarPool should automatically note important things into RoadWire. RoadWire should support email-like messages, threads, project wires, community wires, work wires, external/outside communication, formal/non-urgent updates, long-term records, and message-to-task conversion.",
+      "core_promise": "If it is not immediate but still matters, wire it."
     },
     {
       "number": "27", "id": "detour", "slug": "detour", "name": "Detour",
-      "role": "fallback / fail-safe", "status": "planned",
+      "role": "route execution and navigation", "status": "planned",
       "meaning": "fallback / alternate route",
       "does": ["degraded mode", "backup paths"],
       "org": "BlackRoad-OS-Primary", "domain": "detour.blackroad.io",
       "agents": ["Gaia", "Seraphina", "Lucidia"],
       "receipts": ["detour.activated", "detour.cleared"],
-      "carkeys": ["failover gated"], "next": "scope MVP"
+      "carkeys": ["failover gated"], "next": "scope MVP",
+      "definition": "Detour is BlackRoad's actual route, destination, timing, fallback, reroute, and alternate-execution product. Detour handles going there and when. RoundAbout prepares around a destination or route. Detour handles the actual movement: destination, timing, ETA, route, alternate path, fallback plan, and what happens when the plan changes. Detour is for navigation, route timing, ETA, alternate routes, trip execution, 'leave by' logic, 'what if this path fails?', fallback planning, real-time route changes, service route execution, and travel/sales/home-maintenance route movement.",
+      "core_promise": "Know where you are going, when to go, and what to do when the road changes."
     }
   ]
 }

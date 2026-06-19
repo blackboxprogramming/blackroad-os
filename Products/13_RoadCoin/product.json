@@ -3,7 +3,7 @@
   "id": "roadcoin",
   "slug": "roadcoin",
   "name": "RoadCoin",
-  "role": "payments / billing",
+  "role": "internal utility credit and usage layer",
   "status": "planned",
   "meaning": "payments, credits, billing",
   "does": [
@@ -25,5 +25,7 @@
   "carkeys": [
     "payment gated"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "RoadCoin is BlackRoad's internal utility credit, usage, compute, and contribution accounting layer. RoadCoin is not a speculative cryptocurrency. It is not a security. It is not a bank. It is not investment language. It is a product for tracking usage, access, compute, contribution, credits, and possibly internal rewards inside BlackRoad. RoadCoin should support usage credits, compute credits, contribution credits, access units, reward accounting, creator payout logic only after compliance review, internal balances, transparent usage history, and RoadChain-backed credit events. RoadCoin can help answer: Who used compute? Who contributed compute? What did a task cost? What credits were granted?",
+  "core_promise": "Usage, compute, and contribution should be countable without becoming casino money."
 }

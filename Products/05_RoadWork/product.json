@@ -3,7 +3,7 @@
   "id": "roadwork",
   "slug": "roadwork",
   "name": "RoadWork",
-  "role": "work-in-progress board",
+  "role": "business and operations execution",
   "status": "planned",
   "meaning": "in-progress projects board",
   "does": [
@@ -25,5 +25,7 @@
   "carkeys": [
     "none"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "RoadWork is the 'anything involving work' product. RoadWork is where business, employment, operations, compliance, filings, taxes, registrations, trademarks, Stripe/Atlas, state registrations, backend business setup, internal procedures, task execution, and company workflows live. RoadWork is not only for corporations. It is for anyone trying to do work, start work, organize work, operate a business, run a team, complete required steps, or understand what the next obligation is. RoadWork should answer: What do I need to do? What order do I do it in? What portal or document is involved? What proof do I need?",
+  "core_promise": "This is the work. These are the steps. Here is the proof."
 }

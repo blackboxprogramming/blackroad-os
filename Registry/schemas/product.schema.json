@@ -30,6 +30,7 @@
     "mvp": { "type": "string", "description": "Optional MVP description." },
     "implementation_status": { "enum": ["planned", "mock", "partial", "real", "blocked"], "description": "Optional finer-grained build state." },
     "risk_level": { "enum": ["low", "medium", "high"] },
-    "primary_handoff": { "type": "string", "description": "Optional: products this hands context off to." }
+    "primary_handoff": { "type": "string", "description": "Optional: products this hands context off to." },
+    "core_promise": { "type": "string", "description": "Optional core promise statement that defines the product's value." }
   }
 }

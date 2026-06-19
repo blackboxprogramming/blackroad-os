@@ -3,7 +3,7 @@
   "id": "roadcode",
   "slug": "roadcode",
   "name": "RoadCode",
-  "role": "build / run / deploy room",
+  "role": "end-to-end build system",
   "status": "next",
   "meaning": "build / run / deploy room",
   "does": [
@@ -35,10 +35,11 @@
   ],
   "next": "Open RoadCode MVP window",
   "category": "Operating Spine",
-  "definition": "End-to-end coding, building, debugging, hosting, deployment system.",
+  "definition": "RoadCode is the end-to-end coding, building, debugging, hosting, deployment, and technical guidance product. It is not just a code editor. It is the product that answers: 'Okay, the code exists — now what?' It should help the user understand what a project needs next: domain, database, backend, frontend, environment variables, Cloudflare, Vercel, Railway, local server, Pi, SSH, Git, tests, logs, deployment, rollback, and ongoing maintenance. RoadCode should fix the GitHub traffic-jam problem by routing work through the 172-step process, the 17,290 master index, the 1,729 capability layer, and the 27 agents.",
   "boundary": "From idea to running system without the 'now what?' cliff.",
   "mvp": "Inspect repo, plan patch, route to correct agent, explain deployment.",
   "implementation_status": "planned",
   "risk_level": "medium",
-  "primary_handoff": "RoadOS, HighWay, RoadChain"
+  "primary_handoff": "RoadOS, HighWay, RoadChain",
+  "core_promise": "From idea to running system, without the 'now what?' cliff."
 }

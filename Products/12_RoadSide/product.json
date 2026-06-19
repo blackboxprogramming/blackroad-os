@@ -3,7 +3,7 @@
   "id": "roadside",
   "slug": "roadside",
   "name": "RoadSide",
-  "role": "assistance / quick help",
+  "role": "front-door help and concierge",
   "status": "planned",
   "meaning": "help / support / quick fixes",
   "does": [
@@ -24,5 +24,7 @@
   "carkeys": [
     "none"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "RoadSide is the simple front-door help, concierge, support, and embedded assistant product. RoadSide is the thing a company can put on its website when users need help, routing, onboarding, support, or answers. It should work for BlackRoad itself and eventually for other companies as an embeddable help chatbot. RoadSide should support help chat, website embed, product routing, onboarding, support triage, knowledge-base answers, escalation to humans and agents, company-specific instructions, and handoff to RoadWire for longer threads or RoadWork for operational tasks.",
+  "core_promise": "Ask here. Get routed correctly."
 }

@@ -3,7 +3,7 @@
   "id": "roadview",
   "slug": "roadview",
   "name": "RoadView",
-  "role": "dashboards / monitors",
+  "role": "search, discovery, and visible agent browsing",
   "status": "planned",
   "meaning": "dashboards / live observation",
   "does": [
@@ -25,5 +25,7 @@
   "carkeys": [
     "telemetry read gated"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "RoadView is BlackRoad search, discovery, source routing, and visible Agent browsing. RoadView is where the 17,290 master index becomes useful. A query should not disappear into an opaque search box. It should route into the right lane, gather sources, show provenance, and hand the user to the right product, agent, or capability. RoadView has two important modes: 1) Human RoadView: The user searches, explores, compares, cites, saves, and routes results. 2) Agent RoadView: The user can see what agents are viewing, browsing, comparing, typing, and gathering. It should feel like watching agent work happen on-screen, not like blind hidden automation.",
+  "core_promise": "Search with lanes, sources, consent, and visible intelligence."
 }

@@ -3,7 +3,7 @@
   "id": "roadchain",
   "slug": "roadchain",
   "name": "RoadChain",
-  "role": "ledger / receipts",
+  "role": "proof, receipt, and provenance layer",
   "status": "planned",
   "meaning": "receipts, ledger, chain-of-custody",
   "does": [
@@ -26,5 +26,7 @@
     "write gated",
     "read open"
   ],
-  "next": "scope MVP"
+  "next": "scope MVP",
+  "definition": "RoadChain is the proof, receipt, provenance, audit, rollback, and memory-ledger layer. RoadChain exists because BlackRoad should run on receipts, not vibes. If something important changes, moves, deploys, gets approved, gets remembered, gets routed, or gets corrected, RoadChain should be able to show a durable record of what happened. RoadChain should support receipts, hashes, parent/child event chains, audit logs, provenance, rollback references, memory mutation proof, agent action proof, deployment proof, permission/grant proof, source-backed claims, and correction history. It can say 'receipt-backed' and 'auditable' but should not overclaim 'legal proof' unless implementation and legal review support it.",
+  "core_promise": "If it mattered, there is a receipt."
 }

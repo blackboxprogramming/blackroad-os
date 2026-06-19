@@ -30,10 +30,11 @@
   ],
   "next": "wire command routing",
   "category": "Operating Spine",
-  "definition": "Browser-native BlackRoad computer. One-tab operating environment.",
+  "definition": "RoadOS is the browser-native BlackRoad computer. It is not just a website and not just a decorative Windows 95 skin. It is the one-tab operating environment where the user's files, terminal, agents, memory, APIs, dashboards, command palette, routes, receipts, and active work all stay together. RoadOS exists because normal computers punish people for not knowing exact commands, folders, paths, install steps, terminal syntax, or app boundaries. A normal shell says 'command not found.' RoadOS should instead infer intent, explain what happened, offer safe next actions, and remember what the user was trying to do.",
   "boundary": "RoadOS is the workspace/computer shell. RoadCode builds inside it.",
   "mvp": "Route a command/intent to the right product/file/action and give a safe next step.",
   "implementation_status": "planned",
   "risk_level": "medium",
-  "primary_handoff": "RoadCode, RoadTrip, RoadView"
+  "primary_handoff": "RoadCode, RoadTrip, RoadView",
+  "core_promise": "Open one tab. Your road is still there."
 }
