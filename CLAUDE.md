@@ -26,14 +26,32 @@ The rendered desktop UI is `index.html` (fully self-contained, open directly in 
 
 ### Registry Files:
 
-| File | Purpose | Count | Validator |
-|------|---------|-------|-----------|
-| `products.json` | All 27 products | 27 | `validate-registry.mjs` |
-| `agents.json` | All 27 agents | 27 | `validate-agents.mjs` |
-| `orgs.json` | Organizations | 20 | `validate-collections.mjs` |
-| `domains.json` | Root domains | 20 | `validate-collections.mjs` |
-| `lanes.json` | Index lanes | 17+ | `validate-collections.mjs` |
-| `carkeys.json` | CarKeys lanes | 16 | `validate-collections.mjs` |
+| File | Purpose | Count | Array key | Validator |
+|------|---------|-------|-----------|-----------|
+| `products.json` | All 27 products | 27 | `products` | `validate-registry.mjs` |
+| `agents.json` | All 27 agents | 27 | `agents` | `validate-agents.mjs` |
+| `orgs.json` | Organizations | 20 | `organizations` | `validate-collections.mjs` |
+| `domains.json` | Root domains | 20 | `domains` | `validate-collections.mjs` |
+| `lanes.json` | RoadMap build-status lanes | 20 | `lanes` | `validate-collections.mjs` |
+| `carkeys.json` | CarKeys permission lanes | 16 | `lanes` | `validate-collections.mjs` |
+
+### Registry JSON shape (IMPORTANT):
+
+Each registry file is a **wrapped object**, not a bare array. The records live
+under a named key (see "Array key" column above), alongside metadata:
+
+```jsonc
+{
+  "schema_version": "2.0",
+  "last_updated": "2026-06-19",
+  "note": "Single source of truth for the 27 products. ...",
+  "products": [ /* the 27 records */ ]
+}
+```
+
+So to query records you must go through the key — e.g. `.products[]`, not `.[]`.
+When adding/removing records, keep the metadata block and update `last_updated`
+(and `total_*` counts where present).
 
 ## Essential Commands
 
@@ -96,7 +114,8 @@ When you need to add, update, or remove products:
 
 1. **Edit only** `Registry/products.json`
    - Required fields: `number`, `id`, `slug`, `name`, `role`, `status`, `meaning`, `does[]`, `org`, `domain`, `agents[]`, `receipts[]`, `carkeys[]`, `next`
-   - Optional canon fields: `category`, `definition`, `boundary`, `mvp`, `implementation_status`, `risk_level`, `primary_handoff`
+   - Optional canon fields: `category`, `definition`, `boundary`, `mvp`, `implementation_status`, `risk_level`, `primary_handoff`, `core_promise`
+   - Records go inside the `products` array of the wrapped object (see "Registry JSON shape" above)
    - Constraint: exactly 27 products numbered `01`–`27`; `id` must equal `slug`
    - Valid statuses: `active | next | planned | mvp-stub`
 
@@ -139,42 +158,57 @@ node scripts/sync-collections.mjs
 
 ```
 blackroad-os/
-├── CANON.md                  # Living canon: current shape + rules
-├── CONTRIBUTING.md           # Source-of-truth rules & branch workflow
-├── INDEX.md                  # Repository map
-├── NEXT.md                   # Immediate next actions
-├── Registry/                 # Single source of truth (ALL registries + schemas)
-│   ├── products.json
-│   ├── agents.json
-│   ├── orgs.json
-│   ├── domains.json
-│   ├── lanes.json
-│   ├── carkeys.json
-│   └── schemas/             # JSON schemas for validation
-├── Products/                 # 27 product folders (product.json auto-generated)
-│   ├── 01_RoadOS/
-│   ├── 02_RoadCode/
-│   └── ... (27 total)
-├── Agents/                   # Agent roster (per-agent folders planned)
+├── CANON.md                     # Living canon: current shape + rules
+├── CONTRIBUTING.md              # Source-of-truth rules & branch workflow
+├── INDEX.md                     # Repository map
+├── NEXT.md                      # Immediate next actions
+├── README.md                    # Short repo intro
+├── Registry/                    # Single source of truth (ALL registries + schemas)
+│   ├── products.json            #   27 products   (records under `products`)
+│   ├── agents.json              #   27 agents     (records under `agents`)
+│   ├── orgs.json                #   20 orgs       (records under `organizations`)
+│   ├── domains.json             #   20 domains    (records under `domains`)
+│   ├── lanes.json               #   20 lanes      (records under `lanes`)
+│   ├── carkeys.json             #   16 lanes      (records under `lanes`)
 │   ├── README.md
-│   └── STATUS.md
-├── scripts/                  # Validators & sync generators (Node.js)
-│   ├── validate-registry.mjs
-│   ├── validate-agents.mjs
-│   ├── sync-products.mjs
-│   ├── sync-product-folders.mjs
-│   ├── sync-collections.mjs
-│   └── ... (plus checks for each)
-├── Canon/                    # Canon documents (scaffold)
-├── Commands/                 # Operator command surface (17 core commands)
-├── Docs/                     # Architecture, specs, research
-├── Deployments/              # Runbooks, env maps, rollback plans
-├── HighWay/                  # Product 18: hybrid mesh backbone
-├── Receipts/                 # RoadChain append-only proof trails
-├── .github/workflows/        # CI pipeline
-│   └── registry.yml          # Runs all validators + sync checks
-└── index.html                # Self-contained desktop UI (generated, auto-synced)
+│   └── schemas/                 # JSON schemas for validation
+├── Products/                    # 27 product folders (product.json auto-generated)
+│   ├── 01_RoadOS/ … 27_Detour/  #   27 numbered folders
+│   ├── INDEX.md
+│   └── PRODUCT_STATUS.json
+├── Agents/                      # Agent roster (README + STATUS; per-agent folders planned)
+├── scripts/                     # Validators & sync generators (Node.js, .mjs)
+│   ├── validate-registry.mjs    #   validates products.json
+│   ├── validate-agents.mjs      #   validates agents.json
+│   ├── validate-agents-roster.mjs  # checks roster matches index.html
+│   ├── validate-collections.mjs #   validates orgs/domains/lanes/carkeys
+│   ├── sync-products.mjs         #  regenerates PRODUCTS in index.html
+│   ├── sync-product-folders.mjs  #  regenerates Products/NN_*/product.json
+│   └── sync-collections.mjs      #  regenerates ORGS/DOMAINS/LANES/CARKEYS_LANES
+├── Canon/                       # Canon documents (scaffold)
+├── Commands/                    # Operator command surface (17 core commands)
+├── Docs/                        # Architecture, specs, research (README + STATUS)
+├── docs/                        # Claude working notes / product batch reports
+├── Deployments/                 # Runbooks, env maps, rollback plans
+├── HighWay/                     # Product 18: hybrid mesh backbone
+├── Receipts/                    # RoadChain append-only proof trails
+├── 06-ROADCHAIN-RECEIPTS/       # Claude handoff receipts (product batches)
+├── Archive/ · Assets/           # Scaffold folders (README + STATUS)
+├── .github/workflows/           # CI pipeline
+│   └── registry.yml             #   runs all validators + sync checks
+├── index.html                   # Self-contained desktop UI (~30k lines, generated/auto-synced)
+└── BlackRoadOS_RoadOS_Index.html # Standalone hand-written RoadOS prototype (NOT generated)
 ```
+
+> **Two HTML files, different roles.** `index.html` is the large, generated
+> desktop UI (its `PRODUCTS`/`ORGS`/`DOMAINS`/`LANES`/`CARKEYS_LANES` arrays are
+> auto-synced from `Registry/` — never hand-edit them). `BlackRoadOS_RoadOS_Index.html`
+> is a small, standalone RoadOS prototype built by hand and is **not** part of the
+> registry sync/validation pipeline.
+>
+> **`Docs/` vs `docs/`.** `Docs/` (capital D) holds architecture/specs scaffolding;
+> `docs/` (lowercase) holds Claude working notes and product batch reports. They are
+> distinct directories — check case when referencing.
 
 ## Branch & Commit Workflow
 
@@ -213,6 +247,12 @@ blackroad-os/
 - `GloveBox` is capabilities/meta-info/tools
 - `RoadChain` is receipts/provenance (honest scope — no overclaiming legal compliance)
 
+### Honesty of Status (no fake-done)
+
+- Product `status` of `active` must be backed by a receipt in `Receipts/`; otherwise use `planned`, `next`, or `mvp-stub`
+- RoadMap lanes (`Registry/lanes.json`) use `status = done | fake_done | next | planned`
+- **`fake_done` is deliberate:** it flags a claim that *looks* finished but is **not** yet backed by a receipt. Never quietly upgrade `fake_done` → `done` — a lane only becomes `done` once a real receipt exists
+
 ### Agent Semantics
 
 - Agents request; Operator (Alexa/Alexandria) approves
@@ -234,8 +274,8 @@ xdg-open index.html  # Linux
 ### Checking a Specific Product
 
 ```bash
-# Read the registry entry
-cat Registry/products.json | jq '.[] | select(.number == "01")'
+# Read the registry entry (records live under the `products` key)
+cat Registry/products.json | jq '.products[] | select(.number == "01")'
 
 # Read the generated folder projection
 cat Products/01_RoadOS/product.json
@@ -244,8 +284,8 @@ cat Products/01_RoadOS/product.json
 ### Checking the Agent Roster
 
 ```bash
-# View canonical agent list
-cat Registry/agents.json | jq '.[] | {id, name, role}'
+# View canonical agent list (records live under the `agents` key)
+cat Registry/agents.json | jq '.agents[] | {id, name, role}'
 
 # Validate it
 node scripts/validate-agents.mjs
