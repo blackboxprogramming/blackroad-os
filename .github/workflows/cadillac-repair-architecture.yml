@@ -1,0 +1,52 @@
+name: Cadillac Repair Architecture Sync
+
+on:
+  push:
+    branches:
+      - cadillac/fix-architecture-sync-20260827
+
+permissions:
+  contents: write
+
+jobs:
+  repair-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact repair branch
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: cadillac/fix-architecture-sync-20260827
+          fetch-depth: 0
+
+      - name: Set up Node 20
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "20"
+
+      - name: Regenerate collection-backed index arrays
+        run: node scripts/sync-collections.mjs
+
+      - name: Validate all registries
+        run: node scripts/validate-all.mjs
+
+      - name: Verify product sync
+        run: node scripts/sync-products.mjs --check
+
+      - name: Verify collections sync
+        run: node scripts/sync-collections.mjs --check
+
+      - name: Verify product folder sync
+        run: node scripts/sync-product-folders.mjs --check
+
+      - name: Commit generated index repair when needed
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "index.html already synchronized"
+            exit 0
+          fi
+          git config user.name "Cadillac RoadWorld"
+          git config user.email "noreply@blackroad.systems"
+          git add index.html
+          git commit -m "sync: align generated collections in index"
+          git push origin HEAD:cadillac/fix-architecture-sync-20260827
