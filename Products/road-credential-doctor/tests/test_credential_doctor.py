@@ -8,6 +8,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 from unittest import mock
 
@@ -198,6 +199,68 @@ class CredentialDoctorTests(unittest.TestCase):
         state = load_state(settings.state_file)
         self.assertIn(findings[0].fingerprint, state["retired_fingerprints"])
 
+    def test_reconcile_blocks_unhealthy_replacement(self) -> None:
+        (self.runtime / "fail_phase").write_text("revoke_old", encoding="utf-8")
+        settings, _, _ = self._rotate()
+        pending_state = settings.state_file.read_text(encoding="utf-8")
+        for failed_phase in ("validate_new", "verify_consumer"):
+            with self.subTest(phase=failed_phase):
+                settings.state_file.write_text(pending_state, encoding="utf-8")
+                (self.runtime / "fail_phase").write_text(failed_phase, encoding="utf-8")
+                outcome = reconcile_pending(settings, settings.credentials[0], approved_risk="medium")[0]
+                self.assertFalse(outcome.old_revoked)
+                self.assertFalse(outcome.access_retained)
+                self.assertFalse((self.runtime / "old_revoked").exists())
+                self.assertEqual(1, len(load_state(settings.state_file)["pending_revocations"]))
+
+    def test_reconcile_blocks_consumer_drift(self) -> None:
+        (self.runtime / "fail_phase").write_text("revoke_old", encoding="utf-8")
+        settings, _, _ = self._rotate()
+        (self.runtime / "fail_phase").unlink()
+        (self.runtime / "consumer-primary").write_text("provider-old", encoding="utf-8")
+        outcome = reconcile_pending(settings, settings.credentials[0], approved_risk="medium")[0]
+        self.assertFalse(outcome.old_revoked)
+        self.assertFalse(outcome.access_retained)
+        self.assertNotIn("retry_revoke_old:", self._events())
+
+    def test_reconcile_blocks_missing_replacement_evidence(self) -> None:
+        (self.runtime / "fail_phase").write_text("revoke_old", encoding="utf-8")
+        settings, _, _ = self._rotate()
+        (self.runtime / "fail_phase").unlink()
+        state = load_state(settings.state_file)
+        state["active"] = {}
+        settings.state_file.write_text(json.dumps(state), encoding="utf-8")
+        before = self._events()
+        outcome = reconcile_pending(settings, settings.credentials[0], approved_risk="medium")[0]
+        self.assertFalse(outcome.old_revoked)
+        self.assertFalse(outcome.access_retained)
+        self.assertEqual(before, self._events())
+
+    def test_reconcile_blocks_unsafe_retry_targets(self) -> None:
+        (self.runtime / "fail_phase").write_text("revoke_old", encoding="utf-8")
+        settings, _, _ = self._rotate()
+        (self.runtime / "fail_phase").unlink()
+        saved_state = settings.state_file.read_text(encoding="utf-8")
+        for invalid in ("same_id", "blank_old", "wrong_rotation", "no_consumers"):
+            with self.subTest(invalid=invalid):
+                state = json.loads(saved_state)
+                credential = settings.credentials[0]
+                active = state["active"][credential.id]
+                if invalid == "same_id":
+                    active["provider_id"] = "provider-old"
+                elif invalid == "blank_old":
+                    state["pending_revocations"][0]["provider_id"] = " "
+                elif invalid == "wrong_rotation":
+                    active["last_rotation_id"] = "unrelated-rotation"
+                else:
+                    credential = replace(credential, consumers=())
+                settings.state_file.write_text(json.dumps(state), encoding="utf-8")
+                before = self._events()
+                outcome = reconcile_pending(settings, credential, approved_risk="medium")[0]
+                self.assertFalse(outcome.old_revoked)
+                self.assertFalse(outcome.access_retained)
+                self.assertEqual(before, self._events())
+
     def test_consumers_are_canaried_update_then_verify(self) -> None:
         config = self._config()
         config["credentials"][0]["consumers"].append(
@@ -254,8 +317,14 @@ class CredentialDoctorTests(unittest.TestCase):
         settings, findings, outcome = self._rotate()
         self.assertEqual("pending_revocation", outcome.status)
         (self.runtime / "fail_phase").unlink()
+        before = len(self._events())
         outcomes = reconcile_pending(settings, settings.credentials[0], approved_risk="medium")
         self.assertEqual("revocation_reconciled", outcomes[0].status)
+        self.assertTrue(outcomes[0].access_retained)
+        self.assertEqual(
+            ["validate_new:", "verify_consumer:primary", "retry_revoke_old:"],
+            self._events()[before:],
+        )
         state = load_state(settings.state_file)
         self.assertEqual([], state["pending_revocations"])
         self.assertIn(findings[0].fingerprint, state["retired_fingerprints"])

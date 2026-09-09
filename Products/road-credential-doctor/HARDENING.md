@@ -8,6 +8,20 @@ This change adds engine-level gates before connector dispatch:
 
 Verification: three regression tests failed on the previous implementation; all 31 package tests pass after the fix. Tests use a simulated dispatcher, not live provider accounts.
 
+## Revocation retry access gate
+
+Retries now require distinct non-empty old and replacement provider IDs, an active-state
+record tied to the pending rotation, and declared consumers. After authorization,
+the connector must revalidate the replacement and verify each declared consumer before
+old-key revocation is attempted. Failed or missing evidence leaves the item pending;
+`access_retained: false` means access was not confirmed, not proof of an outage.
+
+Four added regression tests cover unhealthy replacements, consumer drift, missing
+state, and unsafe targets. The successful retry test also checks validation order.
+All 48 tests pass using the simulated connector; live provider behavior is unverified.
+These checks cannot prevent external changes after verification or detect undeclared
+consumers. Adapters must verify access using the requested replacement, not old-key fallback.
+
 ## Deployment status and limitations
 
 This is an orchestration library, not a deployed connector service. The example `road-connectors` dispatcher is a contract placeholder; this package does not implement or authenticate it. A catalog entry is not an installed or verified provider adapter.
