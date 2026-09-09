@@ -105,6 +105,32 @@ class CredentialDoctorTests(unittest.TestCase):
         self.assertNotIn(LEAKED, public)
         self.assertIn("sha256:", public)
 
+    def test_manual_rotation_without_consumers_is_blocked(self) -> None:
+        config = self._config()
+        config["credentials"][0]["consumers"] = []
+        config["credentials"][0]["auto_heal"] = False
+        self.config_path.write_text(json.dumps(config), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "consumer"):
+            self._rotate()
+        self.assertFalse((self.runtime / "events.log").exists())
+
+    def test_rotation_without_provider_id_is_blocked_in_engine(self) -> None:
+        config = self._config()
+        config["credentials"][0]["provider_id"] = ""
+        self.config_path.write_text(json.dumps(config), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "provider id"):
+            self._rotate()
+        self.assertFalse((self.runtime / "events.log").exists())
+
+    def test_pending_revocation_blocks_another_rotation(self) -> None:
+        (self.runtime / "fail_phase").write_text("revoke_old", encoding="utf-8")
+        settings, findings, outcome = self._rotate()
+        self.assertEqual("pending_revocation", outcome.status)
+        events_before = self._events()
+        with self.assertRaisesRegex(ValueError, "pending revocation"):
+            rotate(settings, settings.credentials[0], findings, approved_risk="medium")
+        self.assertEqual(events_before, self._events())
+
     def test_reference_inventory_is_covered_by_declared_consumer(self) -> None:
         report = coverage_report(load_config(self.config_path))
         self.assertEqual(1, report["references"])

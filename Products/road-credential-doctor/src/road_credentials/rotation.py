@@ -168,6 +168,8 @@ def rotate(
     *,
     approved_risk: str,
 ) -> RotationOutcome:
+    if not credential.consumers:
+        raise ValueError("rotation requires at least one declared consumer")
     if not risk_allows(credential.risk, approved_risk):
         raise ValueError(f"{credential.id} risk {credential.risk} exceeds approval {approved_risk}")
     if credential.risk in {"high", "critical"} and credential.authorize_action is None:
@@ -183,8 +185,12 @@ def rotate(
 
     with rotation_lock(settings.state_file):
         state = load_state(settings.state_file)
+        if any(item.get("credential_id") == credential.id for item in state.get("pending_revocations", [])):
+            raise ValueError("reconcile pending revocation before another rotation")
         active = state.setdefault("active", {}).get(credential.id, {})
         old_provider_id = str(active.get("provider_id") or credential.provider_id or "")
+        if not old_provider_id.strip():
+            raise ValueError("rotation requires a non-empty old provider id")
         new_provider_id = ""
         status = "failed_access_retained"
         message = "connector rotation failed before revocation; the old provider credential remains active"
