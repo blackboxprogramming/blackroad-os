@@ -22,6 +22,26 @@ All 48 tests pass using the simulated connector; live provider behavior is unver
 These checks cannot prevent external changes after verification or detect undeclared
 consumers. Adapters must verify access using the requested replacement, not old-key fallback.
 
+## Automatic recovery scheduling
+
+Watch cycles reconcile existing pending operations before creating replacements.
+A credential pending at cycle start cannot rotate again until the next scan, even
+if recovery succeeds, avoiding reuse of stale leak findings. Failed recovery stays
+pending and does not terminate later cycles. Newly pending operations wait until
+the next cycle rather than being retried immediately.
+
+Only auto-heal-enabled credentials within medium risk are eligible for unattended
+recovery. Other pending IDs are reported as `deferred_pending_credentials` and make
+the run return a nonzero status. Consumer coverage checks include eligible pending
+credentials even when no leak signature remains. Dry runs dispatch no actions.
+Manual reconciliation skips credentials with no pending operation, so an idle
+high-risk entry does not demand unrelated approval.
+
+Seven watch regression tests cover recovery, continued failure, manual/critical
+deferral, idle critical entries, dry runs, and coverage after source cleanup.
+All 55 tests pass with simulated connectors. Watch retains a nonzero exit status
+if any cycle failed; it is not a deployed background monitor.
+
 ## Deployment status and limitations
 
 This is an orchestration library, not a deployed connector service. The example `road-connectors` dispatcher is a contract placeholder; this package does not implement or authenticate it. A catalog entry is not an installed or verified provider adapter.

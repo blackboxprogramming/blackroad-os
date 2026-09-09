@@ -13,7 +13,7 @@ from pathlib import Path
 from unittest import mock
 
 from road_credentials.catalog import connector_catalog
-from road_credentials.cli import EXIT_BLOCKED, EXIT_FINDINGS, EXIT_OK, _mapping, main
+from road_credentials.cli import EXIT_BLOCKED, EXIT_FINDINGS, EXIT_OK, EXIT_ROTATION_FAILED, _mapping, main
 from road_credentials.config import ConfigError, load_config
 from road_credentials.doctor import run_doctor
 from road_credentials.inventory import coverage_report
@@ -366,6 +366,96 @@ class CredentialDoctorTests(unittest.TestCase):
         self.assertEqual(EXIT_FINDINGS, code)
         self.assertFalse((self.runtime / "events.log").exists())
         self.assertNotIn(LEAKED, output.getvalue())
+
+    def _watch(self, cycles=1, execute=True):
+        output = io.StringIO()
+        args = ["--config", str(self.config_path), "--json", "watch", "--max-cycles", str(cycles)]
+        if execute:
+            args.extend(["--execute", "--ack-keep-access"])
+        with contextlib.redirect_stdout(output), mock.patch("road_credentials.cli.signal.signal"), mock.patch("road_credentials.cli.time.sleep"):
+            code = main(args)
+        return code, output.getvalue()
+
+    def test_watch_recovers_pending_without_rotating_again(self) -> None:
+        (self.runtime / "fail_phase").write_text("revoke_old", encoding="utf-8")
+        settings, _, _ = self._rotate()
+        (self.runtime / "fail_phase").unlink()
+        code, output = self._watch(cycles=2)
+        self.assertEqual(EXIT_OK, code, output)
+        self.assertEqual([], load_state(settings.state_file)["pending_revocations"])
+        self.assertEqual(1, self._events().count("create_new:"))
+        self.assertEqual(1, self._events().count("retry_revoke_old:"))
+
+    def test_watch_failed_recovery_continues_without_new_key(self) -> None:
+        (self.runtime / "fail_phase").write_text("revoke_old", encoding="utf-8")
+        self._rotate()
+        (self.runtime / "fail_phase").write_text("validate_new", encoding="utf-8")
+        code, output = self._watch(cycles=2)
+        self.assertEqual(EXIT_ROTATION_FAILED, code, output)
+        self.assertIn('"cycle": 2', output)
+        self.assertEqual(1, self._events().count("create_new:"))
+        self.assertNotIn("retry_revoke_old:", self._events())
+
+    def test_watch_does_not_reconcile_manual_credentials(self) -> None:
+        (self.runtime / "fail_phase").write_text("revoke_old", encoding="utf-8")
+        settings, _, _ = self._rotate()
+        (self.runtime / "fail_phase").unlink()
+        config = self._config()
+        config["credentials"][0]["auto_heal"] = False
+        self.config_path.write_text(json.dumps(config), encoding="utf-8")
+        before = self._events()
+        code, output = self._watch()
+        self.assertEqual(EXIT_ROTATION_FAILED, code, output)
+        self.assertEqual(before, self._events())
+        self.assertEqual(1, len(load_state(settings.state_file)["pending_revocations"]))
+        self.assertIn('"deferred_pending_credentials"', output)
+
+    def test_watch_and_reconcile_ignore_idle_critical_credentials(self) -> None:
+        config = self._config()
+        critical = json.loads(json.dumps(config["credentials"][0]))
+        critical.update(id="critical-idle", risk="critical", auto_heal=False)
+        critical["detect"] = {"kinds": ["github_token"], "names": ["IDLE_TOKEN"], "paths": ["idle/**"]}
+        critical["lifecycle"]["authorize_action"] = "carkeys.authorize"
+        config["credentials"].append(critical)
+        self.config_path.write_text(json.dumps(config), encoding="utf-8")
+        code, output = self._watch()
+        self.assertEqual(EXIT_OK, code, output)
+        with contextlib.redirect_stdout(io.StringIO()):
+            code = main(["--config", str(self.config_path), "reconcile", "--execute", "--ack-keep-access"])
+        self.assertEqual(EXIT_OK, code)
+
+    def test_watch_dry_run_never_retries_pending(self) -> None:
+        (self.runtime / "fail_phase").write_text("revoke_old", encoding="utf-8")
+        self._rotate()
+        before = self._events()
+        self._watch(execute=False)
+        self.assertEqual(before, self._events())
+
+    def test_watch_defers_critical_pending_for_manual_approval(self) -> None:
+        (self.runtime / "fail_phase").write_text("revoke_old", encoding="utf-8")
+        self._rotate()
+        config = self._config()
+        config["credentials"][0].update(risk="critical", auto_heal=False)
+        config["credentials"][0]["lifecycle"]["authorize_action"] = "carkeys.authorize"
+        self.config_path.write_text(json.dumps(config), encoding="utf-8")
+        before = self._events()
+        code, output = self._watch(cycles=2)
+        self.assertEqual(EXIT_ROTATION_FAILED, code, output)
+        self.assertIn('"cycle": 2', output)
+        self.assertEqual(before, self._events())
+
+    def test_watch_checks_pending_coverage_without_leak_findings(self) -> None:
+        (self.runtime / "fail_phase").write_text("revoke_old", encoding="utf-8")
+        self._rotate()
+        (self.runtime / "fail_phase").unlink()
+        (self.repo / ".env").unlink()
+        (self.repo / "uncovered.env").write_text("GITHUB_TOKEN=placeholder\n", encoding="utf-8")
+        before = self._events()
+        code, output = self._watch()
+        self.assertEqual(EXIT_ROTATION_FAILED, code, output)
+        self.assertIn('"active_findings": 0', output)
+        self.assertIn("uncovered.env", output)
+        self.assertEqual(before, self._events())
 
     def test_critical_rotation_requires_explicit_risk_approval(self) -> None:
         config = self._config()
