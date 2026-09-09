@@ -14,6 +14,10 @@ This is an orchestration library, not a deployed connector service. The example 
 
 Connector-only placement is a deployment requirement, not something the local subprocess runner can independently prove. An `authority: connector` response is self-reported, not a cryptographic attestation. The runner receives response bytes before rejecting invalid fields; schema rejection cannot guarantee that a malicious dispatcher never sends secret bytes. The scanner necessarily reads source material that may contain leaks.
 
-The existing 64 KiB response check happens after subprocess output is captured, so it is not a streaming memory limit. Crash recovery between provider creation and durable pending-revocation state still requires connector-side idempotency and a durable transaction journal. These limitations remain unresolved by this preflight patch.
+The response runner now enforces 64 KiB while reading stdout, retaining at most one extra byte to detect overflow. It concurrently writes stdin, applies a deadline across pipe I/O and process completion, and cleans up the dispatcher's POSIX process group. Dispatchers must not daemonize or escape that process group; independent durable jobs belong on the authenticated remote connector host. Non-POSIX dispatch fails closed. This bounds captured response data, not total interpreter or child-process memory.
+
+Duplicate JSON fields, malformed UTF-8, whitespace-padded IDs, and parser recursion failures are rejected. Exact-limit valid output is accepted; one byte over is blocked.
+
+Crash recovery between provider creation and durable pending-revocation state still requires connector-side idempotency and a durable transaction journal. This limitation remains unresolved.
 
 No live credentials have been rotated or revoked by this change. Production enablement requires a real authenticated connector runtime, provider-specific tests, durable recovery, and independently verified consumer coverage.

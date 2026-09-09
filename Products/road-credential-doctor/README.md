@@ -14,13 +14,13 @@ road-credentials heal --all --execute --ack-keep-access
 
 Without `--execute`, it produces a dry plan only.
 
-## Guarantees
+## Implemented controls and deployment requirements
 
-- No provider credential value is loaded, generated, stored, or transported by the doctor.
+- Rotation requests use provider IDs, not credential values. The scanner still reads potentially leaked source material.
 - Exactly one configured connector dispatcher is allowed to perform lifecycle actions.
 - Dispatcher requests contain metadata and opaque provider handles only.
 - Connector responses must attest `authority: connector` and `secret_material: false`.
-- Unknown connector response fields are rejected, preventing returned secret material from crossing the boundary.
+- Unknown connector response fields are rejected without being persisted. This cannot prevent a malicious dispatcher from sending bytes to the process in the first place.
 - The old provider ID is revoked only after connector-side validation, consumer canaries, and activation succeed.
 - Failed rotations request connector-side rollback; failed revocation is durably queued by provider ID.
 - Unknown secret names, duplicate ownership, and undeclared consumer paths block live rotation.
@@ -86,7 +86,7 @@ It must execute the named action inside the connector trust domain and return on
 }
 ```
 
-`provider_id` is optional except for creation. Output is capped at 64 KiB. Any unknown field, invalid attestation, malformed JSON, timeout, nonzero exit, missing execution ID, missing new provider ID, or returned secret field fails closed.
+`provider_id` is optional except for creation. Output is capped at 64 KiB during streaming reads on POSIX workers. Duplicate fields, unknown fields, invalid declarations, malformed JSON or UTF-8, timeout, nonzero exit, missing execution IDs, missing new provider IDs, and returned secret fields fail closed. The authority declaration is self-reported, not cryptographic proof. See [HARDENING.md](HARDENING.md) for deployment status and unresolved limitations.
 
 Connector actions are opaque names rather than commands:
 
