@@ -14,7 +14,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const root = process.env.BLACKROAD_ROOT || join(dirname(fileURLToPath(import.meta.url)), "..");
 const HTML = join(root, "index.html");
 const REGISTRY = join(root, "Registry", "products.json");
 

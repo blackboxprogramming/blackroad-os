@@ -1,0 +1,68 @@
+{
+  "product_id": "roadcode",
+  "product_number": "02",
+  "product_name": "RoadCode",
+  "last_updated": "2026-06-19",
+  "tools_used": [
+    {
+      "tool_id": "model.qwen",
+      "access": "inference",
+      "purpose": "Analyze code, generate patches, plan builds"
+    },
+    {
+      "tool_id": "os.shell",
+      "access": "full",
+      "purpose": "Run build commands, tests, linters"
+    },
+    {
+      "tool_id": "exec.sandbox",
+      "access": "full",
+      "purpose": "Execute tests and code in isolated sandbox"
+    },
+    {
+      "tool_id": "api.github",
+      "access": "write",
+      "purpose": "Push commits, create PRs, trigger workflows"
+    },
+    {
+      "tool_id": "storage.workspace",
+      "access": "full",
+      "purpose": "Store build artifacts, logs, temp files"
+    },
+    {
+      "tool_id": "auth.carkeys",
+      "access": "query",
+      "purpose": "Check deploy/vcs permissions"
+    },
+    {
+      "tool_id": "api.http",
+      "access": "query",
+      "purpose": "Fetch docs, examples, provider status"
+    }
+  ],
+  "tools_required": [
+    "os.shell",
+    "storage.workspace"
+  ],
+  "tools_optional": [
+    "model.qwen",
+    "exec.sandbox",
+    "api.github"
+  ],
+  "tools_planned": [
+    "network.proxy"
+  ],
+  "carkeys_lanes_required": [],
+  "carkeys_lanes_gated": [
+    "carkeys.operator-deploy",
+    "carkeys.vcs-deployment",
+    "carkeys.model-execution"
+  ],
+  "receipt_types_generated": [
+    "ROADCODE_REPO_INSPECTED",
+    "ROADCODE_PATCH_PLANNED",
+    "ROADCODE_BUILD_STARTED",
+    "ROADCODE_TEST_COMPLETED",
+    "ROADCODE_DEPLOY_INITIATED"
+  ]
+}

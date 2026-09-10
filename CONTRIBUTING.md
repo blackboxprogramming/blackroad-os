@@ -16,9 +16,14 @@ docs, then receipts — no fake implementation claims.*
 - After changing `Registry/products.json`, run the sync and commit both files:
 
   ```bash
-  node scripts/sync-products.mjs      # regenerate the block in index.html
-  node scripts/validate-registry.mjs  # check schema + invariants
+  node scripts/sync-products.mjs         # regenerate the block in index.html
+  node scripts/sync-product-folders.mjs  # regenerate each Products/NN_*/product.json
+  node scripts/validate-registry.mjs     # check schema + invariants
   ```
+
+- Each `Products/NN_*/product.json` is **also generated** — it is a byte-for-byte
+  projection of the matching registry record. **Never hand-edit it.** This keeps
+  one product schema in the repo instead of a second, drifting copy.
 
 CI (`.github/workflows/registry.yml`) runs both on every push/PR and **fails
 if the registry is invalid or `index.html` has drifted** from it. That is what
@@ -81,9 +86,16 @@ To add/change a product: edit the JSON → `node scripts/sync-products.mjs` →
 
 | Task | Command |
 |------|---------|
-| Regenerate products in `index.html` | `node scripts/sync-products.mjs` |
-| Fail if products drifted (CI mode) | `node scripts/sync-products.mjs --check` |
+| Regenerate `index.html` from registry | `node scripts/sync-products.mjs` |
+| Fail if `index.html` drifted (CI mode) | `node scripts/sync-products.mjs --check` |
+| Regenerate every `Products/NN_*/product.json` | `node scripts/sync-product-folders.mjs` |
+| Fail if a folder `product.json` drifted (CI mode) | `node scripts/sync-product-folders.mjs --check` |
 | Validate the product registry | `node scripts/validate-registry.mjs` |
+| Validate the agent registry | `node scripts/validate-agents.mjs` |
+| Check agent roster matches `index.html` | `node scripts/validate-agents-roster.mjs` |
+| Regenerate `index.html` ORGS/DOMAINS/LANES/CARKEYS_LANES | `node scripts/sync-collections.mjs` |
+| Fail if any generated array drifted (CI mode) | `node scripts/sync-collections.mjs --check` |
+| Validate the org/domain/lane/carkeys registries | `node scripts/validate-collections.mjs` |
 | Regenerate windows in `index.html` | `node scripts/sync-windows.mjs` |
 | Fail if windows drifted (CI mode) | `node scripts/sync-windows.mjs --check` |
 | Validate the window registry | `node scripts/validate-windows.mjs` |

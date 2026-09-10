@@ -1,0 +1,70 @@
+{
+  "product_id": "roadcode",
+  "product_number": "02",
+  "product_name": "RoadCode",
+  "last_updated": "2026-06-19",
+  "core_capabilities": [
+    {
+      "capability": "repo-inspection",
+      "description": "Analyze git repository: project type, dependencies, test suite, CI config",
+      "enabled": true,
+      "depends_on": ["os.shell", "model.qwen"],
+      "status": "planned"
+    },
+    {
+      "capability": "patch-planning",
+      "description": "Analyze code change requirements, plan git workflow",
+      "enabled": true,
+      "depends_on": ["model.qwen", "api.github"],
+      "status": "planned"
+    },
+    {
+      "capability": "test-execution",
+      "description": "Run local test suite in sandbox, report coverage and failures",
+      "enabled": true,
+      "depends_on": ["exec.sandbox", "storage.workspace"],
+      "status": "planned"
+    },
+    {
+      "capability": "logs-streaming",
+      "description": "Stream build/test/deploy logs in real-time to operator",
+      "enabled": true,
+      "depends_on": ["storage.workspace"],
+      "status": "planned"
+    },
+    {
+      "capability": "deploy-readiness",
+      "description": "Check all deploy prerequisites: env vars, secrets, domain, DNS, SSL",
+      "enabled": true,
+      "depends_on": ["auth.carkeys", "api.http"],
+      "status": "planned"
+    },
+    {
+      "capability": "domain-routing",
+      "description": "Set up or verify domain, subdomain, and reverse proxy routing",
+      "enabled": false,
+      "depends_on": ["network.proxy"],
+      "status": "planned"
+    }
+  ],
+  "capability_tiers": {
+    "tier_1_core": [
+      "repo-inspection",
+      "test-execution"
+    ],
+    "tier_2_essential": [
+      "patch-planning",
+      "deploy-readiness"
+    ],
+    "tier_3_advanced": [
+      "logs-streaming",
+      "domain-routing"
+    ]
+  },
+  "feature_flags": {
+    "enable_auto_deploy": false,
+    "enable_github_actions": true,
+    "sandbox_isolation_level": "container",
+    "max_concurrent_builds": 2
+  }
+}

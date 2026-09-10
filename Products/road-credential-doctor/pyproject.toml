@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "road-credential-doctor"
+version = "0.3.0"
+description = "Connector-side no-lockout credential leak detection and transactional rotation"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "BlackRoad OS, Inc." }]
+dependencies = []
+
+[project.scripts]
+road-credentials = "road_credentials.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]

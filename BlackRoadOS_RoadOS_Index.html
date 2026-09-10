@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlackRoad OS — RoadOS Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: monospace;
+            background: #f0f0f0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Desktop Navbar */
+        .desktop-nav {
+            display: flex;
+            background: #222;
+            color: #fff;
+            padding: 10px 20px;
+            gap: 15px;
+            border-bottom: 1px solid #444;
+            flex-wrap: wrap;
+        }
+
+        .nav-icon {
+            padding: 8px 12px;
+            background: #333;
+            border: 1px solid #555;
+            cursor: pointer;
+            user-select: none;
+            border-radius: 2px;
+            font-size: 12px;
+        }
+
+        .nav-icon:hover {
+            background: #444;
+        }
+
+        .nav-icon.active {
+            background: #0066cc;
+            border-color: #0088ff;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Workspace */
+        .workspace {
+            display: none;
+            flex: 1;
+            overflow: auto;
+            padding: 15px;
+            background: #fff;
+        }
+
+        .workspace.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Chat Rail */
+        .chat-rail {
+            width: 250px;
+            border-left: 1px solid #ddd;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-title {
+            padding: 10px;
+            background: #e0e0e0;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            font-size: 12px;
+        }
+
+        .chat-log {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .chat-entry {
+            margin-bottom: 8px;
+            padding: 5px;
+            background: #fff;
+            border-left: 2px solid #0066cc;
+        }
+
+        .chat-time {
+            color: #999;
+            font-size: 10px;
+        }
+
+        .chat-text {
+            color: #333;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #0066cc;
+        }
+
+        /* Home Workspace */
+        .home-panels {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .panel {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .panel-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .panel-status {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Grid Display */
+        .grid-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .grid-item {
+            padding: 10px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            user-select: none;
+            border-radius: 2px;
+            font-size: 12px;
+        }
+
+        .grid-item:hover {
+            background: #e8e8e8;
+        }
+
+        .grid-item.selected {
+            background: #0066cc;
+            color: #fff;
+            border-color: #0088ff;
+        }
+
+        /* Detail Panel */
+        .detail-panel {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            width: 120px;
+            color: #666;
+        }
+
+        .detail-value {
+            flex: 1;
+            color: #333;
+        }
+
+        /* Task Assignment */
+        .task-assignment {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .task-assignment label {
+            display: block;
+            font-size: 12px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .task-assignment select,
+        .task-assignment textarea {
+            width: 100%;
+            padding: 6px;
+            margin-bottom: 8px;
+            font-family: monospace;
+            font-size: 11px;
+            border: 1px solid #bbb;
+            border-radius: 2px;
+        }
+
+        .task-assignment textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 8px 12px;
+            background: #0066cc;
+            color: #fff;
+            border: 1px solid #0088ff;
+            cursor: pointer;
+            font-size: 11px;
+            border-radius: 2px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #0050a8;
+        }
+
+        /* Receipts */
+        .receipts-section {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 15px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .receipt-item {
+            font-size: 11px;
+            margin-bottom: 5px;
+            padding: 5px;
+            background: #fff;
+            border-left: 2px solid #0066cc;
+        }
+
+        .receipt-time {
+            color: #999;
+        }
+
+        .receipt-type {
+            font-weight: bold;
+            color: #0066cc;
+        }
+
+        /* Search/Filter */
+        .search-box {
+            margin-bottom: 15px;
+        }
+
+        .search-box input {
+            width: 100%;
+            max-width: 300px;
+            padding: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            border: 1px solid #bbb;
+            border-radius: 2px;
+        }
+
+        /* Scrollable Containers */
+        .scrollable {
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* File List */
+        .file-tree {
+            list-style: none;
+        }
+
+        .file-item {
+            padding: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            user-select: none;
+            border-left: 3px solid transparent;
+        }
+
+        .file-item:hover {
+            background: #e8e8e8;
+            border-left-color: #0066cc;
+        }
+    </style>
+</head>
+<body>
+    <!-- Desktop Navbar -->
+    <div class="desktop-nav">
+        <div class="nav-icon active" data-workspace="home">🏠 Home</div>
+        <div class="nav-icon" data-workspace="index">📋 Index</div>
+        <div class="nav-icon" data-workspace="agents">👥 Agents</div>
+        <div class="nav-icon" data-workspace="orgs">🏢 Orgs</div>
+        <div class="nav-icon" data-workspace="apps">📦 Apps</div>
+        <div class="nav-icon" data-workspace="products">🚀 Products</div>
+        <div class="nav-icon" data-workspace="domains">🌐 Domains</div>
+        <div class="nav-icon" data-workspace="files">📁 Files</div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Home Workspace -->
+        <div class="workspace active" id="home">
+            <div class="section-title">Home — Work Panels</div>
+            <div class="home-panels">
+                <div class="panel">
+                    <div class="panel-title">lucidia-01</div>
+                    <div class="panel-status">Status: IDLE — 0 agents active</div>
+                </div>
+                <div class="panel">
+                    <div class="panel-title">roadbook-02</div>
+                    <div class="panel-status">Status: IDLE — 0 tasks pending</div>
+                </div>
+                <div class="panel">
+                    <div class="panel-title">br37-03</div>
+                    <div class="panel-status">Status: IDLE — 0 receipts pending</div>
+                </div>
+                <div class="panel">
+                    <div class="panel-title">roadtrip-04</div>
+                    <div class="panel-status">Status: IDLE — RoadTrip solo operator</div>
+                </div>
+            </div>
+            <div id="home-receipts" class="receipts-section"></div>
+        </div>
+
+        <!-- Agents Workspace -->
+        <div class="workspace" id="agents">
+            <div class="section-title">Agents (27 total)</div>
+            <div class="search-box">
+                <input type="text" id="agents-search" placeholder="Filter agents...">
+            </div>
+            <div style="display: flex; gap: 15px; flex: 1; overflow: hidden;">
+                <div style="flex: 0 0 300px; overflow-y: auto;">
+                    <div class="grid-list" id="agents-grid"></div>
+                </div>
+                <div style="flex: 1; overflow-y: auto;">
+                    <div id="agent-detail" class="detail-panel" style="display: none;"></div>
+                </div>
+            </div>
+            <div id="agents-receipts" class="receipts-section"></div>
+        </div>
+
+        <!-- Products Workspace -->
+        <div class="workspace" id="products">
+            <div class="section-title">Products (27 total)</div>
+            <div class="search-box">
+                <input type="text" id="products-search" placeholder="Filter products...">
+            </div>
+            <div style="display: flex; gap: 15px; flex: 1; overflow: hidden;">
+                <div style="flex: 0 0 300px; overflow-y: auto;">
+                    <div class="grid-list" id="products-grid"></div>
+                </div>
+                <div style="flex: 1; overflow-y: auto;">
+                    <div id="product-detail" class="detail-panel" style="display: none;"></div>
+                </div>
+            </div>
+            <div id="products-receipts" class="receipts-section"></div>
+        </div>
+
+        <!-- Domains Workspace -->
+        <div class="workspace" id="domains">
+            <div class="section-title">Root Domains (20 total)</div>
+            <div class="search-box">
+                <input type="text" id="domains-search" placeholder="Filter domains...">
+            </div>
+            <div style="display: flex; gap: 15px; flex: 1; overflow: hidden;">
+                <div style="flex: 0 0 250px; overflow-y: auto;">
+                    <div class="grid-list" id="domains-grid"></div>
+                </div>
+                <div style="flex: 1; overflow-y: auto;">
+                    <div id="domain-detail" class="detail-panel" style="display: none;"></div>
+                </div>
+            </div>
+            <div id="domains-receipts" class="receipts-section"></div>
+        </div>
+
+        <!-- Organizations Workspace -->
+        <div class="workspace" id="orgs">
+            <div class="section-title">Organizations (20 total)</div>
+            <div class="search-box">
+                <input type="text" id="orgs-search" placeholder="Filter organizations...">
+            </div>
+            <div style="display: flex; gap: 15px; flex: 1; overflow: hidden;">
+                <div style="flex: 0 0 250px; overflow-y: auto;">
+                    <div class="grid-list" id="orgs-grid"></div>
+                </div>
+                <div style="flex: 1; overflow-y: auto;">
+                    <div id="org-detail" class="detail-panel" style="display: none;"></div>
+                </div>
+            </div>
+            <div id="orgs-receipts" class="receipts-section"></div>
+        </div>
+
+        <!-- Index Workspace -->
+        <div class="workspace" id="index">
+            <div class="section-title">RoadOS Index</div>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 20px;">
+                <div class="panel">
+                    <div class="panel-title">17 Core Commands</div>
+                    <div class="panel-status">Initialize • Patrol • Lookup • Link • Learn • Create • Attend • Observe • Report • Record • Recall • Receive • Route • Resolve • Retire • Receive • Run</div>
+                </div>
+                <div class="panel">
+                    <div class="panel-title">172 Process Steps</div>
+                    <div class="panel-status">Each command has 5–20 procedural steps</div>
+                </div>
+                <div class="panel">
+                    <div class="panel-title">1,729 Capabilities</div>
+                    <div class="panel-status">Atomic skill library</div>
+                </div>
+                <div class="panel">
+                    <div class="panel-title">17,290 Index Lanes</div>
+                    <div class="panel-status">Cross-indexed access paths</div>
+                </div>
+            </div>
+            <div class="search-box">
+                <input type="text" id="index-search" placeholder="Search index (17,290 lanes)...">
+            </div>
+            <div id="index-results" class="scrollable" style="border: 1px solid #ddd; padding: 10px; border-radius: 4px;"></div>
+        </div>
+
+        <!-- Files Workspace -->
+        <div class="workspace" id="files">
+            <div class="section-title">BlackRoad Filesystem</div>
+            <ul class="file-tree" id="file-tree"></ul>
+        </div>
+
+        <!-- Apps Workspace -->
+        <div class="workspace" id="apps">
+            <div class="section-title">Product Launcher (27 apps)</div>
+            <div class="grid-list" id="apps-grid"></div>
+        </div>
+
+        <!-- Chat Rail -->
+        <div class="chat-rail">
+            <div class="chat-title">Activity Log</div>
+            <div class="chat-log" id="chat-log"></div>
+        </div>
+    </div>
+
+    <script>
+        // ===== DATA STRUCTURES =====
+
+        const AGENTS = [
+            { number: '01', name: 'Lucidia', role: 'Perception Agent', status: 'IDLE', canDo: ['Sense', 'Monitor', 'Analyze'], currentTask: null, lastReceipt: null },
+            { number: '02', name: 'Roadie', role: 'Operations Agent', status: 'IDLE', canDo: ['Execute', 'Route', 'Navigate'], currentTask: null, lastReceipt: null },
+            { number: '03', name: 'Sophia', role: 'Analysis Agent', status: 'IDLE', canDo: ['Evaluate', 'Pattern', 'Diagnose'], currentTask: null, lastReceipt: null },
+            { number: '04', name: 'Cecilia', role: 'Communication Agent', status: 'IDLE', canDo: ['Message', 'Report', 'Broadcast'], currentTask: null, lastReceipt: null },
+            { number: '05', name: 'Sebastian', role: 'Learning Agent', status: 'IDLE', canDo: ['Learn', 'Adapt', 'Update'], currentTask: null, lastReceipt: null },
+            { number: '06', name: 'Elias', role: 'Planning Agent', status: 'IDLE', canDo: ['Plan', 'Strategy', 'Schedule'], currentTask: null, lastReceipt: null },
+            { number: '07', name: 'Silas', role: 'Archive Agent', status: 'IDLE', canDo: ['Store', 'Retrieve', 'Maintain'], currentTask: null, lastReceipt: null },
+            { number: '08', name: 'Gaia', role: 'Network Agent', status: 'IDLE', canDo: ['Connect', 'Route', 'Bridge'], currentTask: null, lastReceipt: null },
+            { number: '09', name: 'Atticus', role: 'Content Agent', status: 'IDLE', canDo: ['Create', 'Edit', 'Compile'], currentTask: null, lastReceipt: null },
+            { number: '10', name: 'Valeria', role: 'Verification Agent', status: 'IDLE', canDo: ['Verify', 'Validate', 'Certify'], currentTask: null, lastReceipt: null },
+            { number: '11', name: 'Alice', role: 'Query Agent', status: 'IDLE', canDo: ['Search', 'Lookup', 'Index'], currentTask: null, lastReceipt: null },
+            { number: '12', name: 'Octavia', role: 'Orchestration Agent', status: 'IDLE', canDo: ['Coordinate', 'Delegate', 'Sync'], currentTask: null, lastReceipt: null },
+            { number: '13', name: 'Anastasia', role: 'Recovery Agent', status: 'IDLE', canDo: ['Recover', 'Restore', 'Backup'], currentTask: null, lastReceipt: null },
+            { number: '14', name: 'Lyra', role: 'Telemetry Agent', status: 'IDLE', canDo: ['Collect', 'Aggregate', 'Stream'], currentTask: null, lastReceipt: null },
+            { number: '15', name: 'Sapphira', role: 'Security Agent', status: 'IDLE', canDo: ['Protect', 'Audit', 'Encrypt'], currentTask: null, lastReceipt: null },
+            { number: '16', name: 'Ophelia', role: 'Guidance Agent', status: 'IDLE', canDo: ['Guide', 'Advise', 'Coach'], currentTask: null, lastReceipt: null },
+            { number: '17', name: 'Thalia', role: 'Visualization Agent', status: 'IDLE', canDo: ['Render', 'Display', 'Chart'], currentTask: null, lastReceipt: null },
+            { number: '18', name: 'Aria', role: 'Audio Agent', status: 'IDLE', canDo: ['Capture', 'Play', 'Transcode'], currentTask: null, lastReceipt: null },
+            { number: '19', name: 'Seraphina', role: 'Synthesis Agent', status: 'IDLE', canDo: ['Synthesize', 'Compose', 'Generate'], currentTask: null, lastReceipt: null },
+            { number: '20', name: 'Gematria', role: 'Calculation Agent', status: 'IDLE', canDo: ['Calculate', 'Compute', 'Model'], currentTask: null, lastReceipt: null },
+            { number: '21', name: 'Cicero', role: 'Rhetoric Agent', status: 'IDLE', canDo: ['Argue', 'Persuade', 'Debate'], currentTask: null, lastReceipt: null },
+            { number: '22', name: 'Portia', role: 'Logic Agent', status: 'IDLE', canDo: ['Reason', 'Prove', 'Infer'], currentTask: null, lastReceipt: null },
+            { number: '23', name: 'Theodosia', role: 'Governance Agent', status: 'IDLE', canDo: ['Rule', 'Decide', 'Enforce'], currentTask: null, lastReceipt: null },
+            { number: '24', name: 'Celeste', role: 'Cosmic Agent', status: 'IDLE', canDo: ['Navigate', 'Orient', 'Celestial'], currentTask: null, lastReceipt: null },
+            { number: '25', name: 'Calliope', role: 'Poetry Agent', status: 'IDLE', canDo: ['Compose', 'Inspire', 'Create'], currentTask: null, lastReceipt: null },
+            { number: '26', name: 'Cordelia', role: 'Empathy Agent', status: 'IDLE', canDo: ['Listen', 'Empathize', 'Support'], currentTask: null, lastReceipt: null },
+            { number: '27', name: 'Olympia', role: 'Victory Agent', status: 'IDLE', canDo: ['Win', 'Achieve', 'Excel'], currentTask: null, lastReceipt: null }
+        ];
+
+        const PRODUCTS = [
+            { number: '01', name: 'RoadOS', status: 'REAL', meaning: 'Operating system core', does: ['Boot', 'Manage agents', 'Route commands'], agents: ['01', '02', '12'], org: 'RoadWork', domain: 'blackroad.io', carkeys: 'public', next: 'Expand to 27 agents' },
+            { number: '02', name: 'RoadCode', status: 'REAL', meaning: 'Development framework', does: ['Compile', 'Test', 'Deploy'], agents: ['03', '09', '21'], org: 'RoadWork', domain: 'blackroad.io', carkeys: 'public', next: 'Add testing layer' },
+            { number: '03', name: 'RoadTrip', status: 'REAL', meaning: 'Solo operator + agents', does: ['Plan route', 'Execute mission', 'Log receipt'], agents: ['01', '06', '25'], org: 'RoadWork', domain: 'blackroad.io', carkeys: 'private', next: 'Add multi-operator support' },
+            { number: '04', name: 'PitStop', status: 'REAL', meaning: 'Learning & homework portal', does: ['Teach', 'Track progress', 'Assign exercises'], agents: ['05', '16', '24'], org: 'BlackBoard', domain: 'blackroad.io', carkeys: 'public', next: 'Add curriculum' },
+            { number: '05', name: 'RoadWork', status: 'REAL', meaning: 'Task management system', does: ['Create task', 'Assign work', 'Track status'], agents: ['12', '14', '06'], org: 'RoadWork', domain: 'blackroad.io', carkeys: 'public', next: 'Add workflow automation' },
+            { number: '06', name: 'BackRoad', status: 'REAL', meaning: 'Historical archive', does: ['Store history', 'Query past', 'Restore state'], agents: ['07', '13', '11'], org: 'RoadChain', domain: 'roadchain.io', carkeys: 'private', next: 'Add versioning' },
+            { number: '07', name: 'CarKeys', status: 'REAL', meaning: 'Permission & access control', does: ['Grant access', 'Revoke permission', 'Audit access'], agents: ['15', '23', '10'], org: 'RoadChain', domain: 'blackroad.io', carkeys: 'system', next: 'Add role-based access' },
+            { number: '08', name: 'RoadBook', status: 'REAL', meaning: 'Documentation & canon', does: ['Write docs', 'Update canon', 'Manage specs'], agents: ['09', '21', '22'], org: 'BlackBoard', domain: 'blackroad.io', carkeys: 'public', next: 'Add auto-generation' },
+            { number: '09', name: 'RoadWorld', status: 'PLANNED', meaning: 'Virtual environment', does: ['Simulate', 'Model world', 'Run scenarios'], agents: ['20', '17', '19'], org: 'OfficeRoad', domain: 'blackroad.company', carkeys: 'private', next: 'Build simulation engine' },
+            { number: '10', name: 'RoadView', status: 'PLANNED', meaning: 'Visualization & dashboards', does: ['Render views', 'Create UI', 'Stream data'], agents: ['17', '14', '04'], org: 'OfficeRoad', domain: 'blackroad.io', carkeys: 'public', next: 'Add real-time updates' },
+            { number: '11', name: 'RoadChain', status: 'REAL', meaning: 'Proof & provenance records', does: ['Create receipt', 'Log action', 'Verify proof'], agents: ['10', '15', '23'], org: 'RoadChain', domain: 'roadchain.io', carkeys: 'system', next: 'Add blockchain integration' },
+            { number: '12', name: 'RoadSide', status: 'PLANNED', meaning: 'Roadside assistance & support', does: ['Help user', 'Provide guidance', 'Log support'], agents: ['16', '04', '26'], org: 'RoadWork', domain: 'blackroad.io', carkeys: 'public', next: 'Add live support' },
+            { number: '13', name: 'RoadCoin', status: 'PLANNED', meaning: 'Digital currency & payments', does: ['Transact', 'Track balance', 'Verify payment'], agents: ['20', '10', '15'], org: 'OfficeRoad', domain: 'roadcoin.io', carkeys: 'private', next: 'Add blockchain' },
+            { number: '14', name: 'CarPool', status: 'REAL', meaning: 'Multi-human + AI collaboration', does: ['Coordinate team', 'Share context', 'Sync async'], agents: ['12', '08', '04'], org: 'RoundAbout', domain: 'blackroad.io', carkeys: 'private', next: 'Add real-time presence' },
+            { number: '15', name: 'BlackBoard', status: 'REAL', meaning: 'Content & collaboration board', does: ['Write', 'Comment', 'Vote'], agents: ['09', '04', '12'], org: 'BlackBoard', domain: 'blackroad.io', carkeys: 'public', next: 'Add real-time sync' },
+            { number: '16', name: 'OneWay', status: 'PLANNED', meaning: 'Broadcast & messaging', does: ['Send', 'Queue', 'Deliver'], agents: ['04', '08', '18'], org: 'HighWay', domain: 'blackroad.io', carkeys: 'public', next: 'Add encryption' },
+            { number: '17', name: 'RoadBand', status: 'PLANNED', meaning: 'Network bandwidth management', does: ['Allocate', 'Monitor', 'Optimize'], agents: ['08', '14', '20'], org: 'HighWay', domain: 'blackroad.network', carkeys: 'system', next: 'Add QoS' },
+            { number: '18', name: 'HighWay', status: 'REAL', meaning: 'Network infrastructure & connectivity', does: ['Route traffic', 'Bridge networks', 'Manage mesh'], agents: ['08', '06', '17'], org: 'HighWay', domain: 'blackroad.network', carkeys: 'system', next: 'Add Meshtastic' },
+            { number: '19', name: 'RoadSport', status: 'PLANNED', meaning: 'Gamification & competition', does: ['Score', 'Rank', 'Award'], agents: ['25', '27', '23'], org: 'OfficeRoad', domain: 'blackroad.io', carkeys: 'public', next: 'Build leaderboard' },
+            { number: '20', name: 'OfficeRoad', status: 'REAL', meaning: 'Office suite & productivity', does: ['Word process', 'Spreadsheet', 'Present'], agents: ['09', '14', '17'], org: 'OfficeRoad', domain: 'blackroad.io', carkeys: 'public', next: 'Add templates' },
+            { number: '21', name: 'RoadStream', status: 'PLANNED', meaning: 'Streaming & real-time data', does: ['Stream', 'Buffer', 'Sync'], agents: ['14', '08', '18'], org: 'HighWay', domain: 'blackroad.io', carkeys: 'public', next: 'Add compression' },
+            { number: '22', name: 'RoadShow', status: 'PLANNED', meaning: 'Live events & broadcasts', does: ['Stream event', 'Moderate', 'Record'], agents: ['04', '18', '17'], org: 'OfficeRoad', domain: 'blackroad.company', carkeys: 'public', next: 'Add multi-stream' },
+            { number: '23', name: 'RoundAbout', status: 'REAL', meaning: 'Preparation & planning', does: ['Prepare', 'Plan', 'Brief'], agents: ['06', '16', '21'], org: 'RoundAbout', domain: 'blackroad.io', carkeys: 'private', next: 'Add contingencies' },
+            { number: '24', name: 'GloveBox', status: 'REAL', meaning: 'Capabilities & meta-info catalog', does: ['Index capabilities', 'Track tools', 'Document API'], agents: ['11', '09', '24'], org: 'BlackBoard', domain: 'blackroad.io', carkeys: 'public', next: 'Add auto-discovery' },
+            { number: '25', name: 'RoadMap', status: 'REAL', meaning: 'Status & progress reporting', does: ['Report status', 'Track milestones', 'Forecast'], agents: ['25', '14', '22'], org: 'RoadWork', domain: 'blackroad.io', carkeys: 'public', next: 'Add predictive milestones' },
+            { number: '26', name: 'RoadWire', status: 'REAL', meaning: 'Durable async communication', does: ['Queue message', 'Retry delivery', 'Persist state'], agents: ['04', '08', '14'], org: 'HighWay', domain: 'blackroad.io', carkeys: 'system', next: 'Add delivery guarantees' },
+            { number: '27', name: 'Detour', status: 'REAL', meaning: 'Fallback & route execution', does: ['Route fallback', 'Execute alternate', 'Log detour'], agents: ['02', '06', '27'], org: 'RoundAbout', domain: 'blackroad.io', carkeys: 'private', next: 'Add intelligent routing' }
+        ];
+
+        const DOMAINS = [
+            { number: '01', domain: 'blackroad.io', purpose: 'Core product hub', tasks: '12 active', workflow: 'Ops Loop', nextRoad: 'Launch public beta', receipts: 'REAL' },
+            { number: '02', domain: 'blackroad.company', purpose: 'Team workspace', tasks: '8 active', workflow: 'Planning', nextRoad: 'Expand team', receipts: 'REAL' },
+            { number: '03', domain: 'blackroad.me', purpose: 'Personal operator space', tasks: '3 active', workflow: 'Experimentation', nextRoad: 'Add notebook', receipts: 'REAL' },
+            { number: '04', domain: 'blackroad.network', purpose: 'Network infrastructure', tasks: '5 active', workflow: 'Operations', nextRoad: 'Integrate Meshtastic', receipts: 'REAL' },
+            { number: '05', domain: 'blackroad.systems', purpose: 'System architecture docs', tasks: '2 active', workflow: 'Documentation', nextRoad: 'Add diagrams', receipts: 'REAL' },
+            { number: '06', domain: 'blackroadai.com', purpose: 'AI research', tasks: '7 active', workflow: 'Research', nextRoad: 'Publish findings', receipts: 'MOCK' },
+            { number: '07', domain: 'blackroadinc.us', purpose: 'Corporate entity', tasks: '4 active', workflow: 'Legal', nextRoad: 'File incorporation', receipts: 'PLANNED' },
+            { number: '08', domain: 'blackroadqi.com', purpose: 'Quantum info product', tasks: '6 active', workflow: 'Development', nextRoad: 'Release alpha', receipts: 'PLANNED' },
+            { number: '09', domain: 'blackroadquantum.com', purpose: 'Quantum research', tasks: '9 active', workflow: 'Experimentation', nextRoad: 'Partner with institute', receipts: 'MOCK' },
+            { number: '10', domain: 'blackroadquantum.info', purpose: 'Quantum documentation', tasks: '3 active', workflow: 'Documentation', nextRoad: 'Add tutorial', receipts: 'PARTIAL' },
+            { number: '11', domain: 'blackroadquantum.net', purpose: 'Quantum network', tasks: '4 active', workflow: 'Operations', nextRoad: 'Scale to 10 nodes', receipts: 'REAL' },
+            { number: '12', domain: 'blackroadquantum.shop', purpose: 'Quantum marketplace', tasks: '2 active', workflow: 'Development', nextRoad: 'Add payments', receipts: 'PLANNED' },
+            { number: '13', domain: 'blackroadquantum.store', purpose: 'Quantum store', tasks: '1 active', workflow: 'Maintenance', nextRoad: 'Migrate to shop', receipts: 'PARTIAL' },
+            { number: '14', domain: 'blackboxprogramming.io', purpose: 'Programming education', tasks: '11 active', workflow: 'Teaching', nextRoad: 'Launch course', receipts: 'REAL' },
+            { number: '15', domain: 'aliceqi.com', purpose: 'Agent Alice workspace', tasks: '5 active', workflow: 'Query ops', nextRoad: 'Index 1M pages', receipts: 'REAL' },
+            { number: '16', domain: 'lucidia.earth', purpose: 'Lucidia agent HQ', tasks: '8 active', workflow: 'Sensing', nextRoad: 'Add 10 sensors', receipts: 'MOCK' },
+            { number: '17', domain: 'lucidia.studio', purpose: 'Creative studio', tasks: '6 active', workflow: 'Creation', nextRoad: 'Launch gallery', receipts: 'PARTIAL' },
+            { number: '18', domain: 'lucidiaqi.com', purpose: 'Lucidia quantum info', tasks: '4 active', workflow: 'Development', nextRoad: 'Release beta', receipts: 'PLANNED' },
+            { number: '19', domain: 'roadchain.io', purpose: 'RoadChain proofs', tasks: '10 active', workflow: 'Proof ops', nextRoad: 'Add blockchain', receipts: 'REAL' },
+            { number: '20', domain: 'roadcoin.io', purpose: 'RoadCoin currency', tasks: '3 active', workflow: 'Finance', nextRoad: 'Enable transactions', receipts: 'PLANNED' }
+        ];
+
+        const ORGS = [
+            { number: '01', name: 'RoadWork', purpose: 'Core operations', lanes: '12 owned', status: 'ACTIVE' },
+            { number: '02', name: 'HighWay', purpose: 'Network & connectivity', lanes: '5 owned', status: 'ACTIVE' },
+            { number: '03', name: 'RoundAbout', purpose: 'Preparation & planning', lanes: '4 owned', status: 'ACTIVE' },
+            { number: '04', name: 'RoadChain', purpose: 'Proof & provenance', lanes: '3 owned', status: 'ACTIVE' },
+            { number: '05', name: 'BlackBoard', purpose: 'Content & learning', lanes: '5 owned', status: 'ACTIVE' },
+            { number: '06', name: 'OfficeRoad', purpose: 'Productivity & tools', lanes: '4 owned', status: 'ACTIVE' },
+            { number: '07', name: 'Detour', purpose: 'Fallback & routing', lanes: '2 owned', status: 'ACTIVE' },
+            { number: '08', name: 'Cordelia Inc', purpose: 'Empathy & support', lanes: '3 owned', status: 'PLANNED' },
+            { number: '09', name: 'Quantum Collective', purpose: 'Quantum research', lanes: '6 owned', status: 'PLANNED' },
+            { number: '10', name: 'Celestial Labs', purpose: 'Navigation & orientation', lanes: '2 owned', status: 'PLANNED' },
+            { number: '11', name: 'Victory Games', purpose: 'Gamification & sport', lanes: '3 owned', status: 'PLANNED' },
+            { number: '12', name: 'Rhetoric Foundation', purpose: 'Communication & debate', lanes: '2 owned', status: 'PLANNED' },
+            { number: '13', name: 'Logic Engines', purpose: 'Reasoning & proof', lanes: '2 owned', status: 'PLANNED' },
+            { number: '14', name: 'Poetry Collective', purpose: 'Creative expression', lanes: '2 owned', status: 'PLANNED' },
+            { number: '15', name: 'Archive Guild', purpose: 'Storage & recovery', lanes: '3 owned', status: 'ACTIVE' },
+            { number: '16', name: 'Perception Institute', purpose: 'Sensing & analysis', lanes: '4 owned', status: 'ACTIVE' },
+            { number: '17', name: 'Synthesis Center', purpose: 'Generation & creation', lanes: '2 owned', status: 'PLANNED' },
+            { number: '18', name: 'Broadcast Network', purpose: 'Messaging & events', lanes: '3 owned', status: 'PLANNED' },
+            { number: '19', name: 'Calculation Bureau', purpose: 'Math & modeling', lanes: '2 owned', status: 'PLANNED' },
+            { number: '20', name: 'Governance Council', purpose: 'Rules & enforcement', lanes: '2 owned', status: 'PLANNED' }
+        ];
+
+        const FILES = [
+            'Agents', 'Archive', 'Assets', 'Canon', 'Commands', 'Context', 'Deployments', 'Docs',
+            'Domains', 'Dump', 'Forks', 'Home', 'Indices', 'Models', 'Operator', 'Organizations',
+            'Products', 'Prompts', 'Receipts', 'Registry', 'Repositories', 'Research', 'Sandbox',
+            'Scripts', 'Skills', 'Templates', 'Workflows'
+        ];
+
+        // ===== RECEIPTS =====
+
+        let receipts = [];
+
+        function createReceipt(type, actor, target, workspace, status = 'DONE_UNVERIFIED') {
+            const receipt = {
+                id: 'RCP_' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                type,
+                actor,
+                target,
+                workspace,
+                status,
+                timestamp: new Date().toLocaleTimeString()
+            };
+            receipts.push(receipt);
+            logChat(`[${receipt.type}] ${actor} → ${target} (${workspace})`);
+            updateReceiptsPanels();
+            return receipt;
+        }
+
+        // ===== CHAT LOG =====
+
+        function logChat(message) {
+            const chatLog = document.getElementById('chat-log');
+            const entry = document.createElement('div');
+            entry.className = 'chat-entry';
+            entry.innerHTML = `
+                <div class="chat-time">${new Date().toLocaleTimeString()}</div>
+                <div class="chat-text">${message}</div>
+            `;
+            chatLog.appendChild(entry);
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+
+        // ===== WORKSPACE SWITCHING =====
+
+        function switchWorkspace(workspaceName) {
+            document.querySelectorAll('.workspace').forEach(ws => ws.classList.remove('active'));
+            document.getElementById(workspaceName).classList.add('active');
+            document.querySelectorAll('.nav-icon').forEach(icon => icon.classList.remove('active'));
+            document.querySelector(`[data-workspace="${workspaceName}"]`).classList.add('active');
+            logChat(`Workspace: ${workspaceName}`);
+            createReceipt('WORKSPACE_OPEN', 'Alexandria', workspaceName, workspaceName, 'DONE_VERIFIED');
+        }
+
+        // ===== AGENTS WORKSPACE =====
+
+        function initAgents() {
+            const grid = document.getElementById('agents-grid');
+            grid.innerHTML = '';
+            AGENTS.forEach(agent => {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                item.textContent = `${agent.number} ${agent.name}`;
+                item.dataset.number = agent.number;
+                item.onclick = () => selectAgent(agent.number);
+                grid.appendChild(item);
+            });
+
+            document.getElementById('agents-search').addEventListener('input', e => {
+                const filter = e.target.value.toLowerCase();
+                document.querySelectorAll('#agents-grid .grid-item').forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(filter) ? 'block' : 'none';
+                });
+            });
+        }
+
+        function selectAgent(number) {
+            const agent = AGENTS.find(a => a.number === number);
+            if (!agent) return;
+
+            document.querySelectorAll('#agents-grid .grid-item').forEach(item => {
+                item.classList.toggle('selected', item.dataset.number === number);
+            });
+
+            const detail = document.getElementById('agent-detail');
+            detail.style.display = 'block';
+            detail.innerHTML = `
+                <div class="detail-row">
+                    <div class="detail-label">Number</div>
+                    <div class="detail-value">${agent.number}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Name</div>
+                    <div class="detail-value">${agent.name}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Role</div>
+                    <div class="detail-value">${agent.role}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value">${agent.status}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Can Do</div>
+                    <div class="detail-value">${agent.canDo.join(', ')}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Current Task</div>
+                    <div class="detail-value">${agent.currentTask || 'None'}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Last Receipt</div>
+                    <div class="detail-value">${agent.lastReceipt || 'None'}</div>
+                </div>
+                <div class="task-assignment">
+                    <label>Assign Task</label>
+                    <select id="task-priority">
+                        <option value="normal">Normal</option>
+                        <option value="urgent">Urgent</option>
+                        <option value="background">Background</option>
+                    </select>
+                    <textarea id="task-description" placeholder="Describe the task..."></textarea>
+                    <button onclick="assignTaskToAgent('${agent.number}')">Send Task</button>
+                </div>
+            `;
+
+            logChat(`Agent selected: ${agent.name} (${agent.number})`);
+            createReceipt('AGENT_SELECT', 'Alexandria', agent.name, 'agents', 'DONE_VERIFIED');
+        }
+
+        function assignTaskToAgent(number) {
+            const agent = AGENTS.find(a => a.number === number);
+            const priority = document.getElementById('task-priority').value;
+            const description = document.getElementById('task-description').value;
+
+            if (!description.trim()) {
+                alert('Task description required');
+                return;
+            }
+
+            agent.status = 'WORKING';
+            agent.currentTask = description;
+            agent.lastReceipt = 'RCP_' + Math.random().toString(36).substr(2, 9).toUpperCase();
+
+            logChat(`Task assigned to ${agent.name}: "${description}" [${priority}]`);
+            createReceipt('TASK_ASSIGN', 'Alexandria', agent.name, 'agents', 'DONE_VERIFIED');
+
+            selectAgent(number);
+        }
+
+        // ===== PRODUCTS WORKSPACE =====
+
+        function initProducts() {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            PRODUCTS.forEach(product => {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                item.textContent = `${product.number} ${product.name}`;
+                item.dataset.number = product.number;
+                item.onclick = () => selectProduct(product.number);
+                grid.appendChild(item);
+            });
+
+            document.getElementById('products-search').addEventListener('input', e => {
+                const filter = e.target.value.toLowerCase();
+                document.querySelectorAll('#products-grid .grid-item').forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(filter) ? 'block' : 'none';
+                });
+            });
+        }
+
+        function selectProduct(number) {
+            const product = PRODUCTS.find(p => p.number === number);
+            if (!product) return;
+
+            document.querySelectorAll('#products-grid .grid-item').forEach(item => {
+                item.classList.toggle('selected', item.dataset.number === number);
+            });
+
+            const detail = document.getElementById('product-detail');
+            detail.style.display = 'block';
+            detail.innerHTML = `
+                <div class="detail-row">
+                    <div class="detail-label">Number</div>
+                    <div class="detail-value">${product.number}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Name</div>
+                    <div class="detail-value">${product.name}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value">${product.status}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Meaning</div>
+                    <div class="detail-value">${product.meaning}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Does</div>
+                    <div class="detail-value">${product.does.join(', ')}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Primary Org</div>
+                    <div class="detail-value">${product.org}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Primary Domain</div>
+                    <div class="detail-value">${product.domain}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Agents</div>
+                    <div class="detail-value">${product.agents.join(', ')}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">CarKeys</div>
+                    <div class="detail-value">${product.carkeys}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Next Action</div>
+                    <div class="detail-value">${product.next}</div>
+                </div>
+                <button onclick="runProductNextAction('${product.number}')" style="margin-top: 10px;">Run Next Action</button>
+            `;
+
+            logChat(`Product selected: ${product.name} (${product.number})`);
+            createReceipt('PRODUCT_SELECT', 'Alexandria', product.name, 'products', 'DONE_VERIFIED');
+        }
+
+        function runProductNextAction(number) {
+            const product = PRODUCTS.find(p => p.number === number);
+            if (!product) return;
+
+            logChat(`Running next action for ${product.name}: "${product.next}"`);
+            createReceipt('PRODUCT_ACTION_RUN', 'Alexandria', product.name, 'products', 'DONE_UNVERIFIED');
+
+            alert(`Next action logged for ${product.name}`);
+        }
+
+        // ===== DOMAINS WORKSPACE =====
+
+        function initDomains() {
+            const grid = document.getElementById('domains-grid');
+            grid.innerHTML = '';
+            DOMAINS.forEach(domain => {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                item.textContent = `${domain.number} ${domain.domain}`;
+                item.dataset.number = domain.number;
+                item.onclick = () => selectDomain(domain.number);
+                grid.appendChild(item);
+            });
+
+            document.getElementById('domains-search').addEventListener('input', e => {
+                const filter = e.target.value.toLowerCase();
+                document.querySelectorAll('#domains-grid .grid-item').forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(filter) ? 'block' : 'none';
+                });
+            });
+        }
+
+        function selectDomain(number) {
+            const domain = DOMAINS.find(d => d.number === number);
+            if (!domain) return;
+
+            document.querySelectorAll('#domains-grid .grid-item').forEach(item => {
+                item.classList.toggle('selected', item.dataset.number === number);
+            });
+
+            const detail = document.getElementById('domain-detail');
+            detail.style.display = 'block';
+            detail.innerHTML = `
+                <div class="detail-row">
+                    <div class="detail-label">Number</div>
+                    <div class="detail-value">${domain.number}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Domain</div>
+                    <div class="detail-value">${domain.domain}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Purpose</div>
+                    <div class="detail-value">${domain.purpose}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Active Tasks</div>
+                    <div class="detail-value">${domain.tasks}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Workflow Step</div>
+                    <div class="detail-value">${domain.workflow}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Next Road</div>
+                    <div class="detail-value">${domain.nextRoad}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Receipt State</div>
+                    <div class="detail-value">${domain.receipts}</div>
+                </div>
+            `;
+
+            logChat(`Domain selected: ${domain.domain}`);
+            createReceipt('DOMAIN_SELECT', 'Alexandria', domain.domain, 'domains', 'DONE_VERIFIED');
+        }
+
+        // ===== ORGANIZATIONS WORKSPACE =====
+
+        function initOrgs() {
+            const grid = document.getElementById('orgs-grid');
+            grid.innerHTML = '';
+            ORGS.forEach(org => {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                item.textContent = `${org.number} ${org.name}`;
+                item.dataset.number = org.number;
+                item.onclick = () => selectOrg(org.number);
+                grid.appendChild(item);
+            });
+
+            document.getElementById('orgs-search').addEventListener('input', e => {
+                const filter = e.target.value.toLowerCase();
+                document.querySelectorAll('#orgs-grid .grid-item').forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(filter) ? 'block' : 'none';
+                });
+            });
+        }
+
+        function selectOrg(number) {
+            const org = ORGS.find(o => o.number === number);
+            if (!org) return;
+
+            document.querySelectorAll('#orgs-grid .grid-item').forEach(item => {
+                item.classList.toggle('selected', item.dataset.number === number);
+            });
+
+            const detail = document.getElementById('org-detail');
+            detail.style.display = 'block';
+            detail.innerHTML = `
+                <div class="detail-row">
+                    <div class="detail-label">Number</div>
+                    <div class="detail-value">${org.number}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Name</div>
+                    <div class="detail-value">${org.name}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Purpose</div>
+                    <div class="detail-value">${org.purpose}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Owned Lanes</div>
+                    <div class="detail-value">${org.lanes}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value">${org.status}</div>
+                </div>
+            `;
+
+            logChat(`Organization selected: ${org.name}`);
+            createReceipt('ORG_SELECT', 'Alexandria', org.name, 'orgs', 'DONE_VERIFIED');
+        }
+
+        // ===== INDEX WORKSPACE =====
+
+        function initIndex() {
+            const searchInput = document.getElementById('index-search');
+            const resultsContainer = document.getElementById('index-results');
+
+            const sampleIndexLanes = [
+                { id: 'LANE_001', name: 'Home Router', path: 'Commands > Initialize > Set Home' },
+                { id: 'LANE_002', name: 'Agent Roster', path: 'Index > Agents > All' },
+                { id: 'LANE_003', name: 'Product Catalog', path: 'Index > Products > All' },
+                { id: 'LANE_004', name: 'Domain List', path: 'Index > Domains > All' },
+                { id: 'LANE_005', name: 'Organization Map', path: 'Index > Organizations > All' },
+                { id: 'LANE_006', name: 'Command Lookup', path: 'Commands > Query > Exact' },
+                { id: 'LANE_007', name: 'Capability Browser', path: 'Index > Capabilities > Search' },
+                { id: 'LANE_008', name: 'Receipt Archive', path: 'Index > Receipts > Filter' }
+            ];
+
+            function displayResults(lanes) {
+                resultsContainer.innerHTML = '';
+                if (lanes.length === 0) {
+                    resultsContainer.innerHTML = '<p style="color: #999;">No lanes found</p>';
+                    return;
+                }
+                lanes.forEach(lane => {
+                    const item = document.createElement('div');
+                    item.style.cssText = 'padding: 8px; margin-bottom: 5px; background: #fff; border-left: 3px solid #0066cc; cursor: pointer;';
+                    item.innerHTML = `<strong>${lane.name}</strong><br><span style="font-size: 10px; color: #999;">${lane.path}</span>`;
+                    item.onclick = () => logChat(`Index lane opened: ${lane.name}`);
+                    resultsContainer.appendChild(item);
+                });
+            }
+
+            displayResults(sampleIndexLanes);
+
+            searchInput.addEventListener('input', e => {
+                const filter = e.target.value.toLowerCase();
+                const filtered = sampleIndexLanes.filter(lane =>
+                    lane.name.toLowerCase().includes(filter) ||
+                    lane.path.toLowerCase().includes(filter)
+                );
+                displayResults(filtered);
+            });
+        }
+
+        // ===== FILES WORKSPACE =====
+
+        function initFiles() {
+            const fileTree = document.getElementById('file-tree');
+            fileTree.innerHTML = '';
+            FILES.forEach(file => {
+                const li = document.createElement('li');
+                li.className = 'file-item';
+                li.textContent = file;
+                li.onclick = () => logChat(`File section opened: ${file}`);
+                fileTree.appendChild(li);
+            });
+        }
+
+        // ===== APPS WORKSPACE =====
+
+        function initApps() {
+            const grid = document.getElementById('apps-grid');
+            grid.innerHTML = '';
+            PRODUCTS.forEach(product => {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                item.style.cursor = 'pointer';
+                item.textContent = `${product.number} ${product.name}`;
+                item.onclick = () => {
+                    switchWorkspace('products');
+                    selectProduct(product.number);
+                };
+                grid.appendChild(item);
+            });
+        }
+
+        // ===== RECEIPTS PANELS =====
+
+        function updateReceiptsPanels() {
+            const workspaces = ['home', 'agents', 'products', 'domains', 'orgs'];
+            workspaces.forEach(ws => {
+                const panel = document.getElementById(`${ws}-receipts`);
+                if (panel) {
+                    panel.innerHTML = '';
+                    const recentReceipts = receipts.slice(-5).reverse();
+                    recentReceipts.forEach(receipt => {
+                        const item = document.createElement('div');
+                        item.className = 'receipt-item';
+                        item.innerHTML = `
+                            <span class="receipt-time">${receipt.timestamp}</span> —
+                            <span class="receipt-type">${receipt.type}</span>
+                            (${receipt.status})
+                        `;
+                        panel.appendChild(item);
+                    });
+                }
+            });
+        }
+
+        // ===== INITIALIZATION =====
+
+        document.addEventListener('DOMContentLoaded', () => {
+            logChat('BlackRoad OS started');
+            createReceipt('SYSTEM_BOOT', 'System', 'RoadOS', 'home', 'DONE_VERIFIED');
+
+            initAgents();
+            initProducts();
+            initDomains();
+            initOrgs();
+            initIndex();
+            initFiles();
+            initApps();
+
+            document.querySelectorAll('[data-workspace]').forEach(icon => {
+                icon.addEventListener('click', () => {
+                    switchWorkspace(icon.dataset.workspace);
+                });
+            });
+
+            updateReceiptsPanels();
+        });
+    </script>
+</body>
+</html>

@@ -1,1 +1,31 @@
-{"id": 10, "slug": "roadview", "name": "RoadView", "number": "10", "category": "Discovery", "definition": "Search, discovery, and visible agent browsing powered by the 17,290 index.", "boundary": "Search becomes visible, receipt-backed, and user-controlled.", "mvp": "Route queries to the right lane with sources and agent options.", "status": "level_4_builder_ready", "implementation_status": "planned", "risk_level": "low", "primary_agents": ["Ophelia", "Gematria"], "primary_handoff": "RoadTrip, RoadBook, RoadChain", "next_action": "Implement indexed search with agent routing"}
+{
+  "number": "10",
+  "id": "roadview",
+  "slug": "roadview",
+  "name": "RoadView",
+  "role": "search, discovery, and visible agent browsing",
+  "status": "planned",
+  "meaning": "dashboards / live observation",
+  "does": [
+    "live metrics",
+    "charts",
+    "alerts"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "roadview.blackroad.io",
+  "agents": [
+    "Gaia",
+    "Theodosia",
+    "Sapphira"
+  ],
+  "receipts": [
+    "roadview.metric",
+    "roadview.alert"
+  ],
+  "carkeys": [
+    "telemetry read gated"
+  ],
+  "next": "scope MVP",
+  "definition": "RoadView is BlackRoad search, discovery, source routing, and visible Agent browsing. RoadView is where the 17,290 master index becomes useful. A query should not disappear into an opaque search box. It should route into the right lane, gather sources, show provenance, and hand the user to the right product, agent, or capability. RoadView has two important modes: 1) Human RoadView: The user searches, explores, compares, cites, saves, and routes results. 2) Agent RoadView: The user can see what agents are viewing, browsing, comparing, typing, and gathering. It should feel like watching agent work happen on-screen, not like blind hidden automation.",
+  "core_promise": "Search with lanes, sources, consent, and visible intelligence."
+}

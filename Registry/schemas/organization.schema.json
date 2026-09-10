@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BlackRoad Organization",
+  "description": "Canonical record for one of the 20 BlackRoad organizations. Registry/orgs.json is the single source of truth; the ORGS array in index.html is generated from it via scripts/sync-collections.mjs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["num", "id", "name", "purpose", "status"],
+  "properties": {
+    "num": { "type": "string", "pattern": "^[0-9]{2}$", "description": "Two-digit canon position, 01-20." },
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Stable lowercase identifier." },
+    "name": { "type": "string" },
+    "purpose": { "type": "string", "description": "One-line purpose of the organization." },
+    "status": { "enum": ["active", "next", "planned", "mvp-stub"], "description": "Honest build status." },
+    "catalogOwner": { "type": "string", "description": "Optional: what this org is the catalog owner of." },
+    "products": { "type": "array", "items": { "type": "string" } },
+    "domains": { "type": "array", "items": { "type": "string" } },
+    "agents": { "type": "array", "items": { "type": "string" } },
+    "repos": { "type": "integer", "description": "Demo seed count, not a receipt-backed metric." },
+    "docs": { "type": "integer", "description": "Demo seed count, not a receipt-backed metric." },
+    "builds": { "type": "integer", "description": "Demo seed count, not a receipt-backed metric." },
+    "receipts": { "type": "string" },
+    "releases": { "type": "string" },
+    "archive": { "type": "string" },
+    "releaseGate": { "type": "string" },
+    "blocker": { "type": "string" },
+    "next": { "type": "string" }
+  }
+}

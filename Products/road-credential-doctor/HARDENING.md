@@ -1,0 +1,57 @@
+# Rotation preflight hardening
+
+This change adds engine-level gates before connector dispatch:
+
+- Manual and automatic rotation require at least one declared consumer.
+- Rotation requires a non-empty old provider ID, including direct engine calls.
+- A pending revocation blocks a new rotation of the same credential while the state lock is held. Reconcile the pending operation first.
+
+Verification: three regression tests failed on the previous implementation; all 31 package tests pass after the fix. Tests use a simulated dispatcher, not live provider accounts.
+
+## Revocation retry access gate
+
+Retries now require distinct non-empty old and replacement provider IDs, an active-state
+record tied to the pending rotation, and declared consumers. After authorization,
+the connector must revalidate the replacement and verify each declared consumer before
+old-key revocation is attempted. Failed or missing evidence leaves the item pending;
+`access_retained: false` means access was not confirmed, not proof of an outage.
+
+Four added regression tests cover unhealthy replacements, consumer drift, missing
+state, and unsafe targets. The successful retry test also checks validation order.
+All 48 tests pass using the simulated connector; live provider behavior is unverified.
+These checks cannot prevent external changes after verification or detect undeclared
+consumers. Adapters must verify access using the requested replacement, not old-key fallback.
+
+## Automatic recovery scheduling
+
+Watch cycles reconcile existing pending operations before creating replacements.
+A credential pending at cycle start cannot rotate again until the next scan, even
+if recovery succeeds, avoiding reuse of stale leak findings. Failed recovery stays
+pending and does not terminate later cycles. Newly pending operations wait until
+the next cycle rather than being retried immediately.
+
+Only auto-heal-enabled credentials within medium risk are eligible for unattended
+recovery. Other pending IDs are reported as `deferred_pending_credentials` and make
+the run return a nonzero status. Consumer coverage checks include eligible pending
+credentials even when no leak signature remains. Dry runs dispatch no actions.
+Manual reconciliation skips credentials with no pending operation, so an idle
+high-risk entry does not demand unrelated approval.
+
+Seven watch regression tests cover recovery, continued failure, manual/critical
+deferral, idle critical entries, dry runs, and coverage after source cleanup.
+All 55 tests pass with simulated connectors. Watch retains a nonzero exit status
+if any cycle failed; it is not a deployed background monitor.
+
+## Deployment status and limitations
+
+This is an orchestration library, not a deployed connector service. The example `road-connectors` dispatcher is a contract placeholder; this package does not implement or authenticate it. A catalog entry is not an installed or verified provider adapter.
+
+Connector-only placement is a deployment requirement, not something the local subprocess runner can independently prove. An `authority: connector` response is self-reported, not a cryptographic attestation. The runner receives response bytes before rejecting invalid fields; schema rejection cannot guarantee that a malicious dispatcher never sends secret bytes. The scanner necessarily reads source material that may contain leaks.
+
+The response runner now enforces 64 KiB while reading stdout, retaining at most one extra byte to detect overflow. It concurrently writes stdin, applies a deadline across pipe I/O and process completion, and cleans up the dispatcher's POSIX process group. Dispatchers must not daemonize or escape that process group; independent durable jobs belong on the authenticated remote connector host. Non-POSIX dispatch fails closed. This bounds captured response data, not total interpreter or child-process memory.
+
+Duplicate JSON fields, malformed UTF-8, whitespace-padded IDs, and parser recursion failures are rejected. Exact-limit valid output is accepted; one byte over is blocked.
+
+Crash recovery between provider creation and durable pending-revocation state still requires connector-side idempotency and a durable transaction journal. This limitation remains unresolved.
+
+No live credentials have been rotated or revoked by this change. Production enablement requires a real authenticated connector runtime, provider-specific tests, durable recovery, and independently verified consumer coverage.

@@ -1,0 +1,56 @@
+{
+  "product_id": "glovebox",
+  "product_number": "24",
+  "product_name": "GloveBox",
+  "last_updated": "2026-06-19",
+  "description": "Master capability registry of 1,729 tools available in BlackRoad OS",
+  "tools_used": [
+    {
+      "tool_id": "storage.indexeddb",
+      "access": "full",
+      "purpose": "Cache tool registry locally for fast lookups"
+    },
+    {
+      "tool_id": "auth.carkeys",
+      "access": "query",
+      "purpose": "Check which tools an agent/product can access"
+    },
+    {
+      "tool_id": "data.vector-search",
+      "access": "query",
+      "purpose": "Find similar tools by semantic search"
+    }
+  ],
+  "tools_required": [
+    "storage.indexeddb"
+  ],
+  "tools_optional": [
+    "data.vector-search"
+  ],
+  "tools_planned": [],
+  "carkeys_lanes_required": [],
+  "carkeys_lanes_gated": [
+    "carkeys.operator-identity"
+  ],
+  "receipt_types_generated": [
+    "GLOVEBOX_TOOL_QUERIED",
+    "GLOVEBOX_CAPABILITY_ADDED",
+    "GLOVEBOX_STATUS_CHANGED"
+  ],
+  "registry_sources": [
+    "Registry/glovebox-tools.json"
+  ],
+  "tool_categories": [
+    "OS",
+    "Execution",
+    "Model",
+    "API",
+    "Storage",
+    "Auth",
+    "Network",
+    "Media",
+    "Math",
+    "Data",
+    "Crypto"
+  ]
+}

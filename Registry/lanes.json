@@ -1,0 +1,677 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-06-15",
+  "total_lanes": 20,
+  "note": "Single source of truth for the 20 RoadMap build-status lanes. The LANES array in index.html is generated from this by scripts/sync-collections.mjs. status=done|fake_done|next|planned — fake_done flags a claim not yet backed by a receipt (per CANON).",
+  "lanes": [
+    {
+      "num": "01",
+      "id": "home",
+      "name": "Home",
+      "status": "done",
+      "meaning": "home screen with folder cabinet, top/bottom bars, centered logo.",
+      "currentlyExists": [
+        "9 folders on a black desktop",
+        "white top bar + clock",
+        "white bottom taskbar + start button",
+        "centered logo wallpaper"
+      ],
+      "needs": [
+        "nothing for v0"
+      ],
+      "blockers": [],
+      "proofNeeded": [
+        {
+          "t": "opens with 9 folders visible",
+          "ok": true
+        },
+        {
+          "t": "folders click to highlight",
+          "ok": true
+        },
+        {
+          "t": "start button shows menu",
+          "ok": true
+        }
+      ],
+      "next": "keep stable"
+    },
+    {
+      "num": "02",
+      "id": "agents",
+      "name": "Agents",
+      "status": "done",
+      "meaning": "27-agent triple-rail control page with dispatch + chat.",
+      "currentlyExists": [
+        "roster + status counts",
+        "detail panel",
+        "dispatch box",
+        "chat rail"
+      ],
+      "needs": [
+        "real agent telemetry"
+      ],
+      "blockers": [],
+      "proofNeeded": [
+        {
+          "t": "opens from Home",
+          "ok": true
+        },
+        {
+          "t": "agent click updates detail",
+          "ok": true
+        },
+        {
+          "t": "dispatch flips status to working",
+          "ok": true
+        }
+      ],
+      "next": "hook real agent telemetry"
+    },
+    {
+      "num": "03",
+      "id": "products",
+      "name": "Products",
+      "status": "done",
+      "meaning": "27-product catalog with status + next action per card.",
+      "currentlyExists": [
+        "list + count tally",
+        "detail panel",
+        "bottom action bar",
+        "chat rail"
+      ],
+      "needs": [
+        "per-product MVP windows"
+      ],
+      "blockers": [
+        "25 products not built yet"
+      ],
+      "proofNeeded": [
+        {
+          "t": "opens from Home",
+          "ok": true
+        },
+        {
+          "t": "RoadOS shows ACTIVE",
+          "ok": true
+        },
+        {
+          "t": "RoadCode shows NEXT",
+          "ok": true
+        }
+      ],
+      "next": "build RoadCode MVP"
+    },
+    {
+      "num": "04",
+      "id": "domains",
+      "name": "Domains",
+      "status": "done",
+      "meaning": "20-domain router console with 172 workflow stage + universal routes.",
+      "currentlyExists": [
+        "list + status counts",
+        "detail with routes + pipeline",
+        "Open Board action"
+      ],
+      "needs": [
+        "actual route handling"
+      ],
+      "blockers": [
+        "hosting/DNS path undecided"
+      ],
+      "proofNeeded": [
+        {
+          "t": "opens from Home",
+          "ok": true
+        },
+        {
+          "t": "blackroad.io ACTIVE",
+          "ok": true
+        },
+        {
+          "t": "OpenBoard disabled for non-active",
+          "ok": true
+        }
+      ],
+      "next": "wire actual /dashboard route on blackroad.io"
+    },
+    {
+      "num": "05",
+      "id": "organizations",
+      "name": "Organizations",
+      "status": "done",
+      "meaning": "20-org ownership cabinet with repo/build/receipt/release stats.",
+      "currentlyExists": [
+        "list + status counts",
+        "catalog-owner expansion for Products + Agents orgs",
+        "stat grid"
+      ],
+      "needs": [
+        "real repo/build/release counts"
+      ],
+      "blockers": [],
+      "proofNeeded": [
+        {
+          "t": "opens from Home",
+          "ok": true
+        },
+        {
+          "t": "Primary, Products, Agents ACTIVE",
+          "ok": true
+        },
+        {
+          "t": "catalog owners expand to all 27",
+          "ok": true
+        }
+      ],
+      "next": "wire real counts from sources"
+    },
+    {
+      "num": "06",
+      "id": "registry",
+      "name": "Registry",
+      "status": "done",
+      "meaning": "16 canon tables, master canon counts, locked rules.",
+      "currentlyExists": [
+        "16-table list",
+        "Master Canon counts",
+        "locked rules block",
+        "file-path list"
+      ],
+      "needs": [
+        "actual JSON file generation"
+      ],
+      "blockers": [],
+      "proofNeeded": [
+        {
+          "t": "opens from Home",
+          "ok": true
+        },
+        {
+          "t": "Master Canon shows 1/27/27/20/20",
+          "ok": true
+        },
+        {
+          "t": "counts pull live from cabinet arrays",
+          "ok": true
+        }
+      ],
+      "next": "emit Registry/*.blackroad.json files"
+    },
+    {
+      "num": "07",
+      "id": "roados-shell",
+      "name": "RoadOS Shell",
+      "status": "fake_done",
+      "meaning": "black background, white bars, clock, start menu, mutually-exclusive windows.",
+      "currentlyExists": [
+        "black desktop",
+        "white top + bottom bars",
+        "clock",
+        "start menu",
+        "9 folders"
+      ],
+      "needs": [
+        "boot receipt",
+        "idle receipt",
+        "unhandled-error receipt"
+      ],
+      "blockers": [],
+      "proofNeeded": [
+        {
+          "t": "emits receipt on boot",
+          "ok": false
+        },
+        {
+          "t": "emits receipt on idle",
+          "ok": false
+        },
+        {
+          "t": "emits receipt on click",
+          "ok": false
+        }
+      ],
+      "fakeNote": "Visible and working, but no receipt has ever been written. By the no-action-without-receipt rule, this is fake-done until receipts land.",
+      "next": "write boot receipt on load"
+    },
+    {
+      "num": "08",
+      "id": "command-routing",
+      "name": "Command Routing",
+      "status": "next",
+      "meaning": "RoadOS should understand clicks and commands, then route to the right page, product, agent, or next action.",
+      "currentlyExists": [
+        "Home folders",
+        "Agents page",
+        "Products page",
+        "Domains page",
+        "Organizations page",
+        "Registry page",
+        "RoadMap page"
+      ],
+      "needs": [
+        "folder click routing",
+        "Start menu routing",
+        "bottom action button routing",
+        "selected page state",
+        "current road label",
+        "receipt stub when action runs"
+      ],
+      "blockers": [],
+      "proofNeeded": [
+        {
+          "t": "click Home folder opens Home",
+          "ok": true
+        },
+        {
+          "t": "click Products folder opens Products",
+          "ok": true
+        },
+        {
+          "t": "click Agents folder opens Agents",
+          "ok": true
+        },
+        {
+          "t": "click Domains folder opens Domains",
+          "ok": true
+        },
+        {
+          "t": "click Organizations folder opens Organizations",
+          "ok": true
+        },
+        {
+          "t": "click Registry opens Registry",
+          "ok": true
+        },
+        {
+          "t": "click RoadMap opens RoadMap",
+          "ok": true
+        },
+        {
+          "t": "Start menu items route",
+          "ok": false
+        },
+        {
+          "t": "action button emits receipt",
+          "ok": false
+        }
+      ],
+      "next": "wire command routing"
+    },
+    {
+      "num": "09",
+      "id": "window-system",
+      "name": "Window System",
+      "status": "fake_done",
+      "meaning": "six mutually-exclusive windows + Esc-to-close.",
+      "currentlyExists": [
+        "Home / Agents / Products / Domains / Orgs / Registry / RoadMap windows",
+        "Esc closes current",
+        "openX closes others"
+      ],
+      "needs": [
+        "window state log",
+        "focus stack",
+        "minimize-to-taskbar"
+      ],
+      "blockers": [],
+      "proofNeeded": [
+        {
+          "t": "only one window open at a time",
+          "ok": true
+        },
+        {
+          "t": "emits receipt on open/close",
+          "ok": false
+        },
+        {
+          "t": "taskbar shows current window",
+          "ok": false
+        }
+      ],
+      "fakeNote": "Works in practice but writes no state log. A reload loses everything; no proof of what was opened or when.",
+      "next": "log window-open events to receipts"
+    },
+    {
+      "num": "10",
+      "id": "chat-rail",
+      "name": "Chat Rail",
+      "status": "fake_done",
+      "meaning": "right-side chat panel in every cabinet window.",
+      "currentlyExists": [
+        "seed messages",
+        "message bubbles",
+        "input + SEND button",
+        "local echo"
+      ],
+      "needs": [
+        "real delivery to agents",
+        "persistence across reload",
+        "cross-window thread"
+      ],
+      "blockers": [
+        "no backend chosen"
+      ],
+      "proofNeeded": [
+        {
+          "t": "messages render",
+          "ok": true
+        },
+        {
+          "t": "messages persist across reload",
+          "ok": false
+        },
+        {
+          "t": "messages reach an actual agent",
+          "ok": false
+        }
+      ],
+      "fakeNote": "The chat is theatre. Your message never leaves the page. Looks right; proves nothing.",
+      "next": "stub chat persistence (local first)"
+    },
+    {
+      "num": "11",
+      "id": "receipts",
+      "name": "Receipts",
+      "status": "next",
+      "meaning": "every action emits an append-only receipt.",
+      "currentlyExists": [
+        "chat shows receipt-shaped strings (theatre)"
+      ],
+      "needs": [
+        "actual receipt log",
+        "stable schema",
+        "write+read API",
+        "verify chain"
+      ],
+      "blockers": [],
+      "proofNeeded": [
+        {
+          "t": "receipts.log file exists",
+          "ok": false
+        },
+        {
+          "t": "one click → one receipt line",
+          "ok": false
+        },
+        {
+          "t": "reload preserves receipts",
+          "ok": false
+        }
+      ],
+      "next": "create receipts.log + write on every click"
+    },
+    {
+      "num": "12",
+      "id": "carkeys",
+      "name": "CarKeys Permissions",
+      "status": "planned",
+      "meaning": "keys, secrets, gates on actions.",
+      "currentlyExists": [
+        "status pills on products + domains saying things are gated"
+      ],
+      "needs": [
+        "vault choice",
+        "scoped tokens",
+        "gate-check on action"
+      ],
+      "blockers": [
+        "vault undecided"
+      ],
+      "proofNeeded": [
+        {
+          "t": "gated action denied without key",
+          "ok": false
+        },
+        {
+          "t": "gated action permitted with key",
+          "ok": false
+        }
+      ],
+      "next": "pick vault + write spec"
+    },
+    {
+      "num": "13",
+      "id": "roadchain",
+      "name": "RoadChain Proof",
+      "status": "planned",
+      "meaning": "append-only chain that proves the receipts haven't been tampered with.",
+      "currentlyExists": [
+        "roadchain.io domain entry",
+        "BlackRoad-OS-Archive org"
+      ],
+      "needs": [
+        "chain format",
+        "hash linkage",
+        "verify function",
+        "export"
+      ],
+      "blockers": [
+        "receipts table 09 must exist first"
+      ],
+      "proofNeeded": [
+        {
+          "t": "chain validates end-to-end",
+          "ok": false
+        },
+        {
+          "t": "tampered receipt detected",
+          "ok": false
+        }
+      ],
+      "next": "spec chain format"
+    },
+    {
+      "num": "14",
+      "id": "detour",
+      "name": "Detour / Recovery",
+      "status": "planned",
+      "meaning": "fallback paths when something fails.",
+      "currentlyExists": [
+        "Detour product entry",
+        "BlackRoad-OS-Cloud org owns it"
+      ],
+      "needs": [
+        "failure detection",
+        "fallback registry",
+        "auto-engage"
+      ],
+      "blockers": [
+        "no failure source defined"
+      ],
+      "proofNeeded": [
+        {
+          "t": "fallback engages on simulated failure",
+          "ok": false
+        },
+        {
+          "t": "fallback clears when primary returns",
+          "ok": false
+        }
+      ],
+      "next": "enumerate failure modes"
+    },
+    {
+      "num": "15",
+      "id": "roadcode-next",
+      "name": "RoadCode Next",
+      "status": "next",
+      "meaning": "build the RoadCode MVP window — build / run / deploy room.",
+      "currentlyExists": [
+        "Products page lists RoadCode as NEXT",
+        "BlackRoad-OS-Code org as NEXT"
+      ],
+      "needs": [
+        "MVP window",
+        "repo inspect view",
+        "patch plan view",
+        "test run view"
+      ],
+      "blockers": [
+        "MVP scope undefined"
+      ],
+      "proofNeeded": [
+        {
+          "t": "RoadCode window opens",
+          "ok": false
+        },
+        {
+          "t": "shows a repo",
+          "ok": false
+        },
+        {
+          "t": "runs a test",
+          "ok": false
+        }
+      ],
+      "next": "scope RoadCode MVP and build the first view"
+    },
+    {
+      "num": "16",
+      "id": "roadtrip-next",
+      "name": "RoadTrip Next",
+      "status": "planned",
+      "meaning": "parallel agent lanes for long tasks.",
+      "currentlyExists": [
+        "RoadTrip product entry"
+      ],
+      "needs": [
+        "lane state",
+        "handoff protocol",
+        "progress tracking"
+      ],
+      "blockers": [
+        "scope"
+      ],
+      "proofNeeded": [
+        {
+          "t": "two lanes run in parallel",
+          "ok": false
+        },
+        {
+          "t": "lanes hand off cleanly",
+          "ok": false
+        }
+      ],
+      "next": "scope RoadTrip MVP"
+    },
+    {
+      "num": "17",
+      "id": "highway-next",
+      "name": "HighWay Next",
+      "status": "planned",
+      "meaning": "high-throughput batch / bulk pipelines.",
+      "currentlyExists": [
+        "HighWay product entry",
+        "BlackRoad-OS-Cloud org owns it"
+      ],
+      "needs": [
+        "batch runner",
+        "throughput meter",
+        "pause/resume"
+      ],
+      "blockers": [
+        "scope"
+      ],
+      "proofNeeded": [
+        {
+          "t": "a batch of 100 ops runs",
+          "ok": false
+        }
+      ],
+      "next": "scope HighWay MVP"
+    },
+    {
+      "num": "18",
+      "id": "public-demo",
+      "name": "Public Demo",
+      "status": "planned",
+      "meaning": "shareable demo of RoadOS — link, gif, or installable.",
+      "currentlyExists": [
+        "local HTML file in /Users/alexa/"
+      ],
+      "needs": [
+        "deploy target",
+        "PWA manifest",
+        "relative paths",
+        "screenshot or short video"
+      ],
+      "blockers": [
+        "hosting choice (Cloudflare Pages / Vercel / Tauri)"
+      ],
+      "proofNeeded": [
+        {
+          "t": "shareable URL",
+          "ok": false
+        },
+        {
+          "t": "installable as PWA",
+          "ok": false
+        },
+        {
+          "t": "opens offline",
+          "ok": false
+        }
+      ],
+      "next": "pick deploy target"
+    },
+    {
+      "num": "19",
+      "id": "blockers",
+      "name": "Blockers",
+      "status": "planned",
+      "meaning": "aggregate view of every blocker across lanes.",
+      "currentlyExists": [
+        "per-lane blocker lists in this RoadMap page"
+      ],
+      "needs": [
+        "aggregation",
+        "cross-lane view",
+        "resolution log"
+      ],
+      "blockers": [
+        "Registry table 08 (Org Ownership) drives this"
+      ],
+      "proofNeeded": [
+        {
+          "t": "aggregated blocker view",
+          "ok": false
+        },
+        {
+          "t": "resolution emits receipt",
+          "ok": false
+        }
+      ],
+      "next": "build cross-lane blocker view"
+    },
+    {
+      "num": "20",
+      "id": "release-gate",
+      "name": "Release Gate",
+      "status": "planned",
+      "meaning": "gates that must pass before a public release ships.",
+      "currentlyExists": [
+        "per-org releaseGate strings in Organizations page"
+      ],
+      "needs": [
+        "gate definitions",
+        "gate-check runner",
+        "pass/fail receipt"
+      ],
+      "blockers": [
+        "release scope undefined"
+      ],
+      "proofNeeded": [
+        {
+          "t": "all gates pass before release",
+          "ok": false
+        },
+        {
+          "t": "any failing gate blocks release",
+          "ok": false
+        }
+      ],
+      "next": "define the gates"
+    }
+  ]
+}

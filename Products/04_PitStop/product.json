@@ -1,1 +1,33 @@
-{"id": 4, "slug": "pitstop", "name": "PitStop", "number": "04", "category": "Education", "definition": "Homework portal for tutoring, explanations, practice, quizzes, and learning support.", "boundary": "Learning surface. Roadie is the agent, PitStop is the product.", "mvp": "Upload homework, get step-by-step help without shame, track weak spots.", "status": "level_4_builder_ready", "implementation_status": "planned", "risk_level": "low", "primary_agents": ["Sophia", "Thalia"], "primary_handoff": "RoadBook, BlackBoard, RoadView, RoadMap", "next_action": "Build tutoring flow with weak spot tracking"}
+{
+  "number": "04",
+  "id": "pitstop",
+  "slug": "pitstop",
+  "name": "PitStop",
+  "role": "homework and learning portal",
+  "status": "planned",
+  "meaning": "stop the system, inspect, repair",
+  "does": [
+    "freeze state",
+    "snapshot",
+    "diagnose",
+    "repair"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "pitstop.blackroad.io",
+  "agents": [
+    "Gaia",
+    "Silas",
+    "Seraphina",
+    "Octavia"
+  ],
+  "receipts": [
+    "pitstop.freeze",
+    "pitstop.repair"
+  ],
+  "carkeys": [
+    "process control gated"
+  ],
+  "next": "scope MVP",
+  "definition": "PitStop is the homework portal. PitStop is tutoring, homework help, quizzes, lessons, practice, explanations, rubrics, learning paths, and teacher/student support. It is the place where a confused learner can stop, refuel, understand the next step, and keep going. PitStop is not Roadie. Roadie is an agent. PitStop is the learning product. PitStop exists because learning tools became paywalls, shame machines, PDF portals, LMS nightmares, and fragmented tutoring apps. PitStop should be forgiving, visual, structured, and calm.",
+  "core_promise": "Pull over, understand it, keep going."
+}

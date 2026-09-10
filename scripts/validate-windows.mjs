@@ -16,7 +16,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const root = process.env.BLACKROAD_ROOT || join(dirname(fileURLToPath(import.meta.url)), "..");
 const reg = JSON.parse(readFileSync(join(root, "Registry", "windows.json"), "utf8"));
 const schema = JSON.parse(readFileSync(join(root, "Registry", "schemas", "window.schema.json"), "utf8"));
 const html = readFileSync(join(root, "index.html"), "utf8");
@@ -28,14 +28,22 @@ const windows = reg.windows;
 if (!Array.isArray(windows)) fail("windows must be an array");
 
 const seenId = new Set(), seenEl = new Set();
-for (const [i, w] of (windows ?? []).entries()) {
+for (const [i, w] of (Array.isArray(windows) ? windows : []).entries()) {
   const where = `window[${i}] (${w?.id ?? "?"})`;
+  if (w === null || typeof w !== "object" || Array.isArray(w)) {
+    fail(`${where}: must be an object`);
+    continue;
+  }
   for (const req of schema.required) {
     if (w[req] === undefined) fail(`${where}: missing required field "${req}"`);
   }
   for (const [key, val] of Object.entries(w)) {
     const spec = schema.properties[key];
     if (!spec) { fail(`${where}: unknown field "${key}"`); continue; }
+    if (spec.type === "string" && typeof val !== "string") {
+      fail(`${where}: "${key}" must be a string`);
+      continue;
+    }
     if (spec.enum && !spec.enum.includes(val)) fail(`${where}: "${key}"="${val}" not in [${spec.enum.join(", ")}]`);
     if (spec.pattern && !new RegExp(spec.pattern).test(String(val))) fail(`${where}: "${key}"="${val}" fails ${spec.pattern}`);
   }

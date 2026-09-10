@@ -1,0 +1,280 @@
+{
+  "status_name": "BlackRoad 27 Product Status",
+  "generated_at": "2026-06-15T20:13:00Z",
+  "source": "Products.txt + product folder scaffolding",
+  "target_canon_maturity": "level_4_builder_ready",
+  "target_implementation_maturity": "planned",
+  "overall_status": "ROUTING scaffolding complete for all 27 products. Strong boundaries and handoffs in place.",
+  "products": [
+    {
+      "number": 1,
+      "slug": "roados",
+      "name": "RoadOS",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "medium",
+      "has_routing": true,
+      "next_action": "Add SCHEMA.md, UI_PLAN.md, API_PLAN.md if not present"
+    },
+    {
+      "number": 2,
+      "slug": "roadcode",
+      "name": "RoadCode",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "medium",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 3,
+      "slug": "roadtrip",
+      "name": "RoadTrip",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "low",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 4,
+      "slug": "pitstop",
+      "name": "PitStop",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "low",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 5,
+      "slug": "roadwork",
+      "name": "RoadWork",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "medium",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 6,
+      "slug": "backroad",
+      "name": "BackRoad",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "low",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 7,
+      "slug": "carkeys",
+      "name": "CarKeys",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "medium",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 8,
+      "slug": "roadbook",
+      "name": "RoadBook",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "medium",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 9,
+      "slug": "roadworld",
+      "name": "RoadWorld",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "medium",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 10,
+      "slug": "roadview",
+      "name": "RoadView",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "medium",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 11,
+      "slug": "roadchain",
+      "name": "RoadChain",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "medium",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 12,
+      "slug": "roadside",
+      "name": "RoadSide",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "low",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 13,
+      "slug": "roadcoin",
+      "name": "RoadCoin",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "medium",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 14,
+      "slug": "carpool",
+      "name": "CarPool",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "low",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 15,
+      "slug": "blackboard",
+      "name": "BlackBoard",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "medium",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 16,
+      "slug": "oneway",
+      "name": "OneWay",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "medium",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 17,
+      "slug": "roadband",
+      "name": "RoadBand",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "medium",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 18,
+      "slug": "highway",
+      "name": "HighWay",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "medium",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 19,
+      "slug": "roadsport",
+      "name": "RoadSport",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "medium",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 20,
+      "slug": "officeroad",
+      "name": "OfficeRoad",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "low",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 21,
+      "slug": "roadstream",
+      "name": "RoadStream",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "low",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 22,
+      "slug": "roadshow",
+      "name": "RoadShow",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "medium",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 23,
+      "slug": "roundabout",
+      "name": "RoundAbout",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "low",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 24,
+      "slug": "glovebox",
+      "name": "GloveBox",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "low",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 25,
+      "slug": "roadmap",
+      "name": "RoadMap",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "low",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 26,
+      "slug": "roadwire",
+      "name": "RoadWire",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "low",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    },
+    {
+      "number": 27,
+      "slug": "detour",
+      "name": "Detour",
+      "canon_maturity": "level_4_builder_ready",
+      "implementation_maturity": "planned",
+      "risk_level": "medium",
+      "has_routing": true,
+      "next_action": "Add remaining files"
+    }
+  ]
+}

@@ -1,1 +1,33 @@
-{"id": 8, "slug": "roadbook", "name": "RoadBook", "number": "08", "category": "Publishing", "definition": "Digital-native publishing for books, essays, research, narration, and provenance.", "boundary": "Write, publish, review, and preserve text/audio work with ownership.", "mvp": "Full publishing lifecycle with versioning and rights management.", "status": "level_4_builder_ready", "implementation_status": "planned", "risk_level": "medium", "primary_agents": ["Cicero", "Calliope", "Theodosia"], "primary_handoff": "RoadView, BlackBoard, RoadChain, RoadWork", "next_action": "Implement versioning and rights tracking"}
+{
+  "number": "08",
+  "id": "roadbook",
+  "slug": "roadbook",
+  "name": "RoadBook",
+  "role": "digital-native publishing and knowledge",
+  "status": "planned",
+  "meaning": "knowledge base, indexed notes",
+  "does": [
+    "note capture",
+    "indexing",
+    "search",
+    "linking"
+  ],
+  "org": "BlackRoad-Knowledge",
+  "domain": "roadbook.blackroad.io",
+  "agents": [
+    "Alice",
+    "Anastasia",
+    "Ophelia",
+    "Cicero"
+  ],
+  "receipts": [
+    "roadbook.note.saved",
+    "roadbook.indexed"
+  ],
+  "carkeys": [
+    "none"
+  ],
+  "next": "scope MVP",
+  "definition": "RoadBook is BlackRoad's digital-native publishing and knowledge product. RoadBook is for books, audiobooks, research, essays, notes, articles, peer review, commentary, provenance, authorship, narration, reader/author collaboration, royalties, and source-backed knowledge. RoadBook exists because writing, narration, publishing, and research are trapped in bad marketplaces, bad economics, physical-book assumptions, and gatekeeping. It should make it easier for people to write, publish, narrate, review, sell, cite, and preserve text/audio knowledge without becoming just a PDF dump or trapping authors in bad royalty systems.",
+  "core_promise": "Publish knowledge without losing ownership, proof, or voice."
+}

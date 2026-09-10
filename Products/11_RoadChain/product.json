@@ -1,16 +1,32 @@
 {
-  "id": 11,
+  "number": "11",
+  "id": "roadchain",
   "slug": "roadchain",
   "name": "RoadChain",
-  "number": "11",
-  "category": "Provenance",
-  "definition": "Receipt layer for provenance, hashes, audit trails, and proof.",
-  "boundary": "Make important actions inspectable without overclaiming legal compliance.",
-  "mvp": "Record and verify meaningful events with receipts.",
-  "status": "level_4_builder_ready",
-  "implementation_status": "planned",
-  "risk_level": "medium",
-  "primary_agents": ["Portia", "Theodosia"],
-  "primary_handoff": "RoadMap, CarKeys, HighWay, Detour",
-  "next_action": "Define core receipt events and verification logic"
+  "role": "proof, receipt, and provenance layer",
+  "status": "planned",
+  "meaning": "receipts, ledger, chain-of-custody",
+  "does": [
+    "append-only log",
+    "chain verify",
+    "export"
+  ],
+  "org": "BlackRoad-OS-Primary",
+  "domain": "roadchain.blackroad.io",
+  "agents": [
+    "Theodosia",
+    "Anastasia",
+    "Seraphina"
+  ],
+  "receipts": [
+    "roadchain.entry",
+    "roadchain.verified"
+  ],
+  "carkeys": [
+    "write gated",
+    "read open"
+  ],
+  "next": "scope MVP",
+  "definition": "RoadChain is the proof, receipt, provenance, audit, rollback, and memory-ledger layer. RoadChain exists because BlackRoad should run on receipts, not vibes. If something important changes, moves, deploys, gets approved, gets remembered, gets routed, or gets corrected, RoadChain should be able to show a durable record of what happened. RoadChain should support receipts, hashes, parent/child event chains, audit logs, provenance, rollback references, memory mutation proof, agent action proof, deployment proof, permission/grant proof, source-backed claims, and correction history. It can say 'receipt-backed' and 'auditable' but should not overclaim 'legal proof' unless implementation and legal review support it.",
+  "core_promise": "If it mattered, there is a receipt."
 }
