@@ -139,12 +139,12 @@ def run_doctor(settings: Settings, *, repair: bool = False) -> list[Check]:
             checks.append(Check("error", "AUTO_HEAL_RISK", f"{credential.id} is {credential.risk} risk and requires human approval"))
         if credential.risk in {"high", "critical"} and credential.authorize_action is None:
             checks.append(Check("error", "AUTHORIZATION_ACTION_REQUIRED", f"{credential.id} requires a high-risk connector authorization action"))
-        if credential.auto_heal and not credential.consumers:
-            checks.append(Check("error", "AUTO_HEAL_NO_CONSUMERS", f"{credential.id} cannot auto-heal without a verified consumer"))
+        if not credential.consumers:
+            checks.append(Check("error", "NO_CONSUMERS", f"{credential.id} cannot rotate without a declared consumer"))
         for consumer in credential.consumers:
             if not consumer.paths:
                 checks.append(Check("error", "UNBOUNDED_CONSUMER", f"{credential.id}/{consumer.id} must declare covered paths or external locators"))
-        if credential.provider_id is None:
+        if not credential.provider_id or not credential.provider_id.strip():
             checks.append(Check("error", "NO_PROVIDER_ID", f"{credential.id} cannot durably retry first-run revocation after a process crash"))
         for name, action in _all_actions(credential):
             if not ACTION_NAME.fullmatch(action):
