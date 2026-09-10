@@ -5,7 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const registryDir = path.join(__dirname, '..', 'Registry');
+const registryDir = process.env.BLACKROAD_ROOT ? path.join(process.env.BLACKROAD_ROOT, 'Registry') : path.join(__dirname, '..', 'Registry');
 
 async function validateGloveBox() {
   console.log('🔧 Validating GloveBox tool registry...\n');
