@@ -17,3 +17,5 @@ jobs:
           node-version: "20"
       - name: Validate all registries and generated projections
         run: node scripts/validate-all.mjs
+      - name: Run the validator/sync test suite
+        run: node --test 'test/**/*.test.mjs'

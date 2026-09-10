@@ -168,6 +168,8 @@ def rotate(
     *,
     approved_risk: str,
 ) -> RotationOutcome:
+    if not credential.consumers:
+        raise ValueError("rotation requires at least one declared consumer")
     if not risk_allows(credential.risk, approved_risk):
         raise ValueError(f"{credential.id} risk {credential.risk} exceeds approval {approved_risk}")
     if credential.risk in {"high", "critical"} and credential.authorize_action is None:
@@ -183,8 +185,12 @@ def rotate(
 
     with rotation_lock(settings.state_file):
         state = load_state(settings.state_file)
+        if any(item.get("credential_id") == credential.id for item in state.get("pending_revocations", [])):
+            raise ValueError("reconcile pending revocation before another rotation")
         active = state.setdefault("active", {}).get(credential.id, {})
         old_provider_id = str(active.get("provider_id") or credential.provider_id or "")
+        if not old_provider_id.strip():
+            raise ValueError("rotation requires a non-empty old provider id")
         new_provider_id = ""
         status = "failed_access_retained"
         message = "connector rotation failed before revocation; the old provider credential remains active"
@@ -404,9 +410,21 @@ def reconcile_pending(
         for item in pending_items:
             rotation_id = str(item.get("rotation_id") or uuid.uuid4().hex[:16])
             old_provider_id = str(item.get("provider_id") or "")
+            active = state.get("active", {}).get(credential.id, {})
+            new_provider_id = active.get("provider_id")
+            evidence_valid = bool(
+                credential.consumers
+                and old_provider_id.strip()
+                and isinstance(new_provider_id, str)
+                and new_provider_id.strip()
+                and new_provider_id != old_provider_id
+                and active.get("last_rotation_id") == item.get("rotation_id")
+                and item.get("rotation_id")
+            )
             events: list[dict[str, Any]] = []
-            authorized = True
-            if credential.authorize_action is not None:
+            authorized = evidence_valid
+            access_retained = False
+            if authorized and credential.authorize_action is not None:
                 approval = _run(
                     settings,
                     credential,
@@ -418,6 +436,24 @@ def reconcile_pending(
                     approved_risk=approved_risk,
                 )
                 authorized = approval.ok
+            if authorized:
+                validated = _run(
+                    settings, credential, credential.validate_action, rotation_id,
+                    "validate_new", events, old_provider_id=old_provider_id,
+                    new_provider_id=new_provider_id, approved_risk=approved_risk,
+                )
+                access_retained = validated.ok
+                if access_retained:
+                    for consumer in credential.consumers:
+                        verified = _run(
+                            settings, credential, consumer.verify_action, rotation_id,
+                            "verify_consumer", events, old_provider_id=old_provider_id,
+                            new_provider_id=new_provider_id, approved_risk=approved_risk,
+                            consumer_id=consumer.id,
+                        )
+                        if not verified.ok:
+                            access_retained = False
+                            break
             result = (
                 _run(
                     settings,
@@ -427,9 +463,10 @@ def reconcile_pending(
                     "retry_revoke_old",
                     events,
                     old_provider_id=old_provider_id,
+                    new_provider_id=new_provider_id,
                     approved_risk=approved_risk,
                 )
-                if authorized
+                if authorized and access_retained
                 else ConnectorResult(False, 77, 0)
             )
             if result.ok:
@@ -441,7 +478,7 @@ def reconcile_pending(
                 message = "connector completed pending old-key revocation"
             else:
                 status = "pending_revocation"
-                message = "old credential remains active; connector retry failed safely"
+                message = "revocation remains pending; replacement access or revocation could not be confirmed"
             receipt = {
                 "schema_version": 2,
                 "rotation_id": rotation_id,
@@ -453,7 +490,7 @@ def reconcile_pending(
                 "started_at": utc_now(),
                 "completed_at": utc_now(),
                 "status": status,
-                "access_retained": True,
+                "access_retained": access_retained,
                 "old_revoked": result.ok,
                 "finding_fingerprints": list(item.get("fingerprints", [])),
                 "events": events,
@@ -464,7 +501,7 @@ def reconcile_pending(
                     credential_id=credential.id,
                     rotation_id=rotation_id,
                     status=status,
-                    access_retained=True,
+                    access_retained=access_retained,
                     old_revoked=result.ok,
                     receipt_path=receipt_path,
                     message=message,

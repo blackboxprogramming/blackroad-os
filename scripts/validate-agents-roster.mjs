@@ -17,7 +17,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const root = process.env.BLACKROAD_ROOT || join(dirname(fileURLToPath(import.meta.url)), "..");
 const reg = JSON.parse(readFileSync(join(root, "Registry", "agents.json"), "utf8"));
 const html = readFileSync(join(root, "index.html"), "utf8");
 

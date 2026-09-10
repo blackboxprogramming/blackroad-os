@@ -216,7 +216,8 @@ def command_reconcile(args: argparse.Namespace, settings: Settings) -> int:
         return EXIT_BLOCKED
     outcomes = []
     for credential in settings.credentials:
-        outcomes.extend(item.public() for item in reconcile_pending(settings, credential, approved_risk=args.approve_risk))
+        if credential.id in pending_ids:
+            outcomes.extend(item.public() for item in reconcile_pending(settings, credential, approved_risk=args.approve_risk))
     _print({"status": "complete", "outcomes": outcomes}, as_json=args.json)
     return EXIT_ROTATION_FAILED if any(item["status"] == "pending_revocation" for item in outcomes) else EXIT_OK
 
@@ -243,27 +244,41 @@ def command_watch(args: argparse.Namespace, settings: Settings) -> int:
         cycle += 1
         findings = scan(settings, include_history=args.git_history)
         grouped, blocked = _mapping(settings, findings)
+        pending_ids = {
+            str(item.get("credential_id"))
+            for item in load_state(settings.state_file).get("pending_revocations", [])
+        }
+        eligible_ids = {
+            credential.id for credential in settings.credentials
+            if credential.auto_heal and risk_allows(credential.risk, "medium")
+        }
+        deferred_pending = sorted(pending_ids - eligible_ids)
         auto_ids = {
-            credential.id for credential in settings.credentials if credential.auto_heal and credential.id in grouped
+            credential_id for credential_id in eligible_ids
+            if credential_id in grouped or credential_id in pending_ids
         }
         coverage = coverage_report(settings)
         coverage_blockers = blockers_for_credentials(coverage, auto_ids, include_unregistered=True)
         outcomes = []
         if args.execute and not blocked and not coverage_blockers:
             for credential in settings.credentials:
-                if credential.auto_heal and credential.id in grouped:
-                    outcomes.append(rotate(settings, credential, grouped[credential.id], approved_risk="medium").public())
+                if credential.id in eligible_ids and credential.id in pending_ids:
+                    outcomes.extend(item.public() for item in reconcile_pending(settings, credential, approved_risk="medium"))
             for credential in settings.credentials:
-                outcomes.extend(item.public() for item in reconcile_pending(settings, credential, approved_risk="medium"))
+                # Findings were mapped before recovery; defer a fresh rotation until
+                # the next scan so retired fingerprints cannot create another key.
+                if credential.id in eligible_ids and credential.id in grouped and credential.id not in pending_ids:
+                    outcomes.append(rotate(settings, credential, grouped[credential.id], approved_risk="medium").public())
         payload = {
             "cycle": cycle,
             "active_findings": sum(len(items) for items in grouped.values()),
             "blocked_findings": blocked,
             "consumer_coverage_blockers": coverage_blockers,
+            "deferred_pending_credentials": deferred_pending,
             "outcomes": outcomes,
         }
         _print(payload, as_json=args.json)
-        if blocked or coverage_blockers or any(item["status"].startswith("failed") or item["status"] == "pending_revocation" for item in outcomes):
+        if blocked or coverage_blockers or deferred_pending or any(item["status"].startswith("failed") or item["status"] == "pending_revocation" for item in outcomes):
             last_code = EXIT_ROTATION_FAILED
         if not stopping and (args.max_cycles == 0 or cycle < args.max_cycles):
             time.sleep(args.interval)

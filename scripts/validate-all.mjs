@@ -13,6 +13,7 @@ const validators = [
   { script: 'validate-glovebox.mjs', name: 'GloveBox Tools' },
   { script: 'validate-roadchain.mjs', name: 'RoadChain Ledger' },
   { script: 'validate-collections.mjs', name: 'Collections' },
+  { script: 'validate-references.mjs', name: 'Cross-Registry References' },
   { script: 'sync-products.mjs', args: ['--check'], name: 'Generated Products' },
   { script: 'sync-collections.mjs', args: ['--check'], name: 'Generated Collections' },
   { script: 'sync-product-folders.mjs', args: ['--check'], name: 'Product Folders' }

@@ -6,7 +6,7 @@ import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const registryDir = path.join(__dirname, '..', 'Registry');
+const registryDir = process.env.BLACKROAD_ROOT ? path.join(process.env.BLACKROAD_ROOT, 'Registry') : path.join(__dirname, '..', 'Registry');
 
 async function validateRoadChain() {
   console.log('⛓️  Validating RoadChain receipt ledger...\n');
