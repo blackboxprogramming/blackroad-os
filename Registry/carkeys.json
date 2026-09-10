@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
-  "last_updated": "2026-06-15",
-  "total_lanes": 16,
-  "note": "Single source of truth for the 16 CarKeys permission lanes. The CARKEYS_LANES array in index.html is generated from this by scripts/sync-collections.mjs. grants[] is seed data; the desktop mutates an in-memory copy at runtime.",
+  "last_updated": "2026-06-19",
+  "total_lanes": 20,
+  "note": "Single source of truth for the 20 CarKeys permission lanes. The CARKEYS_LANES array in index.html is generated from this by scripts/sync-collections.mjs. grants[] is seed data; the desktop mutates an in-memory copy at runtime.",
   "lanes": [
     {
       "num": "01",
@@ -10,7 +10,7 @@
       "name": "Operator Identity",
       "status": "ready",
       "risk": "critical",
-      "purpose": "identifies who can approve, revoke, and reset everything in RoadOS",
+      "purpose": "Identifies who can approve, revoke, and reset everything in RoadOS",
       "permissionTypes": [
         "own",
         "approve",
@@ -26,7 +26,10 @@
         "operator reset requires hardware proof"
       ],
       "connected": [
-        "all lanes"
+        "carkeys.agent-permissions",
+        "carkeys.external-api",
+        "carkeys.model-execution",
+        "carkeys.vcs-deployment"
       ],
       "receiptTypes": [
         "OPERATOR_SET",
@@ -51,6 +54,112 @@
         }
       ],
       "next": "keep stable"
+    },
+    {
+      "num": "17",
+      "id": "model-execution",
+      "name": "Model Execution",
+      "status": "ready",
+      "risk": "high",
+      "purpose": "Gates local LLM inference, token limits, and resource consumption",
+      "permissionTypes": ["query", "fine-tune", "cache-clear"],
+      "defaultRule": "models execute under strict token/time budgets",
+      "operatorRule": "Operator can override model limits or pause inference",
+      "riskRules": [
+        "model inference must be metered via RoadCoin",
+        "context injection attacks are logged to RoadChain",
+        "token budgets reset hourly"
+      ],
+      "connected": ["carkeys.operator-identity"],
+      "receiptTypes": ["MODEL_INFERENCE_STARTED", "MODEL_INFERENCE_COMPLETED", "TOKEN_LIMIT_EXCEEDED"],
+      "grants": [
+        {
+          "id": "grant-model-sebastian",
+          "subject": "Sebastian",
+          "scope": ["query", "cache-clear"],
+          "status": "approved",
+          "grantedAt": "2026-06-15T00:00:00Z",
+          "expiresAt": "never"
+        },
+        {
+          "id": "grant-model-roadie",
+          "subject": "Roadie",
+          "scope": ["query"],
+          "status": "approved",
+          "grantedAt": "2026-06-15T00:00:00Z",
+          "expiresAt": "never"
+        }
+      ],
+      "next": "monitor token usage patterns"
+    },
+    {
+      "num": "18",
+      "id": "data-export",
+      "name": "Data Export & External Sharing",
+      "status": "ready",
+      "risk": "high",
+      "purpose": "Controls what data can leave the BlackRoad perimeter (OneWay proxy required)",
+      "permissionTypes": ["export-local", "export-cloud", "share-external"],
+      "defaultRule": "all external data flows through OneWay proxy",
+      "operatorRule": "Operator can audit/revoke exports retroactively",
+      "riskRules": [
+        "exports must be logged with full payload hash",
+        "identifiable data stripped before external transmission",
+        "consent records stored in RoadChain"
+      ],
+      "connected": ["carkeys.operator-identity"],
+      "receiptTypes": ["DATA_EXPORT_REQUESTED", "DATA_SANITIZED", "DATA_TRANSMITTED", "CONSENT_RECORDED"],
+      "grants": [
+        {
+          "id": "grant-export-ophelia",
+          "subject": "Ophelia",
+          "scope": ["export-local"],
+          "status": "approved",
+          "grantedAt": "2026-06-15T00:00:00Z",
+          "expiresAt": "never"
+        }
+      ],
+      "next": "build OneWay proxy module"
+    },
+    {
+      "num": "19",
+      "id": "physical-devices",
+      "name": "Physical Device Access",
+      "status": "planned",
+      "risk": "critical",
+      "purpose": "Controls access to cameras, microphones, location, sensors, Bluetooth, USB",
+      "permissionTypes": ["camera", "microphone", "location", "sensors", "bluetooth", "usb"],
+      "defaultRule": "require explicit user consent for each device access",
+      "operatorRule": "Operator can revoke all device access immediately",
+      "riskRules": [
+        "device permission prompts are never silent",
+        "device access is metered and logged per app",
+        "hardware state changes logged to RoadChain"
+      ],
+      "connected": ["carkeys.operator-identity"],
+      "receiptTypes": ["DEVICE_REQUESTED", "DEVICE_GRANTED", "DEVICE_REVOKED", "DEVICE_ACCESSED"],
+      "grants": [],
+      "next": "design device permission UI"
+    },
+    {
+      "num": "20",
+      "id": "payment",
+      "name": "Payment & Financial",
+      "status": "planned",
+      "risk": "critical",
+      "purpose": "Controls payment methods, transaction limits, and financial integrations",
+      "permissionTypes": ["read-balance", "initiate-transaction", "subscribe"],
+      "defaultRule": "all transactions require explicit confirmation",
+      "operatorRule": "Operator can freeze all payments or set spending limits",
+      "riskRules": [
+        "payment confirmations require out-of-band verification",
+        "transaction history immutably logged",
+        "suspicious patterns trigger operator alert"
+      ],
+      "connected": ["carkeys.operator-identity"],
+      "receiptTypes": ["PAYMENT_INITIATED", "PAYMENT_CONFIRMED", "PAYMENT_COMPLETED", "PAYMENT_FAILED"],
+      "grants": [],
+      "next": "integration planning with payment providers"
     },
     {
       "num": "02",

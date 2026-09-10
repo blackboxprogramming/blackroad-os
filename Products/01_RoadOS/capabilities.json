@@ -1,0 +1,71 @@
+{
+  "product_id": "roados",
+  "product_number": "01",
+  "product_name": "RoadOS",
+  "last_updated": "2026-06-19",
+  "core_capabilities": [
+    {
+      "capability": "shell-emulation",
+      "description": "Browser-based shell that accepts commands, routes them to right product",
+      "enabled": true,
+      "depends_on": ["os.shell", "model.gemma"],
+      "status": "planned"
+    },
+    {
+      "capability": "file-navigation",
+      "description": "Browse local filesystem, open files in context-aware ways",
+      "enabled": true,
+      "depends_on": ["os.file-nav", "storage.indexeddb"],
+      "status": "active"
+    },
+    {
+      "capability": "window-management",
+      "description": "Create, manage, and route between multiple product windows",
+      "enabled": true,
+      "depends_on": ["storage.indexeddb"],
+      "status": "planned"
+    },
+    {
+      "capability": "command-routing",
+      "description": "Infer user intent and route to correct product/agent",
+      "enabled": true,
+      "depends_on": ["model.gemma", "auth.carkeys"],
+      "status": "planned"
+    },
+    {
+      "capability": "system-clock",
+      "description": "Real-time clock, timers, and scheduling UI",
+      "enabled": true,
+      "depends_on": ["storage.indexeddb"],
+      "status": "planned"
+    },
+    {
+      "capability": "voice-interface",
+      "description": "Voice input/output (delegated to Aria agent)",
+      "enabled": false,
+      "depends_on": ["model.gemma"],
+      "status": "planned"
+    }
+  ],
+  "capability_tiers": {
+    "tier_1_core": [
+      "file-navigation"
+    ],
+    "tier_2_essential": [
+      "window-management",
+      "system-clock"
+    ],
+    "tier_3_advanced": [
+      "shell-emulation",
+      "command-routing"
+    ],
+    "tier_4_optional": [
+      "voice-interface"
+    ]
+  },
+  "feature_flags": {
+    "enable_voice": false,
+    "enable_command_routing": true,
+    "max_concurrent_windows": 5
+  }
+}

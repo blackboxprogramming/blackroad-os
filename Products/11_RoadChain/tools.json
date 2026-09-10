@@ -1,0 +1,38 @@
+{
+  "product_id": "roadchain",
+  "product_number": "11",
+  "product_name": "RoadChain",
+  "last_updated": "2026-06-19",
+  "tools_used": [
+    {
+      "tool_id": "crypto.signing",
+      "access": "full",
+      "purpose": "Sign and verify receipts, maintain chain integrity"
+    },
+    {
+      "tool_id": "storage.indexeddb",
+      "access": "append-only",
+      "purpose": "Store immutable receipt ledger"
+    },
+    {
+      "tool_id": "auth.carkeys",
+      "access": "query",
+      "purpose": "Cross-reference permissions granted with actions taken"
+    }
+  ],
+  "tools_required": [
+    "crypto.signing",
+    "storage.indexeddb"
+  ],
+  "tools_optional": [],
+  "tools_planned": [],
+  "carkeys_lanes_required": [],
+  "carkeys_lanes_gated": [
+    "carkeys.operator-identity"
+  ],
+  "receipt_types_generated": [
+    "RECEIPT_CREATED",
+    "RECEIPT_VERIFIED",
+    "CHAIN_INTEGRITY_CHECK"
+  ]
+}

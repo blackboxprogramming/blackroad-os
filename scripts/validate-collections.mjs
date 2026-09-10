@@ -23,7 +23,7 @@ const COLLECTIONS = [
   { file: "Registry/lanes.json", schema: "Registry/schemas/lane.schema.json",
     key: "lanes", total: "total_lanes", count: 20, label: "roadmap lanes" },
   { file: "Registry/carkeys.json", schema: "Registry/schemas/carkeys-lane.schema.json",
-    key: "lanes", total: "total_lanes", count: 16, label: "carkeys lanes" },
+    key: "lanes", total: "total_lanes", count: 20, label: "carkeys lanes" },
 ];
 
 const errors = [];

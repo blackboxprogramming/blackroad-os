@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-06-19",
+  "total_receipts": 3,
+  "note": "RoadChain immutable receipt ledger. Receipts are appended only, never modified. Each receipt links to the prior via chain_hash. Validated against Registry/schemas/roadchain-receipt.schema.json.",
+  "genesis_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "receipts": [
+    {
+      "receipt_id": "REC-2026-BLACKROAD",
+      "timestamp": "2026-06-10T00:00:00Z",
+      "chain_hash": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6",
+      "prior_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "subject": "Alexandria / Alexa",
+      "action": "OPERATOR_SET",
+      "product": "RoadOS",
+      "agent": null,
+      "tool": null,
+      "carkeys_lane": "carkeys.operator-identity",
+      "metadata": {
+        "operator_name": "Alexandria / Alexa",
+        "handoff_from": "system_bootstrap",
+        "approval_chain": ["Olympia"]
+      },
+      "verification_signature": "MEUCIQDx...base64_encoded_signature",
+      "notes": "System bootstrap: Alexandria / Alexa confirmed as Operator"
+    },
+    {
+      "receipt_id": "REC-2026-ROADOS01",
+      "timestamp": "2026-06-15T14:30:00Z",
+      "chain_hash": "b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+      "prior_hash": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6",
+      "subject": "Roadie",
+      "action": "PRODUCT_LAUNCHED",
+      "product": "RoadOS",
+      "agent": "Roadie",
+      "tool": "os.shell",
+      "carkeys_lane": null,
+      "metadata": {
+        "product_number": "01",
+        "version": "0.1.0",
+        "features_enabled": ["shell-emulation", "file-navigation", "app-routing"],
+        "agents_assigned": ["Lucidia", "Roadie", "Aria", "Silas"]
+      },
+      "verification_signature": "MEUCIQDy...base64_encoded_signature",
+      "notes": "RoadOS MVP launch: browser shell with command routing"
+    },
+    {
+      "receipt_id": "REC-2026-CARKEYS01",
+      "timestamp": "2026-06-16T09:15:00Z",
+      "chain_hash": "c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3",
+      "prior_hash": "b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+      "subject": "Seraphina",
+      "action": "CARKEYS_APPROVED",
+      "product": "CarKeys",
+      "agent": "Seraphina",
+      "tool": "auth.carkeys",
+      "carkeys_lane": "carkeys.agent-permissions",
+      "metadata": {
+        "grant_id": "grant-agent-sebastian-roadcode-deploy",
+        "agent_name": "Sebastian",
+        "scope": ["execute-code", "run-tests", "deploy-staging"],
+        "expires_at": "never",
+        "approved_by": "Alexandria / Alexa"
+      },
+      "verification_signature": "MEUCIQDz...base64_encoded_signature",
+      "notes": "Agent permission grant: Sebastian approved for RoadCode deployment"
+    }
+  ]
+}

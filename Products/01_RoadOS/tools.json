@@ -1,0 +1,58 @@
+{
+  "product_id": "roados",
+  "product_number": "01",
+  "product_name": "RoadOS",
+  "last_updated": "2026-06-19",
+  "tools_used": [
+    {
+      "tool_id": "os.file-nav",
+      "access": "full",
+      "purpose": "Browse local file system and open files in app context"
+    },
+    {
+      "tool_id": "os.shell",
+      "access": "full",
+      "purpose": "Execute shell commands with full RoadOS context"
+    },
+    {
+      "tool_id": "model.gemma",
+      "access": "inference",
+      "purpose": "Lightweight intent inference for command routing"
+    },
+    {
+      "tool_id": "storage.indexeddb",
+      "access": "full",
+      "purpose": "Persist window state, command history, settings"
+    },
+    {
+      "tool_id": "auth.carkeys",
+      "access": "query",
+      "purpose": "Check permission lanes before executing commands"
+    },
+    {
+      "tool_id": "crypto.signing",
+      "access": "verify",
+      "purpose": "Verify receipt signatures for command audit trail"
+    }
+  ],
+  "tools_required": [
+    "os.file-nav",
+    "storage.indexeddb"
+  ],
+  "tools_optional": [
+    "model.gemma",
+    "os.shell"
+  ],
+  "tools_planned": [],
+  "carkeys_lanes_required": [],
+  "carkeys_lanes_gated": [
+    "carkeys.operator-identity",
+    "carkeys.agent-permissions"
+  ],
+  "receipt_types_generated": [
+    "ROADOS_BOOT",
+    "ROADOS_WINDOW_OPENED",
+    "ROADOS_APP_ROUTED",
+    "ROADOS_COMMAND_EXECUTED"
+  ]
+}
