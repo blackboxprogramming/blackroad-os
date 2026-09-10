@@ -6,8 +6,11 @@ no framework — the same "no external build tools" posture as the rest of the r
 
 ```bash
 npm test                          # or:
-node --test 'test/**/*.test.mjs'
+node --test test/*.test.mjs
 ```
+
+The shell expands the test-file pattern before Node runs, so Node 20 does not
+need built-in glob support. CI invokes the same `npm test` command.
 
 Requires Node 20+ (CI pins 20; developed against 22).
 
