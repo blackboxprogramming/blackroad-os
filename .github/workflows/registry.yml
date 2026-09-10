@@ -23,9 +23,13 @@ jobs:
         run: node scripts/validate-agents-roster.mjs
       - name: Validate Registry/orgs.json + domains.json
         run: node scripts/validate-collections.mjs
+      - name: Check cross-registry references resolve
+        run: node scripts/validate-references.mjs
       - name: Check index.html PRODUCTS is in sync with the registry
         run: node scripts/sync-products.mjs --check
       - name: Check index.html ORGS + DOMAINS are in sync with their registries
         run: node scripts/sync-collections.mjs --check
       - name: Check per-folder product.json is in sync with the registry
         run: node scripts/sync-product-folders.mjs --check
+      - name: Run the validator/sync test suite
+        run: node --test 'test/**/*.test.mjs'

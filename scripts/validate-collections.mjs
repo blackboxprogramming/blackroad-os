@@ -13,7 +13,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const root = process.env.BLACKROAD_ROOT || join(dirname(fileURLToPath(import.meta.url)), "..");
 
 const COLLECTIONS = [
   { file: "Registry/orgs.json", schema: "Registry/schemas/organization.schema.json",

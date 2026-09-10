@@ -1,0 +1,15 @@
+{
+  "name": "blackroad-os",
+  "version": "0.0.0",
+  "private": true,
+  "description": "BlackRoad OS registry tooling — validators, sync generators, and their tests.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test 'test/**/*.test.mjs'",
+    "validate": "node scripts/validate-all.mjs && node scripts/validate-references.mjs",
+    "sync": "node scripts/sync-products.mjs && node scripts/sync-collections.mjs && node scripts/sync-product-folders.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

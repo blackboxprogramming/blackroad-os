@@ -12,7 +12,8 @@ const validators = [
   { script: 'validate-agents-roster.mjs', name: 'Agent Roster' },
   { script: 'validate-glovebox.mjs', name: 'GloveBox Tools' },
   { script: 'validate-roadchain.mjs', name: 'RoadChain Ledger' },
-  { script: 'validate-collections.mjs', name: 'Collections' }
+  { script: 'validate-collections.mjs', name: 'Collections' },
+  { script: 'validate-references.mjs', name: 'Cross-Registry References' }
 ];
 
 console.log('🔍 Running full BlackRoad OS validation suite...\n');
