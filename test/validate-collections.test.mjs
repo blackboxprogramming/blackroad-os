@@ -47,3 +47,35 @@ test("reports the offending file in the error output", () => {
   const { stderr } = sandbox.run("validate-collections.mjs");
   assert.match(stderr, /Registry\/orgs\.json/);
 });
+
+test("rejects duplicate domain names even when IDs and numbers differ", () => {
+  sandbox.mutate("domains.json", (r) => { r.domains[1].name = r.domains[0].name; });
+  const { code, stderr } = sandbox.run("validate-collections.mjs");
+  assert.equal(code, 1);
+  assert.match(stderr, /duplicate domain name/);
+});
+
+test("rejects malformed and noncanonical domain names", () => {
+  const original = sandbox.read("domains.json");
+  for (const name of ["", "BLACKROAD.io", "https://blackroad.io", "blackroad.io.", ".blackroad.io", "bad..blackroad.io", "-bad.blackroad.io", "bad-.blackroad.io", "*.blackroad.io", "127.0.0.1", `${"a".repeat(64)}.io`, `${"a".repeat(63)}.${"b".repeat(63)}.${"c".repeat(63)}.${"d".repeat(63)}.io`]) {
+    sandbox.write("domains.json", original);
+    sandbox.mutate("domains.json", (r) => { r.domains[0].name = name; });
+    const { code, stderr } = sandbox.run("validate-collections.mjs");
+    assert.equal(code, 1, JSON.stringify(name));
+    assert.match(stderr, /canonical hostname/);
+  }
+});
+
+test("rejects a subdomain entered as a second root domain", () => {
+  sandbox.mutate("domains.json", (r) => { r.domains[1].name = "app.blackroad.io"; });
+  const { code, stderr } = sandbox.run("validate-collections.mjs");
+  assert.equal(code, 1);
+  assert.match(stderr, /overlapping root domains/);
+});
+
+test("accepts a canonical hostname at the label and total length limits", () => {
+  const name = `${"a".repeat(63)}.${"b".repeat(63)}.${"c".repeat(63)}.${"d".repeat(61)}`;
+  assert.equal(name.length, 253);
+  sandbox.mutate("domains.json", (r) => { r.domains[0].name = name; });
+  assert.equal(sandbox.run("validate-collections.mjs").code, 0);
+});
