@@ -35,9 +35,9 @@ stderr), not a re-implementation of the validation logic.
 |---|---|
 | `validate-registry.test.mjs` | product schema, enums, patterns, `id==slug`, duplicates, count, contiguity |
 | `validate-agents.test.mjs` | agent schema, `slug==name.toLowerCase()`, duplicates, count, `total_agents` |
-| `validate-collections.test.mjs` | orgs/domains/lanes/carkeys counts, duplicates, per-file error attribution |
+| `validate-collections.test.mjs` | orgs/domains/lanes/carkeys counts, duplicates, canonical domain names, overlapping roots, per-file error attribution |
 | `validate-agents-roster.test.mjs` | registry ↔ `index.html` roster drift, missing-array handling |
-| `validate-references.test.mjs` | cross-registry foreign keys (agents, domains, orgs) |
+| `validate-references.test.mjs` | product and domain foreign keys, hostname boundaries, malformed link collections, org warnings |
 | `sync-products.test.mjs` | `--check` drift detection, regenerate round-trip, missing-marker handling |
 
 ## Cross-registry references (`scripts/validate-references.mjs`)
@@ -45,7 +45,10 @@ stderr), not a re-implementation of the validation logic.
 New guard that resolves the foreign keys linking the registries:
 
 - `product.agents[]` → `agents.json` (by name) — **error** on a dangling ref
-- `product.domain` → `domains.json` (by registrable root) — **error** on a foreign domain
+- `product.domain` → `domains.json` (exact root or dot-delimited subdomain) — **error** on a malformed or foreign hostname
+- `domain.products[]` → `products.json` (by name) — **error** on a dangling ref
+- `domain.agents[]` → `agents.json` (by name) — **error** on a dangling ref
+- `domain.nextRoads[]` → `domains.json` (exact root or dot-delimited subdomain) — **error** on a malformed or foreign hostname
 - `product.org` → `orgs.json` (by name) — **warning** for now
 
 `product.org` is a warning, not an error, because the registry already contains
@@ -54,3 +57,9 @@ org references that resolve to no org record — e.g. `BlackRoad-Agents`,
 Picking the correct org for each of those products is a canon call for the
 operator, not something the script should guess. Once reconciled, set
 `ORG_SEVERITY = "error"` in the validator (one line) to lock it down.
+
+Domain names are canonical lowercase ASCII with valid 1–63 character labels and
+at most 253 characters overall. Roots must be unique and non-overlapping. Input
+is validated as stored; validators do not silently trim, lowercase, parse URLs,
+or rewrite generated projections. These are offline namespace checks, not DNS
+or public-suffix registration verification.

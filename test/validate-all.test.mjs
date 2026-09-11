@@ -38,3 +38,18 @@ test("full suite retains the newer cross-registry reference guard", (t) => {
   assert.match(result.stdout + result.stderr, /Cross-Registry References/);
   assert.match(result.stdout + result.stderr, /unknown\.invalid/);
 });
+
+test("full suite rejects broken domain navigation even after regeneration", (t) => {
+  const sandbox = fixture(t);
+  sandbox.mutate("domains.json", (registry) => {
+    registry.domains[0].nextRoads = ["unregistered.example"];
+  });
+  assert.equal(sandbox.run("sync-collections.mjs").code, 0);
+  assert.equal(sandbox.run("sync-collections.mjs", ["--check"]).code, 0);
+  const before = sandbox.readRaw("index.html");
+  const result = sandbox.run("validate-all.mjs");
+  assert.equal(result.code, 1, result.stdout + result.stderr);
+  assert.match(result.stdout + result.stderr, /Cross-Registry References/);
+  assert.match(result.stdout + result.stderr, /nextRoads\[0\].*unregistered\.example/);
+  assert.equal(sandbox.readRaw("index.html"), before);
+});
