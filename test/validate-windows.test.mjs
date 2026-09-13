@@ -21,6 +21,24 @@ test("window labels must be strings", (t) => {
   assert.match(result.stderr, /label.*must be a string/);
 });
 
+test("rejects duplicate open handlers that overwrite desktop action routes", (t) => {
+  const sandbox = fixture(t);
+  const registry = sandbox.read("windows.json");
+  const openFn = registry.windows[0].openFn;
+  registry.windows[1].openFn = openFn;
+  sandbox.write("windows.json", registry);
+
+  // Both windows and the shared handler exist. Regeneration cannot fix this
+  // ambiguity: ACTION_TO_ROUTE is keyed by openFn and would lose the first route.
+  assert.equal(sandbox.run("sync-windows.mjs").code, 0);
+  assert.equal(sandbox.run("sync-windows.mjs", ["--check"]).code, 0);
+  const before = sandbox.readRaw("index.html");
+  const result = sandbox.run("validate-windows.mjs");
+  assert.equal(result.code, 1, result.stdout + result.stderr);
+  assert.ok(result.stderr.includes(`duplicate openFn "${openFn}"`), result.stderr);
+  assert.equal(sandbox.readRaw("index.html"), before);
+});
+
 for (const value of [null, {}, "windows"]) {
   test(`reports a non-array window collection: ${JSON.stringify(value)}`, (t) => {
     const sandbox = fixture(t);

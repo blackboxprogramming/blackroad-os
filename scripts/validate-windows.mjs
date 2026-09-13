@@ -27,7 +27,7 @@ const windows = reg.windows;
 
 if (!Array.isArray(windows)) fail("windows must be an array");
 
-const seenId = new Set(), seenEl = new Set();
+const seenId = new Set(), seenEl = new Set(), seenOpen = new Set();
 for (const [i, w] of (Array.isArray(windows) ? windows : []).entries()) {
   const where = `window[${i}] (${w?.id ?? "?"})`;
   if (w === null || typeof w !== "object" || Array.isArray(w)) {
@@ -49,6 +49,8 @@ for (const [i, w] of (Array.isArray(windows) ? windows : []).entries()) {
   }
   if (w.id) { if (seenId.has(w.id)) fail(`duplicate id "${w.id}"`); seenId.add(w.id); }
   if (w.elementId) { if (seenEl.has(w.elementId)) fail(`duplicate elementId "${w.elementId}"`); seenEl.add(w.elementId); }
+  // ACTION_TO_ROUTE is keyed by openFn; duplicate handlers silently drop a route.
+  if (w.openFn) { if (seenOpen.has(w.openFn)) fail(`duplicate openFn "${w.openFn}"`); seenOpen.add(w.openFn); }
 
   // cross-check against index.html
   if (w.elementId && !html.includes(`id="${w.elementId}"`)) fail(`${where}: id="${w.elementId}" not found in index.html`);
