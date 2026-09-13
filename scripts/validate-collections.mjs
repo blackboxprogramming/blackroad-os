@@ -12,6 +12,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { domainIdentityErrors } from "./lib/domains.mjs";
 
 const root = process.env.BLACKROAD_ROOT || join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -37,6 +38,7 @@ for (const c of COLLECTIONS) {
   const rows = reg[c.key];
 
   if (!Array.isArray(rows)) { fail(`"${c.key}" must be an array`); continue; }
+  if (c.key === "domains") domainIdentityErrors(rows.map((row) => row?.name)).forEach(fail);
   summary.push(`${c.label}:${rows.length}`);
   if (rows.length !== c.count) fail(`expected ${c.count} ${c.label}, found ${rows.length}`);
   if (reg[c.total] !== undefined && reg[c.total] !== rows.length) {

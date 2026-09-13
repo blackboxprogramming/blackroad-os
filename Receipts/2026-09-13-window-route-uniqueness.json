@@ -1,0 +1,38 @@
+{
+  "event": "repository.window_route_validation_repaired",
+  "recorded_at_utc": "2026-09-13T22:46:47Z",
+  "actor": "Codex",
+  "repository": "blackboxprogramming/blackroad-os",
+  "branch": "codex/windows-domain-navigation",
+  "baseline": {
+    "commit": "5a87926766a5ef0890ec354642535221ba8ceb52",
+    "tree": "841a34d5297968ccb1dc47e5c7171f947a4dd312",
+    "working_tree": "clean before this repair",
+    "tests_passed": 59,
+    "validation_checks_passed": 12
+  },
+  "remote_context": {
+    "pr6_head": "c15885b549dfd9f9a3cf153128108f13eb15ed0f",
+    "pr10_head": "572ce1c188fa633669e741e913bdfddf2517aac1",
+    "verification": "Live connector reads confirmed both PRs remain open. PR6 body records the same tree as this local baseline and inclusion of PR10. Live PR6 blob hashes for both changed source/test files exactly match the local baseline blobs. Cached remote refs are stale; local and remote commit IDs differ.",
+    "baseline_validator_blob": "87740f02f4ab693e2a6421965c9de89a5f408fc8",
+    "baseline_test_blob": "917b3f14777da0943dbe0308c24c03fbc0b48229"
+  },
+  "defect": "The validator accepted duplicate window openFn values. Desktop ACTION_TO_ROUTE uses openFn as its key, so one window route would silently overwrite another even after generated projections were synchronized.",
+  "change": "Reject duplicate openFn values and exercise the real validator against an isolated registry with duplicated handlers after successful generation and read-only synchronization checks.",
+  "files": ["scripts/validate-windows.mjs", "test/validate-windows.test.mjs"],
+  "verification": [
+    {"command": "node --test --test-name-pattern='duplicate open handlers' test/validate-windows.test.mjs", "stage": "before fix", "exit_code": 1, "result": "1 failed regression: validator incorrectly returned success for duplicate handlers"},
+    {"command": "node --test test/validate-windows.test.mjs", "stage": "after fix", "exit_code": 0, "result": "8 passed, 0 failed"},
+    {"command": "npm test", "stage": "after fix", "exit_code": 0, "result": "60 passed, 0 failed"},
+    {"command": "npm run validate", "stage": "after fix", "exit_code": 0, "result": "12 checks passed, 0 failed; standalone reference check also passed with 5 pre-existing organization warnings"},
+    {"command": "git diff --check", "stage": "after fix", "exit_code": 0, "result": "No whitespace errors"}
+  ],
+  "runtime": "Node v24.19.0",
+  "limitations": [
+    "Five existing product-to-organization references remain non-fatal warnings; choosing replacement canon names is outside this repair.",
+    "Node 20 CI and browser behavior were not executed in this pass.",
+    "This is a manual maintenance record, not a signed or runtime-generated RoadChain receipt.",
+    "No commit, push, PR update, merge, deployment, generated artifact edit, or canon data change was performed."
+  ]
+}

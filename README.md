@@ -22,6 +22,7 @@ cd blackroad-os
 node scripts/validate-registry.mjs      # products.json
 node scripts/validate-agents.mjs        # agents.json
 node scripts/validate-collections.mjs   # orgs, domains, lanes, carkeys
+node scripts/validate-references.mjs    # product/agent links and domain navigation
 
 # Check that generated artifacts are in sync
 node scripts/sync-products.mjs --check
@@ -50,6 +51,15 @@ Registry/*.json  ──validate──>  schemas/  ──sync──>  index.html
 hand-edit to a generated file will not merge.
 
 ### Registries
+
+Domain records use unique lowercase ASCII hostnames. Collection validation rejects
+malformed hostnames and overlapping roots; reference validation checks product
+domains and each domain's `nextRoads`, `products`, and `agents` links. URLs, ports,
+wildcards, trailing dots, and malformed labels are rejected before suffix matching.
+Subdomains resolve only at a dot boundary under exactly one registered root.
+These checks use the local registry and do not establish DNS ownership, endpoint
+reachability, or permission to publish. Domain roles and status values remain
+operator-maintained source data.
 
 | File | Count | Schema | Validator |
 |------|-------|--------|-----------|

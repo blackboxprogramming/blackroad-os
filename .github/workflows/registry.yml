@@ -15,21 +15,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Validate Registry/products.json
-        run: node scripts/validate-registry.mjs
-      - name: Validate Registry/agents.json
-        run: node scripts/validate-agents.mjs
-      - name: Check agent roster matches index.html
-        run: node scripts/validate-agents-roster.mjs
-      - name: Validate Registry/orgs.json + domains.json
-        run: node scripts/validate-collections.mjs
-      - name: Check cross-registry references resolve
-        run: node scripts/validate-references.mjs
-      - name: Check index.html PRODUCTS is in sync with the registry
-        run: node scripts/sync-products.mjs --check
-      - name: Check index.html ORGS + DOMAINS are in sync with their registries
-        run: node scripts/sync-collections.mjs --check
-      - name: Check per-folder product.json is in sync with the registry
-        run: node scripts/sync-product-folders.mjs --check
+      - name: Validate all registries and generated projections
+        run: node scripts/validate-all.mjs
       - name: Run the validator/sync test suite
-        run: node --test 'test/**/*.test.mjs'
+        run: npm test
