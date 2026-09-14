@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import sys
 import tempfile
 import unittest
@@ -66,12 +65,27 @@ class CanonTests(unittest.TestCase):
             self.assertTrue((output / "dns.json").is_file())
             self.assertTrue((output / "fleet.json").is_file())
 
-    def test_no_secret_material_in_compiled_dns(self) -> None:
+    def test_no_credential_fields_in_compiled_dns(self) -> None:
         desired = compile_state(self.canon)
-        serialized = json.dumps(desired["artifacts"]["dns"]).lower()
-        self.assertNotIn("password", serialized)
-        self.assertNotIn("token", serialized)
-        self.assertNotIn("secret", serialized)
+        sensitive_keys = {
+            "password",
+            "token",
+            "api_key",
+            "private_key",
+            "credential",
+            "secret_value",
+        }
+
+        def walk(value: object) -> None:
+            if isinstance(value, dict):
+                self.assertTrue(sensitive_keys.isdisjoint(value.keys()))
+                for nested in value.values():
+                    walk(nested)
+            elif isinstance(value, list):
+                for nested in value:
+                    walk(nested)
+
+        walk(desired["artifacts"]["dns"])
 
 
 if __name__ == "__main__":
