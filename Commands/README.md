@@ -12,8 +12,9 @@ Commands call scripts and workflows. They should be operator-readable first.
 
 ```text
 road network validate
+road network discover
 road network plan
 road network apply
 ```
 
-Network canon lives in `Canon/Network/`; provider state is derived from canon rather than becoming authority.
+Network canon lives in `Canon/Network/`; provider state is read and reconciled against canon rather than becoming authority.
