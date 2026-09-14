@@ -1,0 +1,68 @@
+schema: blackroad.networks.v1
+
+networks:
+  - id: road.management
+    vlan: 10
+    cidr: 10.17.10.0/24
+    gateway: 10.17.10.1
+    trust: infrastructure
+
+  - id: road.people
+    vlan: 20
+    cidr: 10.17.20.0/24
+    gateway: 10.17.20.1
+    trust: operator
+
+  - id: road.compute
+    vlan: 30
+    cidr: 10.17.30.0/24
+    gateway: 10.17.30.1
+    trust: compute
+
+  - id: road.services
+    vlan: 40
+    cidr: 10.17.40.0/24
+    gateway: 10.17.40.1
+    trust: service
+
+  - id: road.devices
+    vlan: 50
+    cidr: 10.17.50.0/24
+    gateway: 10.17.50.1
+    trust: constrained
+
+  - id: road.media
+    vlan: 60
+    cidr: 10.17.60.0/24
+    gateway: 10.17.60.1
+    trust: constrained
+
+  - id: road.lab
+    vlan: 70
+    cidr: 10.17.70.0/24
+    gateway: 10.17.70.1
+    trust: untrusted
+
+  - id: road.robotics
+    vlan: 80
+    cidr: 10.17.80.0/24
+    gateway: 10.17.80.1
+    trust: physical
+
+  - id: road.mesh
+    vlan: 90
+    cidr: 10.17.90.0/24
+    gateway: 10.17.90.1
+    trust: transport
+
+  - id: road.guest
+    vlan: 100
+    cidr: 10.17.100.0/24
+    gateway: 10.17.100.1
+    trust: guest
+
+  - id: road.control
+    vlan: 1729
+    cidr: 10.17.29.0/24
+    gateway: 10.17.29.1
+    trust: authority
