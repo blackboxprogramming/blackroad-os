@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "road-credential-doctor"
-version = "0.3.0"
+version = "0.4.0"
 description = "Connector-side no-lockout credential leak detection and transactional rotation"
 requires-python = ">=3.11"
 license = "MIT"

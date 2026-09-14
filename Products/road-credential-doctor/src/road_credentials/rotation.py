@@ -8,6 +8,7 @@ from .models import Credential, Finding, Settings
 from .policy import risk_allows
 from .receipts import utc_now, write_receipt
 from .runner import ConnectorResult, dispatch_connector
+from .routes import rotation_route
 from .state import atomic_write_json, load_state, rotation_lock
 
 
@@ -69,7 +70,14 @@ def _run(
     consumer_id: str | None = None,
 ) -> ConnectorResult:
     request = {
-        "schema_version": 1,
+        "schema_version": 2,
+        "route": rotation_route(
+            runtime_id=settings.connector_runtime_id,
+            connector_id=credential.connector,
+            credential_id=credential.id,
+            rotation_id=rotation_id,
+            consumer_id=consumer_id,
+        ),
         "connector_runtime_id": settings.connector_runtime_id,
         "connector": credential.connector,
         "credential_id": credential.id,

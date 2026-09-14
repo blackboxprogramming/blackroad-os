@@ -533,7 +533,11 @@ class CredentialDoctorTests(unittest.TestCase):
         self.assertNotIn("secret", requests.lower())
         for line in requests.splitlines():
             payload = json.loads(line)
+            self.assertEqual(2, payload["schema_version"])
             self.assertEqual("blackroad-connectors-test", payload["connector_runtime_id"])
+            self.assertTrue(payload["route"].startswith("road://ramps/blackroad-connectors-test/github/"))
+            if payload["consumer_id"]:
+                self.assertTrue(payload["route"].endswith(f"/consumers/{payload['consumer_id']}"))
 
     def test_connector_response_with_secret_field_is_rejected(self) -> None:
         (self.runtime / "malicious_response").write_text("1", encoding="utf-8")

@@ -1,10 +1,14 @@
 # Road Credential Doctor
 
+We access it all at RoadOS.  
+We collaborate with Roadies.  
+We code in Road.
+
 Road Credential Doctor detects leaked credential material and asks a trusted connector runtime to perform a no-lockout rotation:
 
 `baseline every consumer → create → validate → update+verify each canary → activate → revoke old`
 
-Version 0.3 has a hard execution-plane boundary: provider credentials, replacement values, secret-manager writes, consumer updates, and revocation all stay inside connectors. The doctor sends only credential IDs, provider IDs, action names, approvals, and rotation IDs. It has no API that accepts secret bytes.
+Version 0.4 has a hard execution-plane boundary: provider credentials, replacement values, secret-manager writes, consumer updates, and revocation all stay inside connectors. In current BlackRoad naming, those external connections are **Ramps**. RoadOS may submit a reviewed request and Roadies may coordinate it, but only the Ramp's connector runtime performs the lifecycle action. The doctor sends only credential IDs, provider IDs, action names, approvals, rotation IDs, and a canonical Route. It has no API that accepts secret bytes.
 
 The practical command remains:
 
@@ -55,7 +59,7 @@ For connector-worker scheduling, adapt `services/road-credential-doctor.service.
 
 ## Connector runtime contract
 
-Version 0.3 requires `schema_version: 3` and refuses older registries. One connector dispatcher is declared at the top level:
+Version 0.4 requires configuration `schema_version: 3` and refuses older registries. One connector dispatcher is declared at the top level:
 
 ```json
 {
@@ -69,6 +73,7 @@ Version 0.3 requires `schema_version: 3` and refuses older registries. One conne
 
 The dispatcher receives one JSON request on stdin. It contains:
 
+- request `schema_version: 2` and a canonical `road://ramps/...` Route;
 - connector runtime, connector, credential, rotation, and consumer IDs;
 - connector action and transaction phase;
 - old and new non-secret provider IDs;
@@ -94,6 +99,8 @@ Connector actions are opaque names rather than commands:
 - consumer: `update_action`, `verify_action`, `rollback_action`.
 
 The dispatcher itself is a connector transport client, not a provider adapter. It must never implement provider credential logic or secret custody on the calling endpoint.
+
+See [ROUTES.md](ROUTES.md) for the RoadOS, Roadies, Routes, and Ramps mapping. Existing package names and connector action identifiers remain compatible; the request schema changes from 1 to 2 because `route` is now required.
 
 ## Credential and consumer inventory
 

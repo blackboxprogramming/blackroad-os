@@ -1,5 +1,11 @@
 # Rotation preflight hardening
 
+Version 0.4 adds a required canonical `road://ramps/...` Route to connector request
+schema 2. This makes each rotation and consumer operation addressable without moving
+credential material into RoadOS or a Roadie. Encoded segments prevent configured IDs
+from injecting Route structure. Routes provide correlation, not authentication or
+authorization; those remain connector-runtime responsibilities.
+
 This change adds engine-level gates before connector dispatch:
 
 - Manual and automatic rotation require at least one declared consumer.

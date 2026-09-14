@@ -11,6 +11,10 @@ The doctor has two roles:
 
 The dispatcher receives no credential bytes. It receives opaque provider IDs, action names, scope identifiers, the rotation ID, and the approved risk. Provider API calls, credential generation, validation, storage, distribution, rollback, and revocation occur beyond that boundary in the connector runtime.
 
+Request schema 2 also carries a deterministic `road://ramps/...` Route. Route
+segments are percent-encoded identifiers and contain no credential values. The Route
+is not an authority token: the connector must authenticate and authorize every request.
+
 Run continuous execution only on the connector worker. A device may perform a read-only scan or submit a reviewed rotation request, but it must not host lifecycle adapters.
 
 ## Connector response boundary
