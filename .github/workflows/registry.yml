@@ -32,4 +32,5 @@ jobs:
       - name: Check per-folder product.json is in sync with the registry
         run: node scripts/sync-product-folders.mjs --check
       - name: Run the validator/sync test suite
-        run: node --test 'test/**/*.test.mjs'
+        run: node --test
+

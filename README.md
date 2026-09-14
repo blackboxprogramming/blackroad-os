@@ -1,5 +1,19 @@
 # BlackRoad OS
 
+<!-- BLACKROAD:CANON:START -->
+## The Road. Pave Tomorrow.
+
+**We access it all at RoadOS.**  
+**We collaborate with Roadies.**  
+**We code in Road.**
+
+*Integration is Innovation.*
+
+Pick up your Roadies. Discover the BlackRoad together.
+
+[Product names, brand language, and implementation boundaries](BLACKROAD_CANON.md)
+<!-- BLACKROAD:CANON:END -->
+
 **Browser-native operating environment.** 27 products, 27 agents, a hybrid mesh
 networking backbone, a Git-native data plane, and RoadChain provenance — with
 context that hands off across one road.
