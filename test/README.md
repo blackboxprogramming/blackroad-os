@@ -6,7 +6,7 @@ no framework — the same "no external build tools" posture as the rest of the r
 
 ```bash
 npm test                          # or:
-node --test 'test/**/*.test.mjs'
+node --test
 ```
 
 Requires Node 20+ (CI pins 20; developed against 22).
@@ -51,3 +51,4 @@ org references that resolve to no org record — e.g. `BlackRoad-Agents`,
 Picking the correct org for each of those products is a canon call for the
 operator, not something the script should guess. Once reconciled, set
 `ORG_SEVERITY = "error"` in the validator (one line) to lock it down.
+
