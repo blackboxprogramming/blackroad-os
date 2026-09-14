@@ -6,14 +6,37 @@ from pathlib import Path
 
 from road_credentials.models import CommandSpec
 from road_credentials.runner import dispatch_connector
+from road_credentials.routes import rotation_route
 
 
 class RunnerTests(unittest.TestCase):
-    def invoke(self, program, timeout=2):
+    def request(self, **changes):
+        request = {
+            "schema_version": 2,
+            "route": rotation_route(
+                runtime_id="test-host", connector_id="github",
+                credential_id="github-ci", rotation_id="rotation-1",
+            ),
+            "connector_runtime_id": "test-host",
+            "connector": "github",
+            "credential_id": "github-ci",
+            "rotation_id": "rotation-1",
+            "phase": "create_new",
+            "action": "credential.create",
+            "risk": "medium",
+            "approved_risk": "medium",
+            "old_provider_id": "provider-old",
+            "new_provider_id": None,
+            "consumer_id": None,
+        }
+        request.update(changes)
+        return request
+
+    def invoke(self, program, timeout=2, request=None):
         with tempfile.TemporaryDirectory() as directory:
             return dispatch_connector(
                 CommandSpec((sys.executable, "-c", program), timeout_seconds=timeout),
-                cwd=Path(directory), connector_runtime_id="test-host", request={"action": "probe"},
+                cwd=Path(directory), connector_runtime_id="test-host", request=request or self.request(),
             )
 
     def response(self, **changes):
@@ -72,11 +95,13 @@ class RunnerTests(unittest.TestCase):
     def test_invalid_utf8_is_rejected(self):
         self.assertEqual(65, self.invoke("import os; os.write(1,b'\\xff')").returncode)
 
-    def test_large_input_does_not_deadlock_early_response(self):
-        payload = json.dumps(self.response())
+    def test_invalid_large_request_is_rejected_before_process_start(self):
         with tempfile.TemporaryDirectory() as directory:
+            marker = Path(directory) / "started"
             result = dispatch_connector(
-                CommandSpec((sys.executable, "-c", "print(" + repr(payload) + ")"), timeout_seconds=2),
-                cwd=Path(directory), connector_runtime_id="test-host", request={"action": "x" * 100000},
+                CommandSpec((sys.executable, "-c", f"open({str(marker)!r},'w').write('1')"), timeout_seconds=2),
+                cwd=Path(directory), connector_runtime_id="test-host",
+                request=self.request(action="x" * 100000),
             )
-        self.assertTrue(result.ok)
+            self.assertFalse(marker.exists())
+        self.assertEqual(64, result.returncode)

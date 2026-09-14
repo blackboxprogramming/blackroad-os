@@ -11,7 +11,22 @@ The doctor has two roles:
 
 The dispatcher receives no credential bytes. It receives opaque provider IDs, action names, scope identifiers, the rotation ID, and the approved risk. Provider API calls, credential generation, validation, storage, distribution, rollback, and revocation occur beyond that boundary in the connector runtime.
 
+Request schema 2 also carries a deterministic `road://ramps/...` Route. Route
+segments are percent-encoded identifiers and contain no credential values. The Route
+is not an authority token: the connector must authenticate and authorize every request.
+
 Run continuous execution only on the connector worker. A device may perform a read-only scan or submit a reviewed rotation request, but it must not host lifecycle adapters.
+
+## Configuration and request boundary
+
+Configuration schema 3 rejects duplicate JSON keys, unknown fields at every nesting
+level, ambiguous booleans, invalid sizes and types, invalid UTF-8, and files over 4 MiB.
+The dispatcher independently validates the exact request schema, phase-specific fields,
+risk approval, bounded identifiers, and canonical Route before starting a process.
+
+Opaque provider handles are structurally allowed and semantically expected to be
+non-secret. The package cannot prove that a malicious or incorrectly configured adapter
+has not mislabeled credential material as an identifier.
 
 ## Connector response boundary
 
@@ -25,20 +40,30 @@ The dispatcher response schema is deliberately tiny: `ok`, `execution_id`, `auth
 
 Dispatcher stderr is discarded. Connector response text is parsed in memory and never written into receipts. Receipts retain only the connector execution ID and phase outcome.
 
+Receipt verification opens regular files without following symlinks, caps each file at
+16 MiB, rejects duplicate keys, invalid UTF-8, malformed or excessively nested JSON,
+and non-object roots, then verifies both the receipt hash and chain link. Receipt
+filenames accept only bounded safe rotation IDs and UTC timestamps.
+
 The connector client process receives a minimal environment allowlist. Ambient token, password, API-key, and credential variables are not inherited.
 
 ## No-lockout invariant
 
 The connector may revoke the old provider ID only after all of these facts are true:
 
-1. Every declared consumer had a healthy connector-side baseline.
-2. A distinct replacement provider ID exists.
-3. The connector validates the replacement.
-4. Each consumer is updated and independently verified as a canary.
-5. The connector activates its replacement version.
-6. Pending revocation state is durably recorded.
+1. A metadata-only operation intent was durably recorded before creation.
+2. Every declared consumer had a healthy connector-side baseline.
+3. A distinct replacement provider ID exists.
+4. The connector validates the replacement.
+5. Each consumer is updated and independently verified as a canary.
+6. The connector activates its replacement version.
+7. Pending revocation state is durably recorded.
 
 Failures before revocation request connector-side rollback. A failed rollback is reported without claiming retained access. A failed revocation leaves a provider-ID-only pending record for safe connector retry.
+
+An unhandled process exit leaves `pending_operations` on the connector worker. A
+reviewed reconciliation reuses the same rotation ID, replays idempotent actions,
+and checkpoints forward. Recovery never infers success from a recorded attempt.
 
 ## Connector implementation rules
 

@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from .models import CommandSpec
+from .protocol import ProtocolError, validate_request
 
 
 SAFE_ENVIRONMENT_NAMES = {
@@ -113,6 +114,15 @@ def dispatch_connector(
     request: Mapping[str, Any],
 ) -> ConnectorResult:
     """Dispatch metadata to a connector host. Credential bytes are never accepted."""
+    started = time.monotonic()
+    try:
+        validated_request = validate_request(request, connector_runtime_id=connector_runtime_id)
+    except ProtocolError:
+        return ConnectorResult(
+            ok=False,
+            returncode=64,
+            duration_ms=round((time.monotonic() - started) * 1000),
+        )
     environment = {
         key: value
         for key, value in os.environ.items()
@@ -124,8 +134,7 @@ def dispatch_connector(
             "ROAD_CONNECTOR_TRANSPORT": "connector_rpc",
         }
     )
-    payload = json.dumps(dict(request), sort_keys=True, separators=(",", ":")).encode("utf-8")
-    started = time.monotonic()
+    payload = json.dumps(validated_request, sort_keys=True, separators=(",", ":")).encode("utf-8")
     try:
         returncode, output = _exchange(list(spec.argv), cwd, environment, payload, spec.timeout_seconds)
         duration_ms = round((time.monotonic() - started) * 1000)

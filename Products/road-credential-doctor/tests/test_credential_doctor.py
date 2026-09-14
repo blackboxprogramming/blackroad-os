@@ -18,7 +18,9 @@ from road_credentials.config import ConfigError, load_config
 from road_credentials.doctor import run_doctor
 from road_credentials.inventory import coverage_report
 from road_credentials.rotation import rotate
+from road_credentials.rotation import reconcile_operations
 from road_credentials.rotation import reconcile_pending
+import road_credentials.rotation as rotation_module
 from road_credentials.scanner import scan
 from road_credentials.scanner import ScanIncomplete
 from road_credentials.state import load_state
@@ -98,6 +100,127 @@ class CredentialDoctorTests(unittest.TestCase):
     def _events(self) -> list[str]:
         return (self.runtime / "events.log").read_text(encoding="utf-8").splitlines()
 
+    def _crash_after(self, phase: str, *, before_dispatch: bool = False):
+        settings = load_config(self.config_path)
+        findings = scan(settings)
+        original = rotation_module._run
+
+        def crashing(*args, **kwargs):
+            current_phase = args[4]
+            if before_dispatch and current_phase == phase:
+                raise SystemExit("simulated process crash")
+            result = original(*args, **kwargs)
+            if not before_dispatch and current_phase == phase:
+                raise SystemExit("simulated process crash")
+            return result
+
+        with mock.patch.object(rotation_module, "_run", side_effect=crashing):
+            with self.assertRaisesRegex(SystemExit, "simulated process crash"):
+                rotate(settings, settings.credentials[0], findings, approved_risk="medium")
+        return settings, findings
+
+    def _configuration_variants(self, settings):
+        credential = settings.credentials[0]
+        yield "runtime", replace(settings, connector_runtime_id="another-runtime"), credential
+        yield "dispatch", replace(settings, connector_dispatch=replace(
+            settings.connector_dispatch, timeout_seconds=17)), credential
+        yield "working_directory", replace(settings, root=self.base), credential
+        yield "connector", settings, replace(credential, connector="another-connector")
+        yield "risk", settings, replace(credential, risk="low")
+        for field in ("authorize_action", "create_action", "validate_action", "activate_action",
+                      "restore_action", "revoke_old_action", "revoke_new_action"):
+            yield field, settings, replace(credential, **{field: "changed.action"})
+        for field, value in (("id", "different-consumer"), ("paths", ("other/**",)),
+                             ("update_action", "changed.update"),
+                             ("verify_action", "changed.verify"),
+                             ("rollback_action", "changed.rollback")):
+            consumer = replace(credential.consumers[0], **{field: value})
+            yield "consumer_" + field, settings, replace(credential, consumers=(consumer,))
+        yield "added_consumer", settings, replace(credential, consumers=(
+            *credential.consumers, replace(credential.consumers[0], id="secondary")))
+
+    def test_operation_recovery_blocks_configuration_drift_before_dispatch(self) -> None:
+        settings, _ = self._crash_after("create_new")
+        before = self._events()
+        for name, changed, credential in self._configuration_variants(settings):
+            with self.subTest(change=name):
+                outcomes = reconcile_operations(changed, credential, approved_risk="medium")
+                self.assertEqual("operation_pending", outcomes[0].status)
+                self.assertIn("configuration", outcomes[0].message)
+                self.assertEqual(before, self._events())
+                self.assertEqual(1, len(load_state(settings.state_file)["pending_operations"]))
+        outcomes = reconcile_operations(settings, settings.credentials[0], approved_risk="medium")
+        self.assertEqual("operation_recovered", outcomes[0].status)
+
+    def test_revocation_recovery_blocks_configuration_drift_before_dispatch(self) -> None:
+        (self.runtime / "fail_phase").write_text("revoke_old", encoding="utf-8")
+        settings, _, _ = self._rotate()
+        (self.runtime / "fail_phase").unlink()
+        before = self._events()
+        for name, changed, credential in self._configuration_variants(settings):
+            with self.subTest(change=name):
+                outcomes = reconcile_pending(changed, credential, approved_risk="medium")
+                self.assertEqual("pending_revocation", outcomes[0].status)
+                self.assertIn("configuration", outcomes[0].message)
+                self.assertEqual(before, self._events())
+                self.assertFalse((self.runtime / "old_revoked").exists())
+        outcomes = reconcile_pending(settings, settings.credentials[0], approved_risk="medium")
+        self.assertEqual("revocation_reconciled", outcomes[0].status)
+
+    def test_legacy_operation_without_configuration_binding_stays_pending(self) -> None:
+        settings, _ = self._crash_after("create_new")
+        state = load_state(settings.state_file)
+        state["pending_operations"][0].pop("execution_config_hash", None)
+        settings.state_file.write_text(json.dumps(state), encoding="utf-8")
+        before = self._events()
+        outcome = reconcile_operations(settings, settings.credentials[0], approved_risk="medium")[0]
+        self.assertEqual("operation_pending", outcome.status)
+        self.assertEqual(before, self._events())
+
+    def test_recovery_blocks_removing_one_of_multiple_consumers(self) -> None:
+        config = self._config()
+        secondary = dict(config["credentials"][0]["consumers"][0], id="secondary")
+        config["credentials"][0]["consumers"].append(secondary)
+        self.config_path.write_text(json.dumps(config), encoding="utf-8")
+        (self.runtime / "consumer-secondary").write_text("provider-old", encoding="utf-8")
+        settings, _ = self._crash_after("activate_connector_version")
+        credential = replace(settings.credentials[0], consumers=settings.credentials[0].consumers[:1])
+        before = self._events()
+        outcome = reconcile_operations(settings, credential, approved_risk="medium")[0]
+        self.assertEqual("operation_pending", outcome.status)
+        self.assertEqual(before, self._events())
+        original = load_state(settings.state_file)["pending_operations"][0]["execution_config_hash"]
+        reconcile_operations(settings, settings.credentials[0], approved_risk="medium")
+        queued = load_state(settings.state_file)["pending_revocations"][0]
+        self.assertEqual(original, queued["execution_config_hash"])
+        before = self._events()
+        outcome = reconcile_pending(settings, credential, approved_risk="medium")[0]
+        self.assertEqual("pending_revocation", outcome.status)
+        self.assertEqual(before, self._events())
+
+    def test_watch_blocks_changed_runtime_with_pending_operation(self) -> None:
+        self._crash_after("create_new")
+        config = self._config()
+        config["connector_runtime"]["id"] = "changed-runtime"
+        self.config_path.write_text(json.dumps(config), encoding="utf-8")
+        before = self._events()
+        code, output = self._watch(cycles=2)
+        self.assertEqual(EXIT_ROTATION_FAILED, code, output)
+        self.assertEqual(before, self._events())
+        self.assertIn("configuration", output)
+
+    def test_legacy_revocation_without_configuration_binding_stays_pending(self) -> None:
+        (self.runtime / "fail_phase").write_text("revoke_old", encoding="utf-8")
+        settings, _, _ = self._rotate()
+        (self.runtime / "fail_phase").unlink()
+        state = load_state(settings.state_file)
+        state["pending_revocations"][0].pop("execution_config_hash", None)
+        settings.state_file.write_text(json.dumps(state), encoding="utf-8")
+        before = self._events()
+        outcome = reconcile_pending(settings, settings.credentials[0], approved_risk="medium")[0]
+        self.assertEqual("pending_revocation", outcome.status)
+        self.assertEqual(before, self._events())
+
     def test_scanner_redacts_secret_values(self) -> None:
         settings = load_config(self.config_path)
         findings = scan(settings)
@@ -119,7 +242,7 @@ class CredentialDoctorTests(unittest.TestCase):
         config = self._config()
         config["credentials"][0]["provider_id"] = ""
         self.config_path.write_text(json.dumps(config), encoding="utf-8")
-        with self.assertRaisesRegex(ValueError, "provider id"):
+        with self.assertRaisesRegex(ValueError, "provider[_ ]id"):
             self._rotate()
         self.assertFalse((self.runtime / "events.log").exists())
 
@@ -256,10 +379,176 @@ class CredentialDoctorTests(unittest.TestCase):
                     credential = replace(credential, consumers=())
                 settings.state_file.write_text(json.dumps(state), encoding="utf-8")
                 before = self._events()
+                if invalid == "blank_old":
+                    with self.assertRaisesRegex(ValueError, "provider_id must be a non-empty string"):
+                        reconcile_pending(settings, credential, approved_risk="medium")
+                    self.assertEqual(before, self._events())
+                    continue
                 outcome = reconcile_pending(settings, credential, approved_risk="medium")[0]
                 self.assertFalse(outcome.old_revoked)
                 self.assertFalse(outcome.access_retained)
                 self.assertEqual(before, self._events())
+
+    def _assert_operation_recovers(self, crash_phase: str, *, before_dispatch: bool = False) -> None:
+        settings, findings = self._crash_after(crash_phase, before_dispatch=before_dispatch)
+        state = load_state(settings.state_file)
+        self.assertEqual(1, len(state["pending_operations"]))
+        operation = state["pending_operations"][0]
+        rotation_id = operation["rotation_id"]
+        self.assertEqual([], state["pending_revocations"])
+
+        recovered = reconcile_operations(settings, settings.credentials[0], approved_risk="medium")
+        self.assertEqual("operation_recovered", recovered[0].status)
+        self.assertTrue(recovered[0].access_retained)
+        state = load_state(settings.state_file)
+        self.assertEqual([], state["pending_operations"])
+        self.assertEqual(rotation_id, state["pending_revocations"][0]["rotation_id"])
+
+        revoked = reconcile_pending(settings, settings.credentials[0], approved_risk="medium")
+        self.assertEqual("revocation_reconciled", revoked[0].status)
+        state = load_state(settings.state_file)
+        self.assertEqual([], state["pending_revocations"])
+        self.assertIn(findings[0].fingerprint, state["retired_fingerprints"])
+        requests = [json.loads(line) for line in (self.runtime / "requests.jsonl").read_text().splitlines()]
+        self.assertEqual({rotation_id}, {item["rotation_id"] for item in requests})
+
+    def test_crash_before_create_recovers_from_durable_intent(self) -> None:
+        self._assert_operation_recovers("create_new", before_dispatch=True)
+        self.assertEqual(1, self._events().count("recover_create_new:"))
+
+    def test_crash_after_create_replays_idempotently(self) -> None:
+        self._assert_operation_recovers("create_new")
+        self.assertEqual(1, self._events().count("create_new:"))
+        self.assertEqual(1, self._events().count("recover_create_new:"))
+
+    def test_crash_after_consumer_update_recovers_forward(self) -> None:
+        self._assert_operation_recovers("update_consumer")
+        self.assertEqual(1, self._events().count("recover_update_consumer:primary"))
+        self.assertEqual("provider-new", (self.runtime / "consumer-primary").read_text())
+
+    def test_crash_after_activation_recovers_forward(self) -> None:
+        self._assert_operation_recovers("activate_connector_version")
+        self.assertEqual(1, self._events().count("recover_activate_connector_version:"))
+        self.assertEqual("provider-new", (self.runtime / "active_provider").read_text())
+
+    def test_failed_operation_recovery_stays_durable(self) -> None:
+        settings, _ = self._crash_after("create_new", before_dispatch=True)
+        (self.runtime / "fail_phase").write_text("recover_create_new", encoding="utf-8")
+        outcome = reconcile_operations(settings, settings.credentials[0], approved_risk="medium")[0]
+        self.assertEqual("operation_pending", outcome.status)
+        self.assertFalse(outcome.access_retained)
+        self.assertEqual(1, len(load_state(settings.state_file)["pending_operations"]))
+        self.assertFalse((self.runtime / "old_revoked").exists())
+
+    def test_successful_rollback_clears_operation_journal(self) -> None:
+        (self.runtime / "fail_phase").write_text("validate_new", encoding="utf-8")
+        settings, _, outcome = self._rotate()
+        self.assertEqual("failed_rolled_back", outcome.status)
+        self.assertEqual([], load_state(settings.state_file)["pending_operations"])
+
+    def test_failed_rollback_preserves_operation_journal(self) -> None:
+        (self.runtime / "fail_phase").write_text("verify_consumer rollback_consumer", encoding="utf-8")
+        settings, _, outcome = self._rotate()
+        self.assertEqual("failed_access_retained", outcome.status)
+        operation = load_state(settings.state_file)["pending_operations"][0]
+        # The consumer update happened, but its verification checkpoint did not.
+        # Recovery therefore resumes from the last proven stage and replays it.
+        self.assertEqual("validated", operation["stage"])
+
+    def test_reconcile_command_recovers_operation_then_revokes(self) -> None:
+        settings, findings = self._crash_after("create_new")
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            code = main(
+                [
+                    "--config", str(self.config_path), "--json", "reconcile",
+                    "--execute", "--ack-keep-access",
+                ]
+            )
+        self.assertEqual(EXIT_OK, code, output.getvalue())
+        payload = json.loads(output.getvalue())
+        self.assertEqual(
+            ["operation_recovered", "revocation_reconciled"],
+            [item["status"] for item in payload["outcomes"]],
+        )
+        state = load_state(settings.state_file)
+        self.assertEqual([], state["pending_operations"])
+        self.assertEqual([], state["pending_revocations"])
+        self.assertIn(findings[0].fingerprint, state["retired_fingerprints"])
+
+    def test_watch_recovers_crashed_operation_without_new_rotation(self) -> None:
+        settings, _ = self._crash_after("update_consumer")
+        before = self._events().count("create_new:")
+        code, output = self._watch(cycles=2)
+        self.assertEqual(EXIT_OK, code, output)
+        self.assertEqual(before, self._events().count("create_new:"))
+        self.assertEqual(1, self._events().count("recover_update_consumer:primary"))
+        state = load_state(settings.state_file)
+        self.assertEqual([], state["pending_operations"])
+        self.assertEqual([], state["pending_revocations"])
+
+    def test_unknown_pending_operation_blocks_all_execution(self) -> None:
+        settings, _ = self._crash_after("create_new", before_dispatch=True)
+        state = load_state(settings.state_file)
+        state["pending_operations"][0]["credential_id"] = "missing-credential"
+        settings.state_file.write_text(json.dumps(state), encoding="utf-8")
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            code = main(
+                [
+                    "--config", str(self.config_path), "--json", "reconcile",
+                    "--execute", "--ack-keep-access",
+                ]
+            )
+        self.assertEqual(EXIT_BLOCKED, code)
+        self.assertIn("PENDING_CREDENTIAL_UNKNOWN", output.getvalue())
+        self.assertNotIn("recover_create_new:", self._events())
+
+    def test_doctor_reports_crash_journal_work(self) -> None:
+        self._crash_after("create_new", before_dispatch=True)
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            code = main(["--config", str(self.config_path), "--json", "doctor"])
+        self.assertEqual(EXIT_FINDINGS, code)
+        payload = json.loads(output.getvalue())
+        self.assertEqual(1, payload["pending_operations"])
+        self.assertEqual(0, payload["pending_revocations"])
+
+    def test_status_reports_routes_without_provider_handles_or_scan(self) -> None:
+        self._crash_after("create_new")
+        output = io.StringIO()
+        with mock.patch("road_credentials.cli.scan", side_effect=AssertionError("status must not scan")):
+            with contextlib.redirect_stdout(output):
+                code = main(["--config", str(self.config_path), "--json", "status"])
+        self.assertEqual(EXIT_FINDINGS, code)
+        report = json.loads(output.getvalue())
+        self.assertEqual(1, report["pending_operation_count"])
+        self.assertEqual(0, report["pending_revocation_count"])
+        self.assertTrue(report["pending_operations"][0]["route"].startswith("road://ramps/"))
+        self.assertNotIn("provider-old", output.getvalue())
+        self.assertNotIn("provider-new", output.getvalue())
+        self.assertNotIn(LEAKED, output.getvalue())
+
+    def test_clean_status_is_zero_and_has_no_work(self) -> None:
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            code = main(["--config", str(self.config_path), "--json", "status"])
+        self.assertEqual(EXIT_OK, code)
+        report = json.loads(output.getvalue())
+        self.assertFalse(report["work_pending"])
+        self.assertEqual([], report["pending_operations"])
+
+    def test_status_reports_pending_revocation_without_provider_handle(self) -> None:
+        (self.runtime / "fail_phase").write_text("revoke_old", encoding="utf-8")
+        self._rotate()
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            code = main(["--config", str(self.config_path), "--json", "status"])
+        self.assertEqual(EXIT_FINDINGS, code)
+        report = json.loads(output.getvalue())
+        self.assertEqual(1, report["pending_revocation_count"])
+        self.assertEqual("github-ci", report["pending_revocations"][0]["credential_id"])
+        self.assertNotIn("provider-old", output.getvalue())
 
     def test_consumers_are_canaried_update_then_verify(self) -> None:
         config = self._config()
@@ -533,7 +822,11 @@ class CredentialDoctorTests(unittest.TestCase):
         self.assertNotIn("secret", requests.lower())
         for line in requests.splitlines():
             payload = json.loads(line)
+            self.assertEqual(2, payload["schema_version"])
             self.assertEqual("blackroad-connectors-test", payload["connector_runtime_id"])
+            self.assertTrue(payload["route"].startswith("road://ramps/blackroad-connectors-test/github/"))
+            if payload["consumer_id"]:
+                self.assertTrue(payload["route"].endswith(f"/consumers/{payload['consumer_id']}"))
 
     def test_connector_response_with_secret_field_is_rejected(self) -> None:
         (self.runtime / "malicious_response").write_text("1", encoding="utf-8")
