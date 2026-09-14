@@ -1,0 +1,26 @@
+schema: blackroad.network.services.v1
+
+services:
+  - { id: svc.nats,     dns: nats.road.home.arpa,      ipv4: 10.17.40.10 }
+  - { id: svc.roadie,   dns: roadie.road.home.arpa,    ipv4: 10.17.40.11 }
+  - { id: svc.roados,   dns: os.road.home.arpa,        ipv4: 10.17.40.12 }
+  - { id: svc.git,      dns: git.road.home.arpa,       ipv4: 10.17.40.13 }
+  - { id: svc.registry, dns: registry.road.home.arpa,  ipv4: 10.17.40.14 }
+  - { id: svc.database, dns: db.road.home.arpa,        ipv4: 10.17.40.15 }
+  - { id: svc.observe,  dns: observe.road.home.arpa,   ipv4: 10.17.40.16 }
+  - { id: svc.models,   dns: models.road.home.arpa,    ipv4: 10.17.40.17 }
+  - { id: svc.search,   dns: search.road.home.arpa,    ipv4: 10.17.40.18 }
+  - { id: svc.identity, dns: identity.road.home.arpa,  ipv4: 10.17.40.19 }
+  - { id: svc.receipts, dns: receipts.road.home.arpa,  ipv4: 10.17.40.20 }
+
+control:
+  - { id: ctl.roados,    dns: os.control.road.home.arpa,        ipv4: 10.17.29.10 }
+  - { id: ctl.identity,  dns: identity.control.road.home.arpa,  ipv4: 10.17.29.11 }
+  - { id: ctl.carkeys,   dns: carkeys.control.road.home.arpa,   ipv4: 10.17.29.12 }
+  - { id: ctl.roadchain, dns: roadchain.control.road.home.arpa, ipv4: 10.17.29.13 }
+  - { id: ctl.fleet,     dns: fleet.control.road.home.arpa,     ipv4: 10.17.29.14 }
+  - { id: ctl.nats,      dns: nats.control.road.home.arpa,      ipv4: 10.17.29.15 }
+  - { id: ctl.secrets,   dns: secrets.control.road.home.arpa,   ipv4: 10.17.29.16 }
+  - { id: ctl.health,    dns: health.control.road.home.arpa,    ipv4: 10.17.29.17 }
+  - { id: ctl.proof,     dns: proof.control.road.home.arpa,     ipv4: 10.17.29.18 }
+  - { id: ctl.routes,    dns: routes.control.road.home.arpa,    ipv4: 10.17.29.19 }
