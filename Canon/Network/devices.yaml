@@ -1,0 +1,223 @@
+schema: blackroad.fleet.network.v1
+
+devices:
+  - id: dev.gateway.udr7.001
+    name: Dream-Router-7
+    hostname: gateway
+    dns: gateway.road.home.arpa
+    type: unifi-dream-router-7
+    network: road.management
+    ipv4: 10.17.10.1
+    state: ordered
+    role: edge-gateway
+
+  - id: dev.mac.m1.001
+    name: Alexandria
+    hostname: alexandria
+    dns: alexandria.road.home.arpa
+    type: macbook-pro-m1
+    network: road.people
+    ipv4: 10.17.20.10
+    state: enrolled
+    role: operator-primary
+
+  - id: dev.iphone.001
+    name: Valeria
+    hostname: valeria
+    dns: valeria.road.home.arpa
+    type: iphone
+    network: road.people
+    ipv4: 10.17.20.11
+    state: enrolled
+    role: operator-mobile
+
+  - id: dev.mac.intel.001
+    name: Atticus
+    hostname: atticus
+    dns: atticus.road.home.arpa
+    type: macbook-pro-intel
+    network: road.people
+    ipv4: 10.17.20.12
+    state: known
+    role: legacy-workstation
+
+  - id: dev.mac.air.001
+    name: Seraphina
+    hostname: seraphina
+    dns: seraphina.road.home.arpa
+    type: macbook-air
+    network: road.people
+    ipv4: 10.17.20.13
+    state: identification-pending
+    role: secondary-workstation
+
+  - id: dev.pi5.001
+    name: Lucidia
+    hostname: lucidia
+    legacy_aliases: [pi-01]
+    dns: lucidia.road.home.arpa
+    type: raspberry-pi-5
+    network: road.compute
+    ipv4: 10.17.30.11
+    state: enrolled
+    role: general-compute
+
+  - id: dev.pi5.002
+    name: Aria
+    hostname: aria
+    legacy_aliases: [pi-04]
+    dns: aria.road.home.arpa
+    type: raspberry-pi-5
+    network: road.compute
+    ipv4: 10.17.30.12
+    state: enrolled
+    role: retrieval-services
+
+  - id: dev.pi5.003
+    name: Octavia
+    hostname: octavia
+    legacy_aliases: [pi-03]
+    dns: octavia.road.home.arpa
+    type: raspberry-pi-5
+    accelerator: hailo-8
+    network: road.compute
+    ipv4: 10.17.30.13
+    state: enrolled
+    role: edge-ai
+
+  - id: dev.pi5.004
+    name: Cecilia
+    hostname: cecilia
+    dns: cecilia.road.home.arpa
+    type: raspberry-pi-5
+    accelerator: hailo-8
+    network: road.lab
+    target_network: road.compute
+    target_ipv4: 10.17.30.14
+    state: physical-identity-unresolved
+    role: edge-ai
+
+  - id: dev.jetson.001
+    name: Olympia
+    hostname: olympia
+    dns: olympia.road.home.arpa
+    type: jetson-orin-nano-super
+    network: road.compute
+    ipv4: 10.17.30.15
+    state: enrollment-pending
+    role: gpu-ai-robotics
+
+  - id: dev.pi400.001
+    name: Alice
+    hostname: alice
+    dns: alice.road.home.arpa
+    type: raspberry-pi-400
+    network: road.compute
+    ipv4: 10.17.30.16
+    state: offline-last-observation
+    role: console-utility
+
+  - id: dev.pi4.kvm.001
+    name: Cordelia
+    hostname: cordelia
+    dns: cordelia.road.home.arpa
+    type: raspberry-pi-4-blikvm-v3
+    network: road.management
+    ipv4: 10.17.10.10
+    state: enrollment-pending
+    role: out-of-band-recovery
+
+  - id: dev.pi.zero2.001
+    name: Calliope
+    hostname: calliope
+    dns: calliope.road.home.arpa
+    type: raspberry-pi-zero-2-rs485-can
+    network: road.robotics
+    ipv4: 10.17.80.11
+    state: enrollment-pending
+    role: deterministic-bus-gateway
+
+  - id: dev.heltec.001
+    name: Lyra
+    hostname: lyra
+    dns: lyra.road.home.arpa
+    type: heltec-wifi-lora-32-v3
+    network: road.mesh
+    ipv4: 10.17.90.10
+    state: known
+    role: rnode-reticulum
+
+  - id: dev.robot.001
+    name: Gaia
+    hostname: gaia
+    dns: gaia.road.home.arpa
+    type: robotics-platform
+    network: road.robotics
+    ipv4: 10.17.80.10
+    state: hardware-definition-pending
+    role: physical-agent-platform
+
+  - id: dev.iot.eufy.001
+    name: Thalia
+    hostname: thalia
+    dns: thalia.road.home.arpa
+    type: robot-vacuum
+    network: road.devices
+    ipv4: 10.17.50.10
+    state: external-service-boundary
+    role: appliance
+
+  - id: dev.media.roku.001
+    name: Sapphira
+    hostname: sapphira
+    dns: sapphira.road.home.arpa
+    type: roku-family
+    network: road.media
+    ipv4: 10.17.60.10
+    state: known
+    role: media
+
+  - id: dev.media.appletv.001
+    name: Cicero
+    hostname: cicero
+    dns: cicero.road.home.arpa
+    type: apple-tv-family
+    network: road.media
+    ipv4: 10.17.60.11
+    state: known
+    role: media
+
+  - id: dev.media.xbox.001
+    name: Sebastian
+    hostname: sebastian
+    dns: sebastian.road.home.arpa
+    type: xbox-family
+    network: road.media
+    ipv4: 10.17.60.12
+    state: known
+    role: media
+
+unresolved:
+  - id: dev.unknown.pi02
+    name: pi-02
+    dns: pi-02.lab.road.home.arpa
+    type: raspberry-pi-unresolved
+    network: road.lab
+    ipv4: 10.17.70.12
+    state: unresolved
+
+  - id: dev.unknown.pi05
+    name: pi-05
+    dns: pi-05.lab.road.home.arpa
+    type: raspberry-pi-unresolved
+    network: road.lab
+    ipv4: 10.17.70.15
+    state: unresolved
+
+  - id: dev.unknown.pi08
+    name: pi-08
+    dns: pi-08.lab.road.home.arpa
+    type: raspberry-pi-unresolved
+    network: road.lab
+    ipv4: 10.17.70.18
+    state: unresolved
