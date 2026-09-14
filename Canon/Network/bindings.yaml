@@ -1,0 +1,19 @@
+schema: blackroad.agent-device-bindings.v1
+
+bindings:
+  - { agent: agent.lucidia,  device: dev.pi5.001,        state: active }
+  - { agent: agent.aria,     device: dev.pi5.002,        state: active }
+  - { agent: agent.octavia,  device: dev.pi5.003,        state: active }
+  - { agent: agent.cecilia,  device: dev.pi5.004,        state: pending-device-verification }
+  - { agent: agent.olympia,  device: dev.jetson.001,     state: intended }
+  - { agent: agent.alice,    device: dev.pi400.001,      state: intended }
+  - { agent: agent.cordelia, device: dev.pi4.kvm.001,    state: intended }
+  - { agent: agent.calliope, device: dev.pi.zero2.001,   state: intended }
+  - { agent: agent.lyra,     device: dev.heltec.001,     state: intended }
+  - { agent: agent.gaia,     device: dev.robot.001,      state: pending-hardware-definition }
+
+invariants:
+  - display_name_equality_is_not_identity
+  - device_binding_grants_no_authority_by_itself
+  - authorization_requires_permissions_credentials_or_receipts
+  - existing_legacy_hostnames_are_preserved_until_migration_is_verified
