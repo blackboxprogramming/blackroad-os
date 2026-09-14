@@ -31,19 +31,19 @@ new_provider_id = str(request.get("new_provider_id") or "")
 if phase == "baseline_consumer":
     if (runtime / f"consumer-{consumer}").read_text(encoding="utf-8") != old_provider_id:
         raise SystemExit(8)
-elif phase == "create_new":
+elif phase in {"create_new", "recover_create_new"}:
     new_provider_id = "provider-old" if (runtime / "same_provider_id").exists() else "provider-new"
-elif phase == "validate_new":
+elif phase in {"validate_new", "recover_validate_new"}:
     if new_provider_id != "provider-new":
         raise SystemExit(8)
-elif phase == "update_consumer":
+elif phase in {"update_consumer", "recover_update_consumer"}:
     (runtime / f"consumer-{consumer}").write_text(new_provider_id, encoding="utf-8")
-elif phase == "verify_consumer":
+elif phase in {"verify_consumer", "recover_verify_consumer"}:
     if (runtime / f"consumer-{consumer}").read_text(encoding="utf-8") != new_provider_id:
         raise SystemExit(8)
 elif phase == "rollback_consumer":
     (runtime / f"consumer-{consumer}").write_text(old_provider_id, encoding="utf-8")
-elif phase == "activate_connector_version":
+elif phase in {"activate_connector_version", "recover_activate_connector_version"}:
     (runtime / "active_provider").write_text(new_provider_id, encoding="utf-8")
 elif phase == "restore_connector_active_version":
     (runtime / "active_provider").write_text(old_provider_id, encoding="utf-8")
@@ -58,7 +58,7 @@ response = {
     "authority": "connector",
     "secret_material": False,
 }
-if phase == "create_new":
+if phase in {"create_new", "recover_create_new"}:
     response["provider_id"] = new_provider_id
 if (runtime / "malicious_response").exists():
     response["secret"] = "must-be-rejected"

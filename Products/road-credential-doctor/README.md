@@ -23,10 +23,13 @@ Without `--execute`, it produces a dry plan only.
 - Rotation requests use provider IDs, not credential values. The scanner still reads potentially leaked source material.
 - Exactly one configured connector dispatcher is allowed to perform lifecycle actions.
 - Dispatcher requests contain metadata and opaque provider handles only.
+- The low-level dispatcher accepts only the exact request schema 2; invalid requests start no connector process.
 - Connector responses must attest `authority: connector` and `secret_material: false`.
 - Unknown connector response fields are rejected without being persisted. This cannot prevent a malicious dispatcher from sending bytes to the process in the first place.
 - The old provider ID is revoked only after connector-side validation, consumer canaries, and activation succeed.
 - Failed rotations request connector-side rollback; failed revocation is durably queued by provider ID.
+- A metadata-only operation intent is fsynced before replacement creation and checkpointed after every proven lifecycle boundary.
+- Recovery replays idempotent Ramp actions with the same rotation ID, then revalidates every consumer before revocation.
 - Unknown secret names, duplicate ownership, and undeclared consumer paths block live rotation.
 - High and critical credentials require explicit approval and a connector authorization action.
 - Receipts are hash-chained and contain connector execution IDs, never credential values.
@@ -100,7 +103,13 @@ Connector actions are opaque names rather than commands:
 
 The dispatcher itself is a connector transport client, not a provider adapter. It must never implement provider credential logic or secret custody on the calling endpoint.
 
-See [ROUTES.md](ROUTES.md) for the RoadOS, Roadies, Routes, and Ramps mapping. Existing package names and connector action identifiers remain compatible; the request schema changes from 1 to 2 because `route` is now required.
+See [ROUTES.md](ROUTES.md) for the RoadOS, Roadies, Routes, and Ramps mapping and [PROTOCOL.md](PROTOCOL.md) for the closed request/response contract. Existing package names and connector action identifiers remain compatible; the request schema changes from 1 to 2 because `route` is now required.
+See [RECOVERY.md](RECOVERY.md) for the durable operation state machine and adapter idempotency contract.
+
+Configuration schema 3 is strict: duplicate keys, unknown fields, wrong types,
+non-boolean `auto_heal`, non-positive scan limits, invalid UTF-8, excessive size, and
+unsupported nesting fail before execution. This prevents misspelled safety settings or
+undocumented credential fields from being silently ignored.
 
 ## Credential and consumer inventory
 
@@ -132,11 +141,16 @@ See [CONNECTORS.md](CONNECTORS.md) for assurance levels and [SECURITY.md](SECURI
 road-credentials scan [--git-history]
 road-credentials inventory
 road-credentials connectors
+road-credentials status
 road-credentials doctor [--git-history] [--repair]
 road-credentials heal (--all | --credential ID) [--force] [--execute --ack-keep-access] [--approve-risk LEVEL]
 road-credentials reconcile --execute --ack-keep-access [--approve-risk LEVEL]
 road-credentials watch [--execute --ack-keep-access] [--interval 300]
 ```
+
+`status` is a read-only, metadata-only view for RoadOS and Roadies. It does not scan
+source files and does not expose old or replacement provider handles. Pending entries
+include their canonical Routes, proven stage, timestamps, and reconciliation state.
 
 | Exit | Meaning |
 | --- | --- |

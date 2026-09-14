@@ -10,6 +10,7 @@ from pathlib import Path
 
 from .catalog import known_user_connector_ids
 from .models import CommandSpec, Credential, Settings
+from .receipts import ReceiptError, read_receipt
 from .scanner import looks_like_secret
 from .state import load_state
 
@@ -68,11 +69,11 @@ def _receipt_checks(settings: Settings) -> list[Check]:
     receipt_files = sorted(settings.receipt_dir.glob("*.json")) if settings.receipt_dir.is_dir() else []
     for path in receipt_files:
         try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
+            payload = read_receipt(path)
             claimed = payload.pop("receipt_hash")
             canonical = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
             calculated = "sha256:" + hashlib.sha256(canonical).hexdigest()
-        except (OSError, json.JSONDecodeError, KeyError, TypeError):
+        except (ReceiptError, KeyError, TypeError):
             checks.append(Check("error", "RECEIPT_INVALID", f"receipt is unreadable or malformed: {path.name}"))
             continue
         if claimed != calculated:
@@ -110,6 +111,18 @@ def run_doctor(settings: Settings, *, repair: bool = False) -> list[Check]:
     checks.extend(_receipt_checks(settings))
     checks.extend(_command_checks(settings, "connector runtime dispatch", settings.connector_dispatch))
     state = load_state(settings.state_file)
+    configured_credential_ids = {credential.id for credential in settings.credentials}
+    for queue in ("pending_operations", "pending_revocations"):
+        for pending in state.get(queue, []):
+            credential_id = pending.get("credential_id")
+            if credential_id not in configured_credential_ids:
+                checks.append(
+                    Check(
+                        "error",
+                        "PENDING_CREDENTIAL_UNKNOWN",
+                        f"{queue} references an unconfigured credential: {credential_id}",
+                    )
+                )
     for pending in state.get("pending_revocations", []):
         if not pending.get("provider_id"):
             checks.append(

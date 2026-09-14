@@ -6,6 +6,11 @@ credential material into RoadOS or a Roadie. Encoded segments prevent configured
 from injecting Route structure. Routes provide correlation, not authentication or
 authorization; those remain connector-runtime responsibilities.
 
+The dispatcher now validates the complete closed request protocol before creating its
+client process. Missing, unknown, mistyped, oversized, unsupported, under-approved, or
+Route-inconsistent requests fail locally. Configuration schema 3 similarly rejects
+duplicate keys and unknown fields rather than silently accepting misspelled controls.
+
 This change adds engine-level gates before connector dispatch:
 
 - Manual and automatic rotation require at least one declared consumer.
@@ -58,6 +63,22 @@ The response runner now enforces 64 KiB while reading stdout, retaining at most 
 
 Duplicate JSON fields, malformed UTF-8, whitespace-padded IDs, and parser recursion failures are rejected. Exact-limit valid output is accepted; one byte over is blocked.
 
-Crash recovery between provider creation and durable pending-revocation state still requires connector-side idempotency and a durable transaction journal. This limitation remains unresolved.
+The connector worker now persists a metadata-only operation intent before replacement
+creation, checkpoints proven stages with file and directory fsync, and recovers forward
+using the same rotation ID. Recovery replays creation when its result was not durably
+observed, then revalidates, updates and verifies every consumer, activates, and creates
+the pending-revocation record. Successful rollback clears the journal; failed rollback
+preserves it. State parsing rejects unknown fields, malformed queues, duplicate or
+overlapping rotation IDs, invalid stages, and unsafe provider-ID transitions.
+State and configuration files are capped at 4 MiB and reject duplicate JSON keys.
+Receipt reads do not follow symlinks, are capped at 16 MiB, and reject ambiguous or
+malformed JSON before hash-chain verification. Rotation IDs and timestamps are
+validated before they influence receipt filenames.
 
-No live credentials have been rotated or revoked by this change. Production enablement requires a real authenticated connector runtime, provider-specific tests, durable recovery, and independently verified consumer coverage.
+This narrows the crash window but still depends on each Ramp adapter honoring the
+same-rotation idempotency contract. It cannot make a non-idempotent provider API safe,
+prove remote durability, or atomically commit across a provider, consumer, and local
+filesystem. A kill between a remote action and its local checkpoint deliberately causes
+that action to be replayed.
+
+No live credentials have been rotated or revoked by this change. Production enablement requires a real authenticated connector runtime, provider-specific idempotency and recovery tests, and independently verified consumer coverage.

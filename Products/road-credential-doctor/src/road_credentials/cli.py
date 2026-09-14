@@ -16,9 +16,10 @@ from .doctor import run_doctor
 from .inventory import blockers_for_credentials, coverage_report
 from .models import Credential, Finding, Settings
 from .policy import RISK_RANK, risk_allows
-from .rotation import reconcile_pending, rotate
+from .rotation import reconcile_operations, reconcile_pending, rotate
 from .scanner import ScanIncomplete, scan
 from .state import RotationBusy, load_state
+from .status import status_report
 
 
 EXIT_OK = 0
@@ -92,6 +93,7 @@ def command_doctor(args: argparse.Namespace, settings: Settings) -> int:
         "checks": [check.public() for check in checks],
         "active_leaks": sum(item["status"] == "active" for item in public),
         "retired_leaks_to_remove": sum(item["status"] == "retired" for item in public),
+        "pending_operations": len(state.get("pending_operations", [])),
         "pending_revocations": len(state.get("pending_revocations", [])),
         "consumer_coverage": coverage,
         "findings": public,
@@ -101,7 +103,7 @@ def command_doctor(args: argparse.Namespace, settings: Settings) -> int:
         return EXIT_BLOCKED
     if coverage["uncovered"] or coverage["unregistered"] or coverage["ambiguous"]:
         return EXIT_BLOCKED
-    if payload["active_leaks"] or payload["pending_revocations"]:
+    if payload["active_leaks"] or payload["pending_operations"] or payload["pending_revocations"]:
         return EXIT_FINDINGS
     return EXIT_OK
 
@@ -116,6 +118,12 @@ def command_inventory(args: argparse.Namespace, settings: Settings) -> int:
 def command_connectors(args: argparse.Namespace, _settings: Settings | None) -> int:
     _print(connector_catalog(), as_json=args.json)
     return EXIT_OK
+
+
+def command_status(args: argparse.Namespace, settings: Settings) -> int:
+    report = status_report(settings)
+    _print(report, as_json=args.json)
+    return EXIT_FINDINGS if report["work_pending"] else EXIT_OK
 
 
 def _selected_credentials(
@@ -205,7 +213,11 @@ def command_reconcile(args: argparse.Namespace, settings: Settings) -> int:
         _print({"status": "blocked", "configuration_errors": configuration_errors}, as_json=args.json)
         return EXIT_BLOCKED
     state = load_state(settings.state_file)
-    pending_ids = {str(item.get("credential_id")) for item in state.get("pending_revocations", [])}
+    pending_ids = {
+        str(item.get("credential_id"))
+        for key in ("pending_operations", "pending_revocations")
+        for item in state.get(key, [])
+    }
     risk_blockers = [
         {"credential_id": credential.id, "risk": credential.risk, "approved_through": args.approve_risk}
         for credential in settings.credentials
@@ -217,9 +229,12 @@ def command_reconcile(args: argparse.Namespace, settings: Settings) -> int:
     outcomes = []
     for credential in settings.credentials:
         if credential.id in pending_ids:
+            outcomes.extend(item.public() for item in reconcile_operations(settings, credential, approved_risk=args.approve_risk))
+            # Operation recovery creates a durable revocation record. Process it
+            # in the same reviewed invocation after replacement access is proven.
             outcomes.extend(item.public() for item in reconcile_pending(settings, credential, approved_risk=args.approve_risk))
     _print({"status": "complete", "outcomes": outcomes}, as_json=args.json)
-    return EXIT_ROTATION_FAILED if any(item["status"] == "pending_revocation" for item in outcomes) else EXIT_OK
+    return EXIT_ROTATION_FAILED if any(item["status"] in {"operation_pending", "pending_revocation"} for item in outcomes) else EXIT_OK
 
 
 def command_watch(args: argparse.Namespace, settings: Settings) -> int:
@@ -244,10 +259,16 @@ def command_watch(args: argparse.Namespace, settings: Settings) -> int:
         cycle += 1
         findings = scan(settings, include_history=args.git_history)
         grouped, blocked = _mapping(settings, findings)
-        pending_ids = {
+        state = load_state(settings.state_file)
+        operation_ids = {
             str(item.get("credential_id"))
-            for item in load_state(settings.state_file).get("pending_revocations", [])
+            for item in state.get("pending_operations", [])
         }
+        revocation_ids = {
+            str(item.get("credential_id"))
+            for item in state.get("pending_revocations", [])
+        }
+        pending_ids = operation_ids | revocation_ids
         eligible_ids = {
             credential.id for credential in settings.credentials
             if credential.auto_heal and risk_allows(credential.risk, "medium")
@@ -263,6 +284,8 @@ def command_watch(args: argparse.Namespace, settings: Settings) -> int:
         if args.execute and not blocked and not coverage_blockers:
             for credential in settings.credentials:
                 if credential.id in eligible_ids and credential.id in pending_ids:
+                    if credential.id in operation_ids:
+                        outcomes.extend(item.public() for item in reconcile_operations(settings, credential, approved_risk="medium"))
                     outcomes.extend(item.public() for item in reconcile_pending(settings, credential, approved_risk="medium"))
             for credential in settings.credentials:
                 # Findings were mapped before recovery; defer a fresh rotation until
@@ -278,7 +301,11 @@ def command_watch(args: argparse.Namespace, settings: Settings) -> int:
             "outcomes": outcomes,
         }
         _print(payload, as_json=args.json)
-        if blocked or coverage_blockers or deferred_pending or any(item["status"].startswith("failed") or item["status"] == "pending_revocation" for item in outcomes):
+        if blocked or coverage_blockers or deferred_pending or any(
+            item["status"].startswith("failed")
+            or item["status"] in {"operation_pending", "pending_revocation"}
+            for item in outcomes
+        ):
             last_code = EXIT_ROTATION_FAILED
         if not stopping and (args.max_cycles == 0 or cycle < args.max_cycles):
             time.sleep(args.interval)
@@ -301,6 +328,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     connectors_parser = subparsers.add_parser("connectors", help="show managed and user-managed connector policies")
     connectors_parser.set_defaults(handler=command_connectors)
+
+    status_parser = subparsers.add_parser("status", help="show metadata-only connector recovery status without scanning source")
+    status_parser.set_defaults(handler=command_status)
 
     doctor_parser = subparsers.add_parser("doctor", help="check connector transport, state, receipts, and leaks")
     doctor_parser.add_argument("--git-history", action="store_true")
