@@ -1,0 +1,37 @@
+name: road-network
+
+on:
+  push:
+    paths:
+      - "Canon/Network/**"
+      - "Products/road-network/**"
+      - "Commands/network.md"
+      - ".github/workflows/road-network.yml"
+  pull_request:
+    paths:
+      - "Canon/Network/**"
+      - "Products/road-network/**"
+      - "Commands/network.md"
+      - ".github/workflows/road-network.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install road-network
+        run: python -m pip install -e Products/road-network
+      - name: Validate canon
+        run: road-network --root . validate
+      - name: Run tests
+        run: python -m unittest discover Products/road-network/tests -v
+      - name: Compile local desired state
+        run: road-network --root . apply --output /tmp/blackroad-network --execute
+      - name: Verify idempotent plan
+        run: road-network --root . plan --output /tmp/blackroad-network
