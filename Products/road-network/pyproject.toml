@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "road-network"
-version = "0.1.0"
-description = "BlackRoad network canon validator, planner, compiler, and receipt writer"
+version = "0.2.0"
+description = "BlackRoad network canon validator, provider discovery planner, compiler, and receipt writer"
 requires-python = ">=3.11"
 license = "MIT"
 authors = [{ name = "BlackRoad OS, Inc." }]
