@@ -37,6 +37,21 @@ def revocation() -> dict:
 
 
 class StateTests(unittest.TestCase):
+    def test_execution_binding_accepts_digest_in_both_queues(self) -> None:
+        state = empty_state()
+        state["pending_operations"] = [dict(operation(), execution_config_hash="a" * 64)]
+        state["pending_revocations"] = [dict(revocation(), execution_config_hash="b" * 64)]
+        self.assertIs(state, validate_state(state))
+
+    def test_execution_binding_rejects_malformed_digest_in_both_queues(self) -> None:
+        for queue, factory in (("pending_operations", operation), ("pending_revocations", revocation)):
+            for value in (None, True, 123, [], {}, "", "a" * 63, "A" * 64, "g" * 64, "a" * 64 + "\n"):
+                with self.subTest(queue=queue, value=value):
+                    state = empty_state()
+                    state[queue] = [dict(factory(), execution_config_hash=value)]
+                    with self.assertRaisesRegex(ValueError, "execution_config_hash"):
+                        validate_state(state)
+
     def test_old_state_gets_additive_operation_default(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "state.json"

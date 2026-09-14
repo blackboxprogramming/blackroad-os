@@ -63,6 +63,14 @@ def _exact_fields(
     return value
 
 
+def _validate_execution_binding(item: dict[str, Any], location: str) -> None:
+    # Legacy records remain readable, but cannot be automatically replayed.
+    if "execution_config_hash" in item:
+        value = item["execution_config_hash"]
+        if not isinstance(value, str) or re.fullmatch(r"[0-9a-f]{64}", value) is None:
+            raise ValueError(f"{location}.execution_config_hash must be a SHA-256 hex digest")
+
+
 def validate_state(data: Any, path: Path | None = None) -> dict[str, Any]:
     location = str(path) if path else "state"
     root = _exact_fields(
@@ -100,8 +108,9 @@ def validate_state(data: Any, path: Path | None = None) -> dict[str, Any]:
                 "credential_id", "connector", "rotation_id", "stage", "old_provider_id",
                 "new_provider_id", "updated_consumers", "fingerprints", "created_at", "updated_at",
             },
-            {"last_error"},
+            {"last_error", "execution_config_hash"},
         )
+        _validate_execution_binding(item, item_location)
         for field in ("credential_id", "connector", "rotation_id", "old_provider_id", "created_at", "updated_at"):
             _string(item.get(field), f"{item_location}.{field}")
         if not ROTATION_ID.fullmatch(item["rotation_id"]):
@@ -133,7 +142,9 @@ def validate_state(data: Any, path: Path | None = None) -> dict[str, Any]:
             value,
             item_location,
             {"credential_id", "rotation_id", "provider_id", "fingerprints", "created_at"},
+            {"execution_config_hash"},
         )
+        _validate_execution_binding(item, item_location)
         for field in ("credential_id", "rotation_id", "provider_id", "created_at"):
             _string(item.get(field), f"{item_location}.{field}")
         if not ROTATION_ID.fullmatch(item["rotation_id"]):

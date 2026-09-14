@@ -119,6 +119,108 @@ class CredentialDoctorTests(unittest.TestCase):
                 rotate(settings, settings.credentials[0], findings, approved_risk="medium")
         return settings, findings
 
+    def _configuration_variants(self, settings):
+        credential = settings.credentials[0]
+        yield "runtime", replace(settings, connector_runtime_id="another-runtime"), credential
+        yield "dispatch", replace(settings, connector_dispatch=replace(
+            settings.connector_dispatch, timeout_seconds=17)), credential
+        yield "working_directory", replace(settings, root=self.base), credential
+        yield "connector", settings, replace(credential, connector="another-connector")
+        yield "risk", settings, replace(credential, risk="low")
+        for field in ("authorize_action", "create_action", "validate_action", "activate_action",
+                      "restore_action", "revoke_old_action", "revoke_new_action"):
+            yield field, settings, replace(credential, **{field: "changed.action"})
+        for field, value in (("id", "different-consumer"), ("paths", ("other/**",)),
+                             ("update_action", "changed.update"),
+                             ("verify_action", "changed.verify"),
+                             ("rollback_action", "changed.rollback")):
+            consumer = replace(credential.consumers[0], **{field: value})
+            yield "consumer_" + field, settings, replace(credential, consumers=(consumer,))
+        yield "added_consumer", settings, replace(credential, consumers=(
+            *credential.consumers, replace(credential.consumers[0], id="secondary")))
+
+    def test_operation_recovery_blocks_configuration_drift_before_dispatch(self) -> None:
+        settings, _ = self._crash_after("create_new")
+        before = self._events()
+        for name, changed, credential in self._configuration_variants(settings):
+            with self.subTest(change=name):
+                outcomes = reconcile_operations(changed, credential, approved_risk="medium")
+                self.assertEqual("operation_pending", outcomes[0].status)
+                self.assertIn("configuration", outcomes[0].message)
+                self.assertEqual(before, self._events())
+                self.assertEqual(1, len(load_state(settings.state_file)["pending_operations"]))
+        outcomes = reconcile_operations(settings, settings.credentials[0], approved_risk="medium")
+        self.assertEqual("operation_recovered", outcomes[0].status)
+
+    def test_revocation_recovery_blocks_configuration_drift_before_dispatch(self) -> None:
+        (self.runtime / "fail_phase").write_text("revoke_old", encoding="utf-8")
+        settings, _, _ = self._rotate()
+        (self.runtime / "fail_phase").unlink()
+        before = self._events()
+        for name, changed, credential in self._configuration_variants(settings):
+            with self.subTest(change=name):
+                outcomes = reconcile_pending(changed, credential, approved_risk="medium")
+                self.assertEqual("pending_revocation", outcomes[0].status)
+                self.assertIn("configuration", outcomes[0].message)
+                self.assertEqual(before, self._events())
+                self.assertFalse((self.runtime / "old_revoked").exists())
+        outcomes = reconcile_pending(settings, settings.credentials[0], approved_risk="medium")
+        self.assertEqual("revocation_reconciled", outcomes[0].status)
+
+    def test_legacy_operation_without_configuration_binding_stays_pending(self) -> None:
+        settings, _ = self._crash_after("create_new")
+        state = load_state(settings.state_file)
+        state["pending_operations"][0].pop("execution_config_hash", None)
+        settings.state_file.write_text(json.dumps(state), encoding="utf-8")
+        before = self._events()
+        outcome = reconcile_operations(settings, settings.credentials[0], approved_risk="medium")[0]
+        self.assertEqual("operation_pending", outcome.status)
+        self.assertEqual(before, self._events())
+
+    def test_recovery_blocks_removing_one_of_multiple_consumers(self) -> None:
+        config = self._config()
+        secondary = dict(config["credentials"][0]["consumers"][0], id="secondary")
+        config["credentials"][0]["consumers"].append(secondary)
+        self.config_path.write_text(json.dumps(config), encoding="utf-8")
+        (self.runtime / "consumer-secondary").write_text("provider-old", encoding="utf-8")
+        settings, _ = self._crash_after("activate_connector_version")
+        credential = replace(settings.credentials[0], consumers=settings.credentials[0].consumers[:1])
+        before = self._events()
+        outcome = reconcile_operations(settings, credential, approved_risk="medium")[0]
+        self.assertEqual("operation_pending", outcome.status)
+        self.assertEqual(before, self._events())
+        original = load_state(settings.state_file)["pending_operations"][0]["execution_config_hash"]
+        reconcile_operations(settings, settings.credentials[0], approved_risk="medium")
+        queued = load_state(settings.state_file)["pending_revocations"][0]
+        self.assertEqual(original, queued["execution_config_hash"])
+        before = self._events()
+        outcome = reconcile_pending(settings, credential, approved_risk="medium")[0]
+        self.assertEqual("pending_revocation", outcome.status)
+        self.assertEqual(before, self._events())
+
+    def test_watch_blocks_changed_runtime_with_pending_operation(self) -> None:
+        self._crash_after("create_new")
+        config = self._config()
+        config["connector_runtime"]["id"] = "changed-runtime"
+        self.config_path.write_text(json.dumps(config), encoding="utf-8")
+        before = self._events()
+        code, output = self._watch(cycles=2)
+        self.assertEqual(EXIT_ROTATION_FAILED, code, output)
+        self.assertEqual(before, self._events())
+        self.assertIn("configuration", output)
+
+    def test_legacy_revocation_without_configuration_binding_stays_pending(self) -> None:
+        (self.runtime / "fail_phase").write_text("revoke_old", encoding="utf-8")
+        settings, _, _ = self._rotate()
+        (self.runtime / "fail_phase").unlink()
+        state = load_state(settings.state_file)
+        state["pending_revocations"][0].pop("execution_config_hash", None)
+        settings.state_file.write_text(json.dumps(state), encoding="utf-8")
+        before = self._events()
+        outcome = reconcile_pending(settings, settings.credentials[0], approved_risk="medium")[0]
+        self.assertEqual("pending_revocation", outcome.status)
+        self.assertEqual(before, self._events())
+
     def test_scanner_redacts_secret_values(self) -> None:
         settings = load_config(self.config_path)
         findings = scan(settings)

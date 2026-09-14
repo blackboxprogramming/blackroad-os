@@ -26,9 +26,41 @@ Every checkpoint records identifiers and evidence metadata only:
 - old and replacement provider handles;
 - proven stage and verified consumer IDs;
 - SHA-256 finding fingerprints;
+- an execution configuration digest preserved through the revocation queue;
 - timestamps and a bounded internal recovery error description.
 
 No credential value belongs in this journal.
+
+## Configuration binding
+
+Before creation, each new intent records `execution_config_hash`, a SHA-256 digest
+of a canonical JSON document with binding version 1. It covers runtime ID,
+dispatcher arguments and timeout, working directory, credential and connector IDs,
+risk, every lifecycle action (including authorization), and the ordered consumer
+list with each consumer's ID, paths, and update/verify/rollback actions. Recovery
+checks this digest before dispatching any action, including authorization. The
+same original digest is transferred into the pending-revocation record.
+
+Changing or removing consumers, changing actions, or redirecting the runtime leaves
+the operation pending. Restore the original configuration to resume, or perform a
+reviewed migration backed by connector/provider evidence. Do not overwrite the
+stored digest with the current one to bypass this check.
+
+State schema 1 remains readable with legacy records that lack this additive field.
+Those records cannot automatically recover or revoke keys: their original execution
+configuration was not recorded. Preserve them for reviewed recovery; neither the
+CLI nor the watcher guesses or backfills a binding. Invalid digest values are
+rejected by state validation.
+
+Scan patterns, scheduling (`auto_heal`), and the configured bootstrap provider ID
+are excluded. Recovery uses provider handles from durable state; changing scan or
+scheduling policy does not redirect an existing action. Normal risk approval and
+watch scheduling gates still apply independently.
+
+This digest detects configuration drift, not tampering by a party able to rewrite
+state. It does not authenticate a connector, hash dispatcher executable contents,
+or detect changes to the remote meaning of an action. Those guarantees require the
+authenticated transport and versioned adapter contracts described below.
 
 ## Idempotency contract
 
@@ -53,7 +85,7 @@ ID. The Road Credential Doctor does not implement that remote table.
 
 1. Acquire the exclusive state lock.
 2. Validate the complete state schema and reject ambiguity.
-3. Match the pending operation to exactly one configured credential and connector.
+3. Match the pending operation to its credential, connector, and original execution configuration.
 4. Reauthorize high- or critical-risk recovery through its configured action.
 5. If replacement creation is not proven, repeat creation with the original rotation ID.
 6. Require a non-empty replacement provider ID distinct from the old provider ID.

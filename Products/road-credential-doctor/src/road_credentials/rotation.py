@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import hashlib
+import json
 import uuid
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import Any, Iterable
 
 from .models import Credential, Finding, Settings
@@ -14,6 +16,38 @@ from .state import atomic_write_json, load_state, rotation_lock
 
 class RotationError(RuntimeError):
     pass
+
+
+def _execution_config_hash(settings: Settings, credential: Credential) -> str:
+    """Bind replay to execution metadata, independent of scan/scheduling settings.
+
+    This is a drift guard, not authentication or an adapter code identity. Provider
+    handles come from the durable operation and active state during recovery.
+    """
+    actions = {
+        name: getattr(credential, name)
+        for name in (
+            "authorize_action", "create_action", "validate_action", "activate_action",
+            "restore_action", "revoke_old_action", "revoke_new_action",
+        )
+    }
+    payload = {
+        "binding_version": 1,
+        "connector_runtime_id": settings.connector_runtime_id,
+        "dispatch": asdict(settings.connector_dispatch),
+        "working_directory": str(settings.root),
+        "credential_id": credential.id,
+        "connector": credential.connector,
+        "risk": credential.risk,
+        "actions": actions,
+        "consumers": [asdict(consumer) for consumer in credential.consumers],
+    }
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    return hashlib.sha256(encoded.encode("ascii")).hexdigest()
+
+
+def _configuration_matches(item: dict[str, Any], settings: Settings, credential: Credential) -> bool:
+    return item.get("execution_config_hash") == _execution_config_hash(settings, credential)
 
 
 @dataclass(frozen=True)
@@ -191,6 +225,7 @@ def _queue_revocation(
     old_provider_id: str,
     new_provider_id: str,
     fingerprints: list[str],
+    execution_config_hash: str,
 ) -> None:
     if not any(item.get("rotation_id") == rotation_id for item in state.get("pending_revocations", [])):
         state.setdefault("pending_revocations", []).append(
@@ -200,6 +235,7 @@ def _queue_revocation(
                 "provider_id": old_provider_id,
                 "fingerprints": fingerprints,
                 "created_at": utc_now(),
+                "execution_config_hash": execution_config_hash,
             }
         )
     state.setdefault("active", {})[credential_id] = {
@@ -289,6 +325,7 @@ def rotate(
                 "updated_consumers": [],
                 "fingerprints": sorted({finding.fingerprint for finding in finding_list}),
                 "created_at": utc_now(),
+                "execution_config_hash": _execution_config_hash(settings, credential),
             }
             _store_operation(settings, state, operation)
             create_attempted = True
@@ -385,6 +422,7 @@ def rotate(
                 old_provider_id=old_provider_id,
                 new_provider_id=new_provider_id,
                 fingerprints=operation["fingerprints"],
+                execution_config_hash=operation["execution_config_hash"],
             )
             atomic_write_json(settings.state_file, state)
 
@@ -506,6 +544,8 @@ def reconcile_operations(
                     raise RotationError("pending operation lacks a durable rotation or old provider id")
                 if operation.get("connector") != credential.connector:
                     raise RotationError("pending operation connector does not match configuration")
+                if not _configuration_matches(operation, settings, credential):
+                    raise RotationError("execution configuration changed or original binding is missing")
 
                 if credential.authorize_action is not None:
                     authorized = _run(
@@ -617,6 +657,7 @@ def reconcile_operations(
                     old_provider_id=old_provider_id,
                     new_provider_id=new_provider_id,
                     fingerprints=sorted(set(fingerprints)),
+                    execution_config_hash=operation["execution_config_hash"],
                 )
                 atomic_write_json(settings.state_file, state)
                 status = "operation_recovered"
@@ -679,8 +720,10 @@ def reconcile_pending(
             old_provider_id = str(item.get("provider_id") or "")
             active = state.get("active", {}).get(credential.id, {})
             new_provider_id = active.get("provider_id")
+            configuration_matches = _configuration_matches(item, settings, credential)
             evidence_valid = bool(
-                credential.consumers
+                configuration_matches
+                and credential.consumers
                 and old_provider_id.strip()
                 and isinstance(new_provider_id, str)
                 and new_provider_id.strip()
@@ -746,6 +789,8 @@ def reconcile_pending(
             else:
                 status = "pending_revocation"
                 message = "revocation remains pending; replacement access or revocation could not be confirmed"
+                if not configuration_matches:
+                    message = "revocation remains pending; execution configuration changed or original binding is missing"
             receipt = {
                 "schema_version": 2,
                 "rotation_id": rotation_id,
