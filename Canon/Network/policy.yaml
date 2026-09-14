@@ -1,0 +1,100 @@
+schema: blackroad.network-policy.v1
+
+defaults:
+  interzone: deny
+  internet_inbound: deny
+  unknown_device_network: road.lab
+
+principles:
+  - unknown_devices_enter_lab
+  - identity_precedes_authority
+  - ip_address_is_not_identity
+  - agent_name_is_not_device_identity
+  - control_plane_is_not_general_lan
+  - cloud_is_not_canonical
+  - recovery_plane_remains_independent
+  - explicit_routes_only
+  - physical_actuation_requires_permission
+  - significant_changes_require_receipts
+
+zones:
+  road.management:
+    may_administer: [road.management]
+    deny_from: [road.devices, road.media, road.lab]
+
+  road.people:
+    operator_hosts: [dev.mac.m1.001, dev.iphone.001]
+
+  road.compute:
+    may_reach: [road.services]
+    control_access: scoped
+
+  road.services:
+    may_reach: [road.compute, road.control]
+    access: scoped
+
+  road.devices:
+    internet: constrained
+    internal_default: deny
+    isolation: recommended
+
+  road.media:
+    internet: allow
+    internal_default: deny
+    discovery_from: [road.people]
+
+  road.lab:
+    internet: updates-only
+    internal_default: deny
+    promotion_requires: [identity-verification, enrollment, receipt]
+
+  road.robotics:
+    internet: deny-by-default
+    control_access: scoped
+    actuation_requires: [permission, receipt]
+
+  road.mesh:
+    internal_default: deny
+    gateways_only: true
+
+  road.guest:
+    internet: allow
+    internal_default: deny
+    client_isolation: true
+
+  road.control:
+    trust: authority
+    general_client_access: deny
+    allowed_sources: [road.people, road.compute, road.services]
+    access: scoped
+
+migration:
+  order:
+    - Dream-Router-7
+    - Alexandria
+    - Cordelia
+    - Lucidia
+    - Aria
+    - Octavia
+    - Cecilia-after-verification
+    - Olympia
+    - Alice
+    - Calliope
+    - Lyra
+    - Gaia-after-hardware-definition
+    - media
+    - iot
+    - unresolved-to-lab
+
+  enrollment_steps:
+    - discover
+    - fingerprint
+    - verify-hardware-identity
+    - record-device-id
+    - assign-network
+    - reserve-address
+    - create-dns
+    - test-allowed-routes
+    - test-denied-routes
+    - write-receipt
+    - mark-enrolled
